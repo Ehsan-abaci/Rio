@@ -49,6 +49,18 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Vazir
+      fonts:
+        - asset: assets/font/Vazir.ttf
+          weight: 500 
+        - asset: assets/font/Vazir-Medium.ttf
+          weight: 600
+        - asset: assets/font/Vazir-Bold.ttf
+          weight: 700 
+        - asset: assets/font/Vazir-Thin.ttf
+          weight: 400    
+
   # fonts:
   #   - family: Schyler
   #     fonts:

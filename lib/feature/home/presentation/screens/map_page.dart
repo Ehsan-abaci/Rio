@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -10,6 +13,9 @@ import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
+import 'package:share_scooter/core/widgets/low_level_circle_button.dart';
+import 'package:share_scooter/feature/home/presentation/widgets/main_drawer.dart';
+import 'package:share_scooter/feature/home/presentation/widgets/vehicle_bottom_sheet.dart';
 
 import 'package:share_scooter/line_anim.dart';
 
@@ -31,7 +37,8 @@ class MapPage extends StatefulWidget {
   State<MapPage> createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
+  Scooter? selectedScooter;
   List<Scooter> scooters = [
     Scooter(
       id: "#1",
@@ -51,7 +58,7 @@ class _MapPageState extends State<MapPage> {
     Scooter(
       name: "Apple Scooter",
       id: "#4",
-      location: const LatLng(37.304436, 59.594230),
+      location: const LatLng(38.304436, 59.594230),
     ),
   ];
 
@@ -100,107 +107,193 @@ class _MapPageState extends State<MapPage> {
     setState(() {});
   }
 
+  selecetScooter(Scooter? scooter) {
+    selectedScooter == null
+        ? selectedScooter = scooter
+        : selectedScooter = null;
+
+    if (selectedScooter != null) {
+      mapController.fitCamera(
+        CameraFit.bounds(
+          padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 200),
+          forceIntegerZoomLevel: false,
+          minZoom: 2,
+          maxZoom: 15,
+          bounds: LatLngBounds(
+            selectedScooter!.location,
+            currentLocation!,
+          ),
+        ),
+      );
+      mapController.rotate(0);
+    }
+    setState(() {});
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: FlutterMap(
-              options: const MapOptions(
-                keepAlive: true,
-
-                // initialCenter: currentLocation!,
-                initialZoom: 16,
+    final bottomSheetHeight = height * .3;
+    return PopScope(
+      canPop: selectedScooter == null,
+      onPopInvoked: (didPop) {
+        if (selectedScooter != null) {
+          setState(() {
+            selectedScooter = null;
+          });
+        }
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        bottomSheet: selectedScooter == null
+            ? null
+            : VehicleBottomSheet(
+                selectedScooter: selectedScooter!,
               ),
-              children: [
-                TileLayer(
-                  tileProvider: const FMTCStore('mapStore').getTileProvider(),
-                  keepBuffer: 100,
-                  urlTemplate:
-                      'https://api.mapbox.com/styles/v1/hamidaslami2/clob8flgd012t01qsdwnf70md/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaGFtaWRhc2xhbWkyIiwiYSI6ImNsbm9wcm5idjAyaWUya255enF0bmZyNnoifQ.eD-IuFdTBd9rDEgqyPyQEA',
+        body: Stack(
+          children: [
+            Positioned.fill(
+              bottom: selectedScooter != null ? bottomSheetHeight - 20 : 0.0,
+              right: 0,
+              left: 0,
+              child: FlutterMap(
+                mapController: mapController,
+                options: const MapOptions(
+                  keepAlive: true,
+                  initialZoom: 16,
                 ),
-                CurrentLocationLayer(
-                  alignPositionOnUpdate: AlignOnUpdate.once,
-                  alignDirectionOnUpdate: AlignOnUpdate.never,
-                  style: LocationMarkerStyle(
-                    marker: Container(
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.shade300,
-                            spreadRadius: 5,
-                            blurRadius: 5)
-                      ], color: Colors.white, shape: BoxShape.circle),
-                      child: Container(
-                        margin: const EdgeInsets.all(3),
-                        decoration: const BoxDecoration(
-                            color: Colors.blueAccent, shape: BoxShape.circle),
-                      ),
-                    ),
-                    markerSize: const Size.square(25),
-                    accuracyCircleColor: Colors.blueAccent.withOpacity(0.1),
-                    headingSectorColor: Colors.blueAccent.withOpacity(0.8),
-                    headingSectorRadius: 50,
+                children: [
+                  TileLayer(
+                    tileProvider: const FMTCStore('mapStore').getTileProvider(),
+                    keepBuffer: 100,
+                    urlTemplate:
+                        'https://api.mapbox.com/styles/v1/hamidaslami2/clob8flgd012t01qsdwnf70md/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaGFtaWRhc2xhbWkyIiwiYSI6ImNsbm9wcm5idjAyaWUya255enF0bmZyNnoifQ.eD-IuFdTBd9rDEgqyPyQEA',
                   ),
-                  moveAnimationDuration: Duration.zero, // disable animation
-                ),
-                MarkerLayer(
-                  markers: [
-                    ...scooters.map(
-                      (e) => Marker(
-                        point: e.location,
-                        child: GestureDetector(
-                            onTap: () {},
-                            child: SvgPicture.asset(AssetsIcon.point)),
+                  CurrentLocationLayer(
+                    alignPositionOnUpdate: AlignOnUpdate.once,
+                    alignDirectionOnUpdate: AlignOnUpdate.never,
+                    style: LocationMarkerStyle(
+                      marker: Container(
+                        decoration: BoxDecoration(boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.shade300,
+                              spreadRadius: 5,
+                              blurRadius: 5)
+                        ], color: Colors.white, shape: BoxShape.circle),
+                        child: Container(
+                          margin: const EdgeInsets.all(3),
+                          decoration: const BoxDecoration(
+                              color: Colors.blueAccent, shape: BoxShape.circle),
+                        ),
                       ),
+                      markerSize: const Size.square(25),
+                      accuracyCircleColor: Colors.blueAccent.withOpacity(0.1),
+                      headingSectorColor: Colors.blueAccent.withOpacity(0.8),
+                      headingSectorRadius: 50,
                     ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Positioned.fromRect(
-            rect: Rect.fromLTWH(0, 0, width, height * .12),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    ColorManager.white,
-                    ColorManager.white.withOpacity(.7),
-                    ColorManager.white.withOpacity(.3),
-                  ],
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    SvgPicture.asset(
-                      AssetsIcon.coupon,
-                      color: ColorManager.primaryDark,
-                    ),
-                    SvgPicture.asset(
-                      AssetsImage.logo,
-                      width: width * .2,
-                      color: ColorManager.primaryDark,
-                    ),
-                    SvgPicture.asset(
-                      AssetsIcon.menu,
-                      color: ColorManager.primaryDark,
-                    ),
-                  ],
-                ),
+                    moveAnimationDuration: Duration.zero, // disable animation
+                  ),
+                  MarkerLayer(
+                    markers: [
+                      ...scooters.map(
+                        (e) => Marker(
+                          width: 70,
+                          height: 70,
+                          point: e.location,
+                          child: GestureDetector(
+                            onTap: () {
+                              selecetScooter(e);
+                            },
+                            child: SvgPicture.asset(
+                              e.id == selectedScooter?.id
+                                  ? AssetsIcon.selectedPoint
+                                  : AssetsIcon.point,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+            Positioned.fromRect(
+              rect: Rect.fromLTWH(0, 0, width, height * .12),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      ColorManager.white,
+                      ColorManager.white.withOpacity(.7),
+                      ColorManager.white.withOpacity(.3),
+                    ],
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SvgPicture.asset(
+                        AssetsIcon.coupon,
+                        color: ColorManager.primaryDark,
+                      ),
+                      SvgPicture.asset(
+                        AssetsImage.logo,
+                        width: width * .2,
+                        color: ColorManager.primaryDark,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          _scaffoldKey.currentState?.openDrawer();
+                        },
+                        child: SvgPicture.asset(
+                          AssetsIcon.menu,
+                          color: ColorManager.primaryDark,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+                bottom: (selectedScooter == null)
+                    ? width * .08
+                    : width * .08 + bottomSheetHeight,
+                right: width * .08,
+                child: LowLevelCircleButton(
+                  AssetsIcon.code,
+                  height * .09,
+                  ColorManager.primaryDark,
+                  ColorManager.white,
+                )),
+            Positioned(
+              bottom: (selectedScooter == null)
+                  ? width * .08
+                  : width * .08 + bottomSheetHeight,
+              left: width * .08,
+              child: LowLevelCircleButton(
+                AssetsIcon.location,
+                height * .06,
+                ColorManager.white,
+                ColorManager.primaryDark,
+              ),
+            ),
+          ],
+        ),
+        drawer: MainDrawer()
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

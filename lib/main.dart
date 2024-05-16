@@ -39,10 +39,11 @@ class MyApp extends StatelessWidget {
         Locale('fa', "IR"),
         Locale('en', "US"),
       ],
+      
       title: 'RIO',
       themeMode: ThemeMode.light,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        fontFamily: "Vazir",
         useMaterial3: true,
       ),
       home: MapPage(),
