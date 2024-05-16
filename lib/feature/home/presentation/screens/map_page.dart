@@ -16,6 +16,7 @@ import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/low_level_circle_button.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/main_drawer.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/vehicle_bottom_sheet.dart';
+import 'package:share_scooter/feature/qr_code/presentation/screens/qr_code_page.dart';
 
 import 'package:share_scooter/line_anim.dart';
 
@@ -130,7 +131,7 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
     setState(() {});
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -147,149 +148,158 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
         }
       },
       child: Scaffold(
-        key: _scaffoldKey,
-        bottomSheet: selectedScooter == null
-            ? null
-            : VehicleBottomSheet(
-                selectedScooter: selectedScooter!,
-              ),
-        body: Stack(
-          children: [
-            Positioned.fill(
-              bottom: selectedScooter != null ? bottomSheetHeight - 20 : 0.0,
-              right: 0,
-              left: 0,
-              child: FlutterMap(
-                mapController: mapController,
-                options: const MapOptions(
-                  keepAlive: true,
-                  initialZoom: 16,
+          key: _scaffoldKey,
+          bottomSheet: selectedScooter == null
+              ? null
+              : VehicleBottomSheet(
+                  selectedScooter: selectedScooter!,
                 ),
-                children: [
-                  TileLayer(
-                    tileProvider: const FMTCStore('mapStore').getTileProvider(),
-                    keepBuffer: 100,
-                    urlTemplate:
-                        'https://api.mapbox.com/styles/v1/hamidaslami2/clob8flgd012t01qsdwnf70md/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaGFtaWRhc2xhbWkyIiwiYSI6ImNsbm9wcm5idjAyaWUya255enF0bmZyNnoifQ.eD-IuFdTBd9rDEgqyPyQEA',
+          body: Stack(
+            children: [
+              Positioned.fill(
+                bottom: selectedScooter != null ? bottomSheetHeight - 20 : 0.0,
+                right: 0,
+                left: 0,
+                child: FlutterMap(
+                  mapController: mapController,
+                  options: const MapOptions(
+                    keepAlive: true,
+                    initialZoom: 16,
                   ),
-                  CurrentLocationLayer(
-                    alignPositionOnUpdate: AlignOnUpdate.once,
-                    alignDirectionOnUpdate: AlignOnUpdate.never,
-                    style: LocationMarkerStyle(
-                      marker: Container(
-                        decoration: BoxDecoration(boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey.shade300,
-                              spreadRadius: 5,
-                              blurRadius: 5)
-                        ], color: Colors.white, shape: BoxShape.circle),
-                        child: Container(
-                          margin: const EdgeInsets.all(3),
-                          decoration: const BoxDecoration(
-                              color: Colors.blueAccent, shape: BoxShape.circle),
-                        ),
-                      ),
-                      markerSize: const Size.square(25),
-                      accuracyCircleColor: Colors.blueAccent.withOpacity(0.1),
-                      headingSectorColor: Colors.blueAccent.withOpacity(0.8),
-                      headingSectorRadius: 50,
+                  children: [
+                    TileLayer(
+                      tileProvider:
+                          const FMTCStore('mapStore').getTileProvider(),
+                      keepBuffer: 100,
+                      urlTemplate:
+                          'https://api.mapbox.com/styles/v1/hamidaslami2/clob8flgd012t01qsdwnf70md/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaGFtaWRhc2xhbWkyIiwiYSI6ImNsbm9wcm5idjAyaWUya255enF0bmZyNnoifQ.eD-IuFdTBd9rDEgqyPyQEA',
                     ),
-                    moveAnimationDuration: Duration.zero, // disable animation
-                  ),
-                  MarkerLayer(
-                    markers: [
-                      ...scooters.map(
-                        (e) => Marker(
-                          width: 70,
-                          height: 70,
-                          point: e.location,
-                          child: GestureDetector(
-                            onTap: () {
-                              selecetScooter(e);
-                            },
-                            child: SvgPicture.asset(
-                              e.id == selectedScooter?.id
-                                  ? AssetsIcon.selectedPoint
-                                  : AssetsIcon.point,
+                    CurrentLocationLayer(
+                      alignPositionOnUpdate: AlignOnUpdate.once,
+                      alignDirectionOnUpdate: AlignOnUpdate.never,
+                      style: LocationMarkerStyle(
+                        marker: Container(
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.shade300,
+                                spreadRadius: 5,
+                                blurRadius: 5)
+                          ], color: Colors.white, shape: BoxShape.circle),
+                          child: Container(
+                            margin: const EdgeInsets.all(3),
+                            decoration: const BoxDecoration(
+                                color: Colors.blueAccent,
+                                shape: BoxShape.circle),
+                          ),
+                        ),
+                        markerSize: const Size.square(25),
+                        accuracyCircleColor: Colors.blueAccent.withOpacity(0.1),
+                        headingSectorColor: Colors.blueAccent.withOpacity(0.8),
+                        headingSectorRadius: 50,
+                      ),
+                      moveAnimationDuration: Duration.zero, // disable animation
+                    ),
+                    MarkerLayer(
+                      markers: [
+                        ...scooters.map(
+                          (e) => Marker(
+                            width: 70,
+                            height: 70,
+                            point: e.location,
+                            child: GestureDetector(
+                              onTap: () {
+                                selecetScooter(e);
+                              },
+                              child: SvgPicture.asset(
+                                e.id == selectedScooter?.id
+                                    ? AssetsIcon.selectedPoint
+                                    : AssetsIcon.point,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Positioned.fromRect(
-              rect: Rect.fromLTWH(0, 0, width, height * .12),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      ColorManager.white,
-                      ColorManager.white.withOpacity(.7),
-                      ColorManager.white.withOpacity(.3),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      SvgPicture.asset(
-                        AssetsIcon.coupon,
-                        color: ColorManager.primaryDark,
-                      ),
-                      SvgPicture.asset(
-                        AssetsImage.logo,
-                        width: width * .2,
-                        color: ColorManager.primaryDark,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          _scaffoldKey.currentState?.openDrawer();
-                        },
-                        child: SvgPicture.asset(
-                          AssetsIcon.menu,
+              ),
+              Positioned.fromRect(
+                rect: Rect.fromLTWH(0, 0, width, height * .12),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        ColorManager.white,
+                        ColorManager.white.withOpacity(.7),
+                        ColorManager.white.withOpacity(.3),
+                      ],
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SvgPicture.asset(
+                          AssetsIcon.coupon,
                           color: ColorManager.primaryDark,
                         ),
-                      ),
-                    ],
+                        SvgPicture.asset(
+                          AssetsImage.logo,
+                          width: width * .2,
+                          color: ColorManager.primaryDark,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _scaffoldKey.currentState?.openDrawer();
+                          },
+                          child: SvgPicture.asset(
+                            AssetsIcon.menu,
+                            color: ColorManager.primaryDark,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
+              Positioned(
+                  bottom: (selectedScooter == null)
+                      ? width * .08
+                      : width * .08 + bottomSheetHeight,
+                  right: width * .08,
+                  child: LowLevelCircleButton(
+                    AssetsIcon.code,
+                    height * .09,
+                    ColorManager.primaryDark,
+                    ColorManager.white,
+                    () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => QrCodePage(),
+                        ),
+                      );
+                    },
+                  )),
+              Positioned(
                 bottom: (selectedScooter == null)
                     ? width * .08
                     : width * .08 + bottomSheetHeight,
-                right: width * .08,
+                left: width * .08,
                 child: LowLevelCircleButton(
-                  AssetsIcon.code,
-                  height * .09,
-                  ColorManager.primaryDark,
+                  AssetsIcon.location,
+                  height * .06,
                   ColorManager.white,
-                )),
-            Positioned(
-              bottom: (selectedScooter == null)
-                  ? width * .08
-                  : width * .08 + bottomSheetHeight,
-              left: width * .08,
-              child: LowLevelCircleButton(
-                AssetsIcon.location,
-                height * .06,
-                ColorManager.white,
-                ColorManager.primaryDark,
+                  ColorManager.primaryDark,
+                  () {},
+                ),
               ),
-            ),
-          ],
-        ),
-        drawer: MainDrawer()
-      ),
+            ],
+          ),
+          drawer: MainDrawer()),
     );
   }
 

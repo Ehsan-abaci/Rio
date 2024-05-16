@@ -7,40 +7,46 @@ class LowLevelCircleButton extends StatelessWidget {
     this.size,
     this.bgColor,
     this.frColor,
+    this.onTap,
   );
+  void Function()? onTap;
   String image;
   double size;
   Color bgColor;
   Color frColor;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      padding: EdgeInsets.all(size / 3.6),
-      decoration: ShapeDecoration(
-        color: bgColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(size),
-        ),
-        shadows: const [
-          BoxShadow(
-            color: Color(0x11000000),
-            blurRadius: 8,
-            offset: Offset(0, 4),
-            spreadRadius: 0,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        
+        width: size,
+        height: size,
+        padding: EdgeInsets.all(size / 3.6),
+        decoration: ShapeDecoration(
+          color: bgColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(size),
           ),
-          BoxShadow(
-            color: Color(0x33000000),
-            blurRadius: 3,
-            offset: Offset(0, 1),
-            spreadRadius: 0,
-          )
-        ],
-      ),
-      child: SvgPicture.asset(
-        image,
-        color: frColor,
+          shadows: const [
+            BoxShadow(
+              color: Color(0x11000000),
+              blurRadius: 8,
+              offset: Offset(0, 4),
+              spreadRadius: 0,
+            ),
+            BoxShadow(
+              color: Color(0x33000000),
+              blurRadius: 3,
+              offset: Offset(0, 1),
+              spreadRadius: 0,
+            )
+          ],
+        ),
+        child: SvgPicture.asset(
+          image,
+          color: frColor,
+        ),
       ),
     );
   }

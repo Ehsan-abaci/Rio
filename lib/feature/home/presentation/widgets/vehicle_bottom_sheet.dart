@@ -80,6 +80,7 @@ class VehicleBottomSheet extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 CustomElevatedButton(
+                  onTap: () {},
                   content: "رزرو کن",
                   icon: AssetsIcon.reservation,
                   bgColor: ColorManager.primary,
@@ -90,6 +91,8 @@ class VehicleBottomSheet extends StatelessWidget {
                   height: height,
                 ),
                 CustomElevatedButton(
+                  onTap: () {},
+
                   content: "زنگ بزن",
                   icon: AssetsIcon.ring,
                   bgColor: ColorManager.surface,

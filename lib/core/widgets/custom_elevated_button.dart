@@ -13,6 +13,7 @@ class CustomElevatedButton extends StatelessWidget {
     required this.width,
     required this.height,
     this.fontSize = 18,
+    required this.onTap,
   });
 
   String content;
@@ -24,11 +25,13 @@ class CustomElevatedButton extends StatelessWidget {
   double fontSize;
   double width;
   double height;
+  void Function()? onTap;
+
   @override
   Widget build(BuildContext context) {
     return FittedBox(
       child: ElevatedButton(
-          onPressed: () {},
+          onPressed: onTap,
           style: ElevatedButton.styleFrom(
             backgroundColor: bgColor,
             foregroundColor: frColor,

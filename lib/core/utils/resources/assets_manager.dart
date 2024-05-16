@@ -20,4 +20,6 @@ class AssetsIcon {
   static const String history = "$ICON_PATH/History.svg";
   static const String payment = "$ICON_PATH/Payment.svg";
   static const String settings = "$ICON_PATH/Settings.svg";
+  static const String flashlight = "$ICON_PATH/Flashlight.svg";
+  static const String keyboard = "$ICON_PATH/Keyboard.svg";
 }

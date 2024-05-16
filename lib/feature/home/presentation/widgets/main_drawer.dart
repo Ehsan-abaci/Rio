@@ -31,7 +31,7 @@ class MainDrawer extends StatelessWidget {
                   right: width * .075,
                   top: height * .13,
                   height: height * .1,
-                  child: FittedBox(
+                  child: const FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,10 +47,9 @@ class MainDrawer extends StatelessWidget {
                         Text(
                           "امروز میخوای سواری کنی؟",
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400,
-                            wordSpacing: 3
-                          ),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                              wordSpacing: 3),
                         )
                       ],
                     ),
@@ -100,11 +99,10 @@ class MainDrawer extends StatelessWidget {
                                             child: Text(
                                               "اعتبار کیف پول RIO",
                                               style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                                wordSpacing: 2,
-                                                letterSpacing: 1
-                                              ),
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14,
+                                                  wordSpacing: 2,
+                                                  letterSpacing: 1),
                                             ),
                                           ),
                                           SizedBox(height: 10),
@@ -123,6 +121,7 @@ class MainDrawer extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 5),
                                   CustomElevatedButton(
+                                    onTap: (){},
                                     content: "افزایش اعتبار",
                                     fontSize: 12,
                                     bgColor: ColorManager.surfaceTertiary,
