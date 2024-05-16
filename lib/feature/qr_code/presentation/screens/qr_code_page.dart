@@ -8,6 +8,9 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
+import 'package:share_scooter/feature/home/presentation/widgets/reservation_modal.dart';
+import 'package:share_scooter/feature/home/presentation/widgets/ring_modal.dart';
+import 'package:share_scooter/feature/home/presentation/widgets/start_riding_modal.dart';
 
 class QrCodePage extends StatefulWidget {
   const QrCodePage({super.key});
@@ -58,7 +61,13 @@ class _QrCodePageState extends State<QrCodePage> {
                       );
                     }),
                 CustomElevatedButton(
-                  onTap: () {},
+                  onTap: () {
+                    showAdaptiveDialog(
+                      context: context,
+
+                      builder: (context) => StartRidingModal(),
+                    );
+                  },
                   content: "123",
                   icon: AssetsIcon.keyboard,
                   bgColor: Colors.transparent,
