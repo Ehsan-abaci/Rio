@@ -40,7 +40,7 @@ class ColorManager {
   static Color mediumEmphasis = HexColor.fromHexColor('#000000').withOpacity(.6);
   static Color lowEmphasis = HexColor.fromHexColor('000000 .38');
   static Color reversedEmphasis = HexColor.fromHexColor('FFFFFF');
-  static Color placeholder = HexColor.fromHexColor('8C8C8C');
+  static Color placeholder = HexColor.fromHexColor('#8C8C8C');
   static Color border = HexColor.fromHexColor('DBDBDB');
 }
 

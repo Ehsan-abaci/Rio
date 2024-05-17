@@ -23,4 +23,8 @@ class AssetsIcon {
   static const String flashlight = "$ICON_PATH/Flashlight.svg";
   static const String keyboard = "$ICON_PATH/Keyboard.svg";
   static const String start = "$ICON_PATH/Start.svg";
+  static const String back = "$ICON_PATH/Back.svg";
+  static const String clock = "$ICON_PATH/Clock.svg";
+  static const String distance = "$ICON_PATH/Distance.svg";
+  static const String right = "$ICON_PATH/Right.svg";
 }

@@ -28,7 +28,7 @@ class RingModal extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -40,6 +40,7 @@ class RingModal extends StatelessWidget {
                         color: ColorManager.primaryExtraLight,
                       ),
                     ),
+                    const SizedBox(height: 4),
                     Expanded(
                       child: Text(
                         "اسکوتر درحال زنگ خوردنه",
@@ -65,15 +66,13 @@ class RingModal extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(
-              height: 0,
-            ),
+            const Divider(height: 0),
             Expanded(
               flex: 1,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 10),
+                 const SizedBox(width: 10),
                   CustomElevatedButton(
                     content: "توقف هشدار",
                     fontSize: 16,
