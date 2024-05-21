@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
+import 'package:share_scooter/feature/home/presentation/blocs/ride/ride_bloc.dart';
 import 'package:share_scooter/feature/home/presentation/screens/map_page.dart';
-import 'package:share_scooter/feature/ride_histories/presentation/screens/ride_history_page.dart';
+import 'package:share_scooter/locator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await initAppMoudule();
 
   await FMTCObjectBoxBackend().initialise();
 
@@ -28,26 +32,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => RideBloc(),
+        ),
       ],
-      locale: const Locale('fa', "IR"),
-      supportedLocales: const [
-        Locale('fa', "IR"),
-        Locale('en', "US"),
-      ],
-      
-      title: 'RIO',
-      themeMode: ThemeMode.light,
-      theme: ThemeData(
-        fontFamily: "Vazir",
-        useMaterial3: true,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        locale: const Locale('fa', "IR"),
+        supportedLocales: const [
+          Locale('fa', "IR"),
+          Locale('en', "US"),
+        ],
+        title: 'RIO',
+        themeMode: ThemeMode.light,
+        theme: ThemeData(
+          fontFamily: "Vazir",
+          useMaterial3: true,
+        ),
+        home: MapPage(),
       ),
-      home: RideHistoriesPage(),
     );
   }
 }

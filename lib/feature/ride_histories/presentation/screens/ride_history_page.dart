@@ -1,8 +1,27 @@
+import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
+import 'package:share_scooter/locator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class RideHistory {
+  Duration duration;
+  String distance;
+  double price;
+  Uint8List? image;
+  RideHistory({
+    required this.duration,
+    required this.distance,
+    required this.price,
+    this.image,
+  });
+}
 
 class RideHistoriesPage extends StatefulWidget {
   const RideHistoriesPage({super.key});
@@ -12,6 +31,25 @@ class RideHistoriesPage extends StatefulWidget {
 }
 
 class _RideHistoriesPageState extends State<RideHistoriesPage> {
+  List<RideHistory> _rideHistories = [];
+  final sp = di<SharedPreferences>();
+  @override
+  void initState() {
+    List<dynamic> rawData = jsonDecode(sp.getString('ride_image') ?? '[]');
+
+    _rideHistories = rawData.map(
+      (e) {
+        return RideHistory(
+          distance: "6",
+          duration: const Duration(minutes: 18),
+          price: 4000,
+          image: Uint8List.fromList(List<int>.from(e)),
+        );
+      },
+    ).toList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,11 +85,14 @@ class _RideHistoriesPageState extends State<RideHistoriesPage> {
         ),
         child: ListView(
           children: [
-            RideHistoryItem(),
-            RideHistoryItem(),
-            RideHistoryItem(),
-            RideHistoryItem(),
-            RideHistoryItem(),
+            ..._rideHistories.map(
+              (e) => RideHistoryItem(
+                duration: e.duration,
+                distance: e.distance,
+                price: e.price,
+                image: e.image,
+              ),
+            ),
           ],
         ),
       ),
@@ -60,7 +101,20 @@ class _RideHistoriesPageState extends State<RideHistoriesPage> {
 }
 
 class RideHistoryItem extends StatelessWidget {
-  const RideHistoryItem({super.key});
+  RideHistoryItem({
+    super.key,
+    // required this.date,
+    required this.duration,
+    required this.distance,
+    required this.price,
+    required this.image,
+  });
+
+  // DateTime date;
+  Duration duration;
+  String distance;
+  double price;
+  Uint8List? image;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +136,33 @@ class RideHistoryItem extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: Placeholder(),
+                  child: Stack(
+                    children: [
+                      (image != null)
+                          ? Image.memory(
+                              image!,
+                              fit: BoxFit.cover,
+                              width: 500,
+                            )
+                          : Placeholder(),
+                      Positioned(
+                        left: 10,
+                        bottom: 10,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: ColorManager.appBg,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: SvgPicture.asset(
+                            AssetsIcon.scooterAlt,
+                            fit: BoxFit.scaleDown,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Expanded(
                   flex: 2,
@@ -127,9 +207,6 @@ class RideHistoryItem extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                    // Text(
-                                    //   "28 شهریور 1403    19:12",
-                                    // ),
                                     SizedBox(height: height * .02),
                                     Row(
                                       mainAxisAlignment:
@@ -146,7 +223,7 @@ class RideHistoryItem extends StatelessWidget {
                                             ),
                                             SizedBox(width: 2),
                                             Text(
-                                              "18 دقیقه",
+                                              "${duration.inMinutes} دقیقه",
                                               style: TextStyle(
                                                   color:
                                                       ColorManager.placeholder,
@@ -166,7 +243,7 @@ class RideHistoryItem extends StatelessWidget {
                                             ),
                                             SizedBox(width: 2),
                                             Text(
-                                              "6KM",
+                                              "${distance}KM",
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: ColorManager.placeholder,
@@ -194,8 +271,9 @@ class RideHistoryItem extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       textDirection: TextDirection.ltr,
-                                      "4.000000000",
+                                      price.toStringAsFixed(0).to3Dot(),
                                       style: TextStyle(
+                                        fontSize: 12,
                                         overflow: TextOverflow.ellipsis,
                                         color: ColorManager.primary,
                                         fontWeight: FontWeight.w500,
@@ -227,5 +305,20 @@ class RideHistoryItem extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension PriceChanger on String {
+  String to3Dot() {
+    String res = '';
+    int k = 0;
+    for (int i = length - 1; i >= 0; i--) {
+      res = this[i] + res;
+      k++;
+      if (k % 3 == 0 && length != k) {
+        res = ",$res";
+      }
+    }
+    return res;
   }
 }

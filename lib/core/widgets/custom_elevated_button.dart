@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomElevatedButton extends StatelessWidget {
@@ -11,7 +13,6 @@ class CustomElevatedButton extends StatelessWidget {
     required this.borderRadius,
     this.borderColor,
     required this.width,
-    required this.height,
     this.fontSize = 18,
     required this.onTap,
   });
@@ -24,11 +25,11 @@ class CustomElevatedButton extends StatelessWidget {
   Color? borderColor;
   double fontSize;
   double width;
-  double height;
   void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height;
     return FittedBox(
       child: ElevatedButton(
           onPressed: onTap,
@@ -37,8 +38,9 @@ class CustomElevatedButton extends StatelessWidget {
             foregroundColor: frColor,
             surfaceTintColor: bgColor,
             elevation: 0,
-            fixedSize: Size(width / 2.5, height * .07),
-            padding: EdgeInsets.zero,
+            fixedSize: Size(width / 2, height * 0.06),
+            padding: EdgeInsets.symmetric(
+                vertical: height * .01, horizontal: width * .02),
             shape: RoundedRectangleBorder(
               side: BorderSide(
                 color: borderColor ?? Colors.transparent,
@@ -48,25 +50,38 @@ class CustomElevatedButton extends StatelessWidget {
               ),
             ),
           ),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Row(
-              children: [
-                if (icon != null)
-                  SvgPicture.asset(
-                    icon!,
-                    color: frColor,
+          child: Align(
+            alignment: Alignment.center,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                children: [
+                  if (icon != null)
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          icon!,
+                          color: frColor,
+                        ),
+                        const SizedBox(width: 5),
+                      ],
+                    ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FittedBox(
+                      child: Text(
+                        content,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: fontSize,
+                          color: frColor,
+                        ),
+                      ),
+                    ),
                   ),
-                SizedBox(width: 5),
-                Text(
-                  content,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: fontSize,
-                    color: frColor,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           )),
     );

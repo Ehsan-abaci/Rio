@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
+import 'package:share_scooter/feature/ride_histories/presentation/screens/ride_history_page.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
@@ -45,11 +46,11 @@ class MainDrawer extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "امروز میخوای سواری کنی؟",
+                          "امروز با ریو میخوای سواری داشته یاشی؟",
                           style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
-                              wordSpacing: 3),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                          ),
                         )
                       ],
                     ),
@@ -97,7 +98,7 @@ class MainDrawer extends StatelessWidget {
                                         children: [
                                           FittedBox(
                                             child: Text(
-                                              "اعتبار کیف پول RIO",
+                                              "اعتبار کیف پول شما",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 14,
@@ -108,7 +109,7 @@ class MainDrawer extends StatelessWidget {
                                           SizedBox(height: 10),
                                           FittedBox(
                                             child: Text(
-                                              "50,000 هزارتومان",
+                                              "50,000 تومان (T)",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w800,
                                                 fontSize: 20,
@@ -121,14 +122,13 @@ class MainDrawer extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 5),
                                   CustomElevatedButton(
-                                    onTap: (){},
-                                    content: "افزایش اعتبار",
-                                    fontSize: 12,
+                                    onTap: () {},
+                                    content: "شارژ",
+                                    fontSize: 16,
                                     bgColor: ColorManager.surfaceTertiary,
                                     frColor: Colors.black,
                                     borderRadius: 12,
-                                    width: width * .5,
-                                    height: height * .1,
+                                    width: width * .4,
                                   ),
                                 ],
                               ),
@@ -146,31 +146,35 @@ class MainDrawer extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                ListTile(
-                  leading: SvgPicture.asset(
-                    AssetsIcon.history,
-                  ),
-                  title: const Text(
-                    "تاریخچه سواری",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
+                MenuListTile(
+                  title: "تاریخچه سواری",
+                  icon: AssetsIcon.history,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RideHistoriesPage(),
                     ),
                   ),
                 ),
-                ListTile(
-                  leading: SvgPicture.asset(
-                    AssetsIcon.payment,
-                  ),
-                  title: const Text(
-                    "روش های پرداخت",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                    ),
-                  ),
+                MenuListTile(
+                  title: "پرداخت اعتباری",
+                  icon: AssetsIcon.payment,
+                  onTap: () {},
+                ),
+                MenuListTile(
+                  title: "اعتبار معرفی به دوستان",
+                  icon: AssetsIcon.earn,
+                  onTap: () {},
+                ),
+                MenuListTile(
+                  title: "کارت هدیه",
+                  icon: AssetsIcon.gift,
+                  onTap: () {},
+                ),
+                MenuListTile(
+                  title: "راهنمای ریو",
+                  icon: AssetsIcon.help,
+                  onTap: () {},
                 ),
                 const Divider(),
                 ListTile(
@@ -190,6 +194,42 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class MenuListTile extends StatelessWidget {
+  MenuListTile({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.onTap,
+  });
+  String title;
+  String icon;
+  void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: SvgPicture.asset(
+        icon,
+      ),
+      onTap: onTap,
+      title: Align(
+        alignment: Alignment.bottomRight,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+              fontSize: 17,
+            ),
+          ),
+        ),
       ),
     );
   }

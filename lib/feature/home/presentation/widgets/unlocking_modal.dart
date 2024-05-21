@@ -1,14 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/feature/home/presentation/blocs/ride/ride_bloc.dart';
-import 'package:share_scooter/feature/home/presentation/screens/map_page.dart';
+import 'package:share_scooter/feature/home/presentation/widgets/start_riding_modal.dart';
 
-class StartRidingModal extends StatelessWidget {
-  const StartRidingModal({super.key});
+class UnlockingModal extends StatefulWidget {
+  const UnlockingModal({super.key});
+
+  @override
+  State<UnlockingModal> createState() => _UnlockingModalState();
+}
+
+class _UnlockingModalState extends State<UnlockingModal> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 2)).then(
+      (_) {
+        if (mounted) {
+          context.read<RideBloc>().add(SetReadyToRide());
+          Navigator.pop(context);
+          showAdaptiveDialog(
+            context: context,
+            builder: (context) => StartRidingModal(),
+          );
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,18 +63,18 @@ class StartRidingModal extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: SvgPicture.asset(
-                          AssetsIcon.start,
+                          AssetsIcon.unlocked,
                           height: 32,
                           color: ColorManager.primaryExtraLight,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 4),
                     Expanded(
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          "بزن بریم !",
+                          "باز کردن قفل اسکوتر...",
                           style: TextStyle(
                             color: ColorManager.highEmphasis,
                             fontWeight: FontWeight.w600,
@@ -65,11 +87,11 @@ class StartRidingModal extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        "قفل الکترونیکی دستگاه باز شده و همین حالا میتونی از سواری لذت ببری.",
+                        "گوشی را نزدیک اسکوتر نگه دارید و تا زمان نمایش پیام شروع سواری منتظر بمانید.",
                         style: TextStyle(
                           color: ColorManager.mediumEmphasis,
                           fontWeight: FontWeight.w400,
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -77,22 +99,21 @@ class StartRidingModal extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(
-              height: 0,
-            ),
+            const Divider(height: 0),
             Expanded(
               flex: 1,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   CustomElevatedButton(
-                    content: "شروع سواری",
+                    content: "لغو",
                     fontSize: 16,
-                    bgColor: ColorManager.surfacePrimary,
+                    bgColor: ColorManager.surface,
                     frColor: ColorManager.primaryDark,
+                    borderColor: ColorManager.border,
                     borderRadius: 8,
-                    width: width * .7,
+                    width: width * .3,
                     onTap: () {
                       Navigator.pop(context);
                     },

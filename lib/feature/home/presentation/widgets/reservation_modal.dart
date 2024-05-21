@@ -1,9 +1,13 @@
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
+import 'package:share_scooter/feature/home/presentation/blocs/ride/ride_bloc.dart';
+import 'package:share_scooter/feature/home/presentation/widgets/ring_modal.dart';
 
 class ReservationModal extends StatelessWidget {
   const ReservationModal({super.key});
@@ -29,38 +33,65 @@ class ReservationModal extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.symmetric(
+                    vertical: height * .01, horizontal: width * .04),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Expanded(
-                      child: SvgPicture.asset(
-                        AssetsIcon.reservation,
-                        height: 32,
-                        color: ColorManager.primaryExtraLight,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: SvgPicture.asset(
+                          AssetsIcon.reservation,
+                          height: 32,
+                          color: ColorManager.primaryExtraLight,
+                        ),
                       ),
                     ),
                     SizedBox(height: 4),
                     Expanded(
                       child: FittedBox(
+                        fit: BoxFit.scaleDown,
                         child: Text(
-                          "بیا الان رزروش کن",
+                          "تاییدیه رزرو",
                           style: TextStyle(
-                              color: ColorManager.highEmphasis,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
+                            color: ColorManager.highEmphasis,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ),
+                    const SizedBox(height: 4),
                     Expanded(
                       flex: 2,
-                      child: Text(
-                        "رزروشرزروشرزروشرزروشرزروشرزروشرزروشرزروشبیا الان رزروش کن",
-                        style: TextStyle(
-                          color: ColorManager.mediumEmphasis,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
+                      child: RichText(
+                        text: TextSpan(
+                          text: "رزرو اسکوتر با هزینه ",
+                          style: TextStyle(
+                            color: ColorManager.mediumEmphasis,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: "500 T/min",
+                              style: TextStyle(
+                                color: ColorManager.success,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                              ),
+                            ),
+                            TextSpan(
+                              text: " را تائید نمائید.",
+                              style: TextStyle(
+                                color: ColorManager.mediumEmphasis,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),
@@ -68,36 +99,49 @@ class ReservationModal extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(height: 0,),
+            Divider(
+              height: 0,
+            ),
             Expanded(
               flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(width: 10),
-                  CustomElevatedButton(
-                    content: "رزرو کردن",
-                    fontSize: 16,
-                    bgColor: ColorManager.surfacePrimary,
-                    frColor: ColorManager.primaryDark,
-                    borderRadius: 8,
-                    width: width * .6,
-                    height: height * .5,
-                    onTap: () {},
-                  ),
-                  SizedBox(width: 10),
-                  CustomElevatedButton(
-                    content: "لغو کردن",
-                    fontSize: 16,
-                    bgColor: ColorManager.surface,
-                    frColor: ColorManager.primaryDark,
-                    borderColor: ColorManager.border,
-                    borderRadius: 8,
-                    width: width * .6,
-                    height: height * .5,
-                    onTap: () {},
-                  ),
-                ],
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 10),
+                    CustomElevatedButton(
+                      content: "تائید",
+                      fontSize: 16,
+                      bgColor: ColorManager.surfacePrimary,
+                      frColor: ColorManager.primaryDark,
+                      borderRadius: 8,
+                      width: width * .4,
+                      onTap: () {
+                        context.read<RideBloc>().add(SetReserved());
+                        Navigator.pop(context);
+                        showAdaptiveDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => RingModal(),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 10),
+                    CustomElevatedButton(
+                      content: "لغو",
+                      fontSize: 16,
+                      bgColor: ColorManager.surface,
+                      frColor: ColorManager.primaryDark,
+                      borderColor: ColorManager.border,
+                      borderRadius: 8,
+                      width: width * .4,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

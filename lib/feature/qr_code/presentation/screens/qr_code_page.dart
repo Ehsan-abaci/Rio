@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
@@ -35,6 +36,42 @@ class _QrCodePageState extends State<QrCodePage> {
           Positioned(
             left: 0,
             right: 0,
+            top: 0,
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              leading: SvgPicture.asset(
+                AssetsIcon.back,
+                matchTextDirection: true,
+                fit: BoxFit.scaleDown,
+                color: ColorManager.surface,
+              ),
+              title: SvgPicture.asset(
+                AssetsImage.logo,
+                color: ColorManager.reversedEmphasis,
+                fit: BoxFit.scaleDown,
+                width: 70,
+              ),
+              centerTitle: true,
+            ),
+          ),
+          Positioned(
+            top: height * .2,
+            left: width * .03,
+            right: width * .03,
+            child: FittedBox(
+              child: Text(
+                " کد QR روی اسکوتر را برای شروع  اسکن کنید",
+                style: TextStyle(
+                    color: ColorManager.surface,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
             bottom: height * .05,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -44,7 +81,7 @@ class _QrCodePageState extends State<QrCodePage> {
                     builder: (context, snapshot) {
                       var isTurnedOn = snapshot.data ?? false;
                       return CustomElevatedButton(
-                        content: "چراغ قوه",
+                        content: "فلاش گوشی",
                         onTap: () async {
                           await controller?.toggleFlash();
                           setState(() {});
@@ -56,26 +93,18 @@ class _QrCodePageState extends State<QrCodePage> {
                         frColor: ColorManager.surface,
                         borderRadius: 12,
                         borderColor: ColorManager.border,
-                        width: width,
-                        height: height,
+                        width: width * .8,
                       );
                     }),
                 CustomElevatedButton(
-                  onTap: () {
-                    showAdaptiveDialog(
-                      context: context,
-
-                      builder: (context) => StartRidingModal(),
-                    );
-                  },
-                  content: "123",
+                  onTap: () {},
+                  content: "کد دستگاه",
                   icon: AssetsIcon.keyboard,
                   bgColor: Colors.transparent,
                   frColor: ColorManager.surface,
                   borderRadius: 12,
                   borderColor: ColorManager.border,
-                  width: width,
-                  height: height,
+                  width: width * .8,
                 )
               ],
             ),
