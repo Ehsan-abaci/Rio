@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
-import 'package:share_scooter/feature/home/presentation/blocs/ride/ride_bloc.dart';
+import 'package:share_scooter/feature/home/presentation/blocs/bloc/ride_bloc.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/ring_modal.dart';
 
 class ReservationModal extends StatelessWidget {
@@ -118,7 +118,7 @@ class ReservationModal extends StatelessWidget {
                       borderRadius: 8,
                       width: width * .4,
                       onTap: () {
-                        context.read<RideBloc>().add(SetReserved());
+                        context.read<RideBloc>().add(ReservedEvent());
                         Navigator.pop(context);
                         showAdaptiveDialog(
                           context: context,

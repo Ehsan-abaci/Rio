@@ -35,4 +35,5 @@ class AssetsIcon {
   static const String vehicleBox = "$ICON_PATH/Vehicle box.svg";
   static const String play = "$ICON_PATH/Play.svg";
   static const String pause = "$ICON_PATH/Pause.svg";
+  static const String navigation = "$ICON_PATH/Navigation.svg";
 }

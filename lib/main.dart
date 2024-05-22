@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
-import 'package:share_scooter/feature/home/presentation/blocs/ride/ride_bloc.dart';
+import 'package:share_scooter/feature/home/presentation/blocs/bloc/ride_bloc.dart';
 import 'package:share_scooter/feature/home/presentation/screens/map_page.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => RideBloc(),
-        ),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

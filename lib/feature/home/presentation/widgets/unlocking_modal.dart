@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
-import 'package:share_scooter/feature/home/presentation/blocs/ride/ride_bloc.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/start_riding_modal.dart';
 
 class UnlockingModal extends StatefulWidget {
@@ -21,7 +20,7 @@ class _UnlockingModalState extends State<UnlockingModal> {
     Future.delayed(const Duration(seconds: 2)).then(
       (_) {
         if (mounted) {
-          context.read<RideBloc>().add(SetReadyToRide());
+          // context.read<RideBloc>().add(SetReadyToRide());
           Navigator.pop(context);
           showAdaptiveDialog(
             context: context,

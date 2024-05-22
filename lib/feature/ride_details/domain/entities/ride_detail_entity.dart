@@ -20,15 +20,15 @@ class RideDetailEntity extends Equatable {
     this.rideId,
     required this.scooter,
     required this.startTime,
-     this.endTime,
-     this.duration,
+    this.endTime,
+    this.duration,
     this.reservationCost = 1000,
-     this.ridingCost,
+    required this.ridingCost,
   }) {
     rideId = uuid.v4();
     tax = ridingCost != null ? (reservationCost + ridingCost!) * .1 : null;
     totalCost =
-        ridingCost != null ? (reservationCost + ridingCost! + tax!) : null;
+        ridingCost != null ? (reservationCost + ridingCost!) : null;
   }
 
   List<Object?> get props => [
