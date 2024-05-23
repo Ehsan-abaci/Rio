@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../signup/presentation/screens/signup_page.dart';
@@ -14,8 +15,10 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (BuildContext context) => const SignupPage()));
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => const SignupPage()));
     });
     super.initState();
   }
@@ -24,24 +27,24 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: SvgPicture.asset(
-                  AssetsImage.bg,
-                  fit: BoxFit.fill,
-                ),
-              ),
-              Center(
-                child: Positioned.fill(
-                  child: SvgPicture.asset(
-                    AssetsImage.logo,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-            ],
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: SvgPicture.asset(
+              AssetsImage.bg,
+              fit: BoxFit.fill,
+            ),
           ),
-        ));
+          Align(
+            alignment: Alignment.center,
+            child: SvgPicture.asset(
+              AssetsImage.logo,
+              fit: BoxFit.scaleDown,
+              width: MediaQuery.sizeOf(context).width * .4,
+            ),
+          ),
+        ],
+      ),
+    ));
   }
 }
