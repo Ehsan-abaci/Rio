@@ -345,6 +345,7 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
                     },
                   ),
                 ),
+                if(state is RideInitial || state is RideFirst || state is RideReserving)
                 Positioned(
                   bottom: (bottomSheet == null)
                       ? width * .08
