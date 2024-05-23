@@ -29,15 +29,15 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
               Positioned.fill(
                 child: SvgPicture.asset(
                   AssetsImage.bg,
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                 ),
               ),
-              Center(
-                child: Positioned.fill(
-                  child: SvgPicture.asset(
-                    AssetsImage.logo,
-                    fit: BoxFit.fill,
-                  ),
+              Align(
+                alignment: Alignment.center,
+                child: SvgPicture.asset(
+                  AssetsImage.logo,
+                  fit: BoxFit.scaleDown,
+                  width: MediaQuery.sizeOf(context).width * .4,
                 ),
               ),
             ],
