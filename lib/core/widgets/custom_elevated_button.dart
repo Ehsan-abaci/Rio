@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomElevatedButton extends StatelessWidget {
-  CustomElevatedButton({
+ const CustomElevatedButton({
     super.key,
     required this.content,
     this.icon,
@@ -17,15 +17,15 @@ class CustomElevatedButton extends StatelessWidget {
     required this.onTap,
   });
 
-  String content;
-  String? icon;
-  Color bgColor;
-  Color frColor;
-  double borderRadius;
-  Color? borderColor;
-  double fontSize;
-  double width;
-  void Function()? onTap;
+  final String content;
+  final String? icon;
+  final Color bgColor;
+  final Color frColor;
+  final double borderRadius;
+  final Color? borderColor;
+  final double fontSize;
+  final double width;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +38,9 @@ class CustomElevatedButton extends StatelessWidget {
             foregroundColor: frColor,
             surfaceTintColor: bgColor,
             elevation: 0,
-            fixedSize: Size(width / 2, height * 0.06),
+            fixedSize: Size(width, height * 0.06),
             padding: EdgeInsets.symmetric(
-                vertical: height * .01, horizontal: width * .02),
+                vertical: height * .01, horizontal: width * .04),
             shape: RoundedRectangleBorder(
               side: BorderSide(
                 color: borderColor ?? Colors.transparent,

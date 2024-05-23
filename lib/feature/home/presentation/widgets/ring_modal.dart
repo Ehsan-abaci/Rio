@@ -115,7 +115,7 @@ class _RingModalState extends State<RingModal> {
                       bgColor: ColorManager.surfacePrimary,
                       frColor: ColorManager.primaryDark,
                       borderRadius: 8,
-                      width: width * .6,
+                      width: width * .3,
                       onTap: () {
                         Navigator.pop(context);
                         showAdaptiveDialog(

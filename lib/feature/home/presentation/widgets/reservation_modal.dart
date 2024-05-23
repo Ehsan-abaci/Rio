@@ -49,7 +49,7 @@ class ReservationModal extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Expanded(
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
@@ -99,9 +99,7 @@ class ReservationModal extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(
-              height: 0,
-            ),
+            const Divider(height: 0),
             Expanded(
               flex: 1,
               child: FittedBox(
@@ -109,21 +107,21 @@ class ReservationModal extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     CustomElevatedButton(
                       content: "تائید",
                       fontSize: 16,
                       bgColor: ColorManager.surfacePrimary,
                       frColor: ColorManager.primaryDark,
                       borderRadius: 8,
-                      width: width * .4,
+                      width: width * .2,
                       onTap: () {
                         context.read<RideBloc>().add(ReservedEvent());
                         Navigator.pop(context);
                         showAdaptiveDialog(
                           context: context,
                           barrierDismissible: false,
-                          builder: (context) => RingModal(),
+                          builder: (context) => const RingModal(),
                         );
                       },
                     ),
@@ -135,7 +133,7 @@ class ReservationModal extends StatelessWidget {
                       frColor: ColorManager.primaryDark,
                       borderColor: ColorManager.border,
                       borderRadius: 8,
-                      width: width * .4,
+                      width: width * .2,
                       onTap: () {
                         Navigator.pop(context);
                       },

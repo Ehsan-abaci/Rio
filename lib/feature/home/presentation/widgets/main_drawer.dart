@@ -128,7 +128,7 @@ class MainDrawer extends StatelessWidget {
                                     bgColor: ColorManager.surfaceTertiary,
                                     frColor: Colors.black,
                                     borderRadius: 12,
-                                    width: width * .4,
+                                    width: width * .2,
                                   ),
                                 ],
                               ),

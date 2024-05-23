@@ -112,7 +112,7 @@ class _UnlockingModalState extends State<UnlockingModal> {
                     frColor: ColorManager.primaryDark,
                     borderColor: ColorManager.border,
                     borderRadius: 8,
-                    width: width * .3,
+                    width: width * .15,
                     onTap: () {
                       Navigator.pop(context);
                     },

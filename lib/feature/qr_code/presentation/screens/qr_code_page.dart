@@ -93,7 +93,7 @@ class _QrCodePageState extends State<QrCodePage> {
                         frColor: ColorManager.surface,
                         borderRadius: 12,
                         borderColor: ColorManager.border,
-                        width: width * .8,
+                        width: width * .4,
                       );
                     }),
                 CustomElevatedButton(
@@ -104,7 +104,7 @@ class _QrCodePageState extends State<QrCodePage> {
                   frColor: ColorManager.surface,
                   borderRadius: 12,
                   borderColor: ColorManager.border,
-                  width: width * .8,
+                  width: width * .4,
                 )
               ],
             ),

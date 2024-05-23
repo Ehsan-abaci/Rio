@@ -188,7 +188,7 @@ class ReserveBottomSheetButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         CustomElevatedButton(
           onTap: () {},
@@ -198,7 +198,7 @@ class ReserveBottomSheetButtons extends StatelessWidget {
           frColor: ColorManager.primaryDark,
           borderRadius: 12,
           borderColor: ColorManager.border,
-          width: width * .8,
+          width: width * .4,
         ),
         CustomElevatedButton(
           onTap: () {
@@ -214,7 +214,7 @@ class ReserveBottomSheetButtons extends StatelessWidget {
           frColor: ColorManager.white,
           borderRadius: 12,
           borderColor: ColorManager.border,
-          width: width * .8,
+          width: width * .4,
         ),
       ],
     );
@@ -235,7 +235,7 @@ class StartBottomSheetButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         CustomElevatedButton(
           onTap: () {},
@@ -244,7 +244,7 @@ class StartBottomSheetButtons extends StatelessWidget {
           frColor: ColorManager.white,
           borderRadius: 12,
           borderColor: ColorManager.border,
-          width: width * .8,
+          width: width * .4,
         ),
         CustomElevatedButton(
           onTap: () {
@@ -256,7 +256,7 @@ class StartBottomSheetButtons extends StatelessWidget {
           frColor: ColorManager.primaryDark,
           borderRadius: 12,
           borderColor: ColorManager.border,
-          width: width * .8,
+          width: width * .4,
         ),
       ],
     );
@@ -275,7 +275,7 @@ class PausedBottomSheetButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         CustomElevatedButton(
           onTap: () {
@@ -287,7 +287,7 @@ class PausedBottomSheetButtons extends StatelessWidget {
           frColor: ColorManager.white,
           borderRadius: 12,
           borderColor: ColorManager.border,
-          width: width * .8,
+          width: width * .4,
         ),
         CustomElevatedButton(
           onTap: () {
@@ -298,7 +298,7 @@ class PausedBottomSheetButtons extends StatelessWidget {
           frColor: ColorManager.primaryDark,
           borderRadius: 12,
           borderColor: ColorManager.border,
-          width: width * .8,
+          width: width * .4,
         ),
       ],
     );
@@ -317,7 +317,7 @@ class RidingBottomSheetButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         CustomElevatedButton(
           onTap: () {
@@ -329,7 +329,7 @@ class RidingBottomSheetButtons extends StatelessWidget {
           frColor: ColorManager.white,
           borderRadius: 12,
           borderColor: ColorManager.border,
-          width: width * .8,
+          width: width * .4,
         ),
         CustomElevatedButton(
           onTap: () {},
@@ -338,7 +338,7 @@ class RidingBottomSheetButtons extends StatelessWidget {
           frColor: ColorManager.primaryDark,
           borderRadius: 12,
           borderColor: ColorManager.border,
-          width: width * .8,
+          width: width * .4,
         ),
       ],
     );

@@ -76,22 +76,20 @@ class StartRidingModal extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(
-              height: 0,
-            ),
+           const Divider(height: 0),
             Expanded(
               flex: 1,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 10),
+                 const SizedBox(width: 10),
                   CustomElevatedButton(
                     content: "شروع سواری",
                     fontSize: 16,
                     bgColor: ColorManager.surfacePrimary,
                     frColor: ColorManager.primaryDark,
                     borderRadius: 8,
-                    width: width * .7,
+                    width: width * .35,
                     onTap: () {
                       Navigator.pop(context);
                     },
