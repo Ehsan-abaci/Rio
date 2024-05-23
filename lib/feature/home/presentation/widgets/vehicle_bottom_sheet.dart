@@ -95,12 +95,14 @@ class _VehicleBottomSheetState extends State<VehicleBottomSheet> {
                                 SizedBox(height: 10),
                                 FittedBox(
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "شماره دستگاه : ${selectedScooter.id} ",
                                         style: TextStyle(
                                           fontSize: 16,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w500,
                                           color: ColorManager.mediumEmphasis,
                                         ),
                                       ),
@@ -112,18 +114,41 @@ class _VehicleBottomSheetState extends State<VehicleBottomSheet> {
                                             (_) => _stopwatch.elapsed,
                                           ),
                                           builder: (context, snapshot) {
-                                            if (!snapshot.hasData)
-                                              return SizedBox();
-                                            return Text(
-                                              snapshot.data!.toMs(),
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w400,
-                                                color: state is RideInProgress
-                                                    ? ColorManager.success
-                                                    : ColorManager.danger,
-                                              ),
-                                            );
+                                            if (snapshot.hasData) {
+                                              return FittedBox(
+                                                child: RichText(
+                                                  text: TextSpan(
+                                                    text: " •  ",
+                                                    style: TextStyle(
+                                                      color: ColorManager
+                                                          .mediumEmphasis,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                    children: [
+                                                      TextSpan(
+                                                        text: snapshot.data!
+                                                            .toMs(),
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: state
+                                                                  is RideInProgress
+                                                              ? ColorManager
+                                                                  .success
+                                                              : ColorManager
+                                                                  .danger,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              return const SizedBox();
+                                            }
                                           },
                                         ),
                                     ],

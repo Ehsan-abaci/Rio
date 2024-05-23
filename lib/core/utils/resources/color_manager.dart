@@ -22,13 +22,13 @@ class ColorManager {
 
 // Background colors
   static Color appBg = HexColor.fromHexColor('#F5F5F5');
-  static Color overlay = HexColor.fromHexColor('#000000 .8');
-  static Color inputBg = HexColor.fromHexColor('#DADADA .8');
+  static Color overlay = HexColor.fromHexColor('#000000').withOpacity(.8);
+  static Color inputBg = HexColor.fromHexColor('#DADADA').withOpacity(.8);
   static Color surface = HexColor.fromHexColor('#FFFFFF');
   static Color surfaceTertiary = HexColor.fromHexColor('#000000').withOpacity(.06);
   static Color surfaceTertiaryReverse = HexColor.fromHexColor('#FFFFFF').withOpacity(0.6);
   static Color surfacePrimary = HexColor.fromHexColor('#EEE5FF');
-  static Color surfacePrimaryBlur = HexColor.fromHexColor('#5200FF .07');
+  static Color surfacePrimaryBlur = HexColor.fromHexColor('#5200FF').withOpacity(.07);
   static Color surfaceSuccess = HexColor.fromHexColor('#F0FFF1');
   static Color surfaceWarning = HexColor.fromHexColor('#FFFBED');
   static Color surfaceDanger = HexColor.fromHexColor('#FFE5E5');
@@ -38,7 +38,7 @@ class ColorManager {
 
   static Color highEmphasis = HexColor.fromHexColor('#000000').withOpacity(.87);
   static Color mediumEmphasis = HexColor.fromHexColor('#000000').withOpacity(.6);
-  static Color lowEmphasis = HexColor.fromHexColor('000000 .38');
+  static Color lowEmphasis = HexColor.fromHexColor('000000').withOpacity(.38);
   static Color reversedEmphasis = HexColor.fromHexColor('FFFFFF');
   static Color placeholder = HexColor.fromHexColor('#8C8C8C');
   static Color border = HexColor.fromHexColor('DBDBDB');

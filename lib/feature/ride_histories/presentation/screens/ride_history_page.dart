@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:share_scooter/core/utils/extensions.dart';
 
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
@@ -308,17 +309,3 @@ class RideHistoryItem extends StatelessWidget {
   }
 }
 
-extension PriceChanger on String {
-  String to3Dot() {
-    String res = '';
-    int k = 0;
-    for (int i = length - 1; i >= 0; i--) {
-      res = this[i] + res;
-      k++;
-      if (k % 3 == 0 && length != k) {
-        res = ",$res";
-      }
-    }
-    return res;
-  }
-}

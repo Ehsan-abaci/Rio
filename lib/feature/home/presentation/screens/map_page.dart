@@ -81,7 +81,6 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
     }
   }
 
-
   @override
   void dispose() {
     mapController.dispose();
@@ -203,26 +202,53 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
                           moveAnimationDuration:
                               Duration.zero, // disable animation
                         ),
-                        MarkerLayer(
-                          markers: [
-                            ...scooters.map(
-                              (e) => Marker(
-                                width: 70,
-                                height: 70,
-                                point: e.location,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    selecetScooter(e);
-                                  },
-                                  child: SvgPicture.asset(
-                                    e.id == selectedScooter?.id
-                                        ? AssetsIcon.selectedPoint
-                                        : AssetsIcon.point,
+                        BlocBuilder<RideBloc, RideState>(
+                          builder: (context, state) {
+                            if (state is RideReserving) {
+                              selectedScooter = state.selectedScooter;
+                            }
+                            if (state is RideFirst ||
+                                state is RideInitial ||
+                                state is RideReserving) {
+                              return MarkerLayer(
+                                markers: [
+                                  ...scooters.map(
+                                    (e) {
+                                      return Marker(
+                                        width: 70,
+                                        height: 70,
+                                        point: e.location,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            selecetScooter(e);
+                                          },
+                                          child: SvgPicture.asset(
+                                            e.id == selectedScooter?.id &&
+                                                    state is RideReserving
+                                                ? AssetsIcon.selectedPoint
+                                                : AssetsIcon.point,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                ),
-                              ),
-                            ),
-                          ],
+                                ],
+                              );
+                            } else {
+                              return MarkerLayer(
+                                markers: [
+                                  Marker(
+                                    width: 70,
+                                    height: 70,
+                                    point: selectedScooter!.location,
+                                    child: SvgPicture.asset(
+                                      AssetsIcon.point,
+                                    ),
+                                  )
+                                ],
+                              );
+                            }
+                          },
                         ),
                       ],
                     ),
