@@ -27,24 +27,24 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: SvgPicture.asset(
-              AssetsImage.bg,
-              fit: BoxFit.fill,
-            ),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: SvgPicture.asset(
+                  AssetsImage.bg,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: SvgPicture.asset(
+                  AssetsImage.logo,
+                  fit: BoxFit.scaleDown,
+                  width: MediaQuery.sizeOf(context).width * .4,
+                ),
+              ),
+            ],
           ),
-          Align(
-            alignment: Alignment.center,
-            child: SvgPicture.asset(
-              AssetsImage.logo,
-              fit: BoxFit.scaleDown,
-              width: MediaQuery.sizeOf(context).width * .4,
-            ),
-          ),
-        ],
-      ),
-    ));
+        ));
   }
 }
