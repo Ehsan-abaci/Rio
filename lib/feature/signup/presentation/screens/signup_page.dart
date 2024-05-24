@@ -106,52 +106,6 @@ class SignupPage extends StatelessWidget {
           )
         ],
       ),
-
-      // Stack(
-      //   children: [
-      //     Positioned(
-      //       top: 0,
-      //       left: 0,
-      //       right: 0,
-      //       child: Image.asset(
-      //         AssetsImage.bgSignup,
-      //         fit: BoxFit.cover,
-      //       ),
-      //     ),
-      //
-      //     Column(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       children: [
-      //         Align(
-      //           alignment: Alignment.topCenter,
-      //           child: Padding(
-      //             padding: const EdgeInsets.only(top: 10.0),
-      //             child: SvgPicture.asset(
-      //               AssetsImage.logo,
-      //               fit: BoxFit.scaleDown,
-      //               width: MediaQuery.sizeOf(context).width * 0.4,
-      //             ),
-      //           ),
-      //         ),
-      //
-      //         Align(
-      //           alignment: Alignment.bottomCenter,
-      //           child: Padding(
-      //             padding: const EdgeInsets.only(bottom: 5.0),
-      //             child: Text(
-      //               "بهترین راه برای رسیدن به مقصد",
-      //               style: TextStyle(
-      //                 fontSize: 24,
-      //                 fontWeight: FontWeight.w800,
-      //                 color: ColorManager.highEmphasis,
-      //               ),
-      //             ),
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //   ],
-      // ),
     ));
   }
 }
