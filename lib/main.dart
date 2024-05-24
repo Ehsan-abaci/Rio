@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
           fontFamily: "Vazir",
           useMaterial3: true,
         ),
-        home: MapPage(),
+        home: const SplashScreenPage(),
       ),
     );
   }
