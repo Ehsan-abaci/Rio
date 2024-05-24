@@ -25,7 +25,7 @@ class MainDrawer extends StatelessWidget {
                 Positioned.fill(
                   child: SvgPicture.asset(
                     AssetsImage.menuBg,
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 Positioned(
@@ -72,7 +72,7 @@ class MainDrawer extends StatelessWidget {
                           Positioned.fill(
                             child: SvgPicture.asset(
                               AssetsImage.bg,
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                               colorFilter: ColorFilter.mode(
                                 ColorManager.primaryDark,
                                 BlendMode.srcIn,

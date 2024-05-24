@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
+// import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:share_scooter/feature/home/presentation/blocs/bloc/ride_bloc.dart';
 import 'package:share_scooter/feature/home/presentation/screens/map_page.dart';
 import 'package:share_scooter/feature/splash/presentation/screens/splash_screen_page.dart';
@@ -13,11 +13,11 @@ void main() async {
 
   await initAppMoudule();
 
-  await FMTCObjectBoxBackend().initialise();
+  // await FMTCObjectBoxBackend().initialise();
 
-  if (!await const FMTCStore('mapStore').manage.ready) {
-    await const FMTCStore('mapStore').manage.create();
-  }
+  // if (!await const FMTCStore('mapStore').manage.ready) {
+  //   await const FMTCStore('mapStore').manage.create();
+  // }
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemNavigationBarIconBrightness: Brightness.dark,
@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
           fontFamily: "Vazir",
           useMaterial3: true,
         ),
-        home: SplashScreenPage(),
+        home: MapPage(),
       ),
     );
   }
