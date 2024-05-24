@@ -5,6 +5,7 @@ class AssetsImage {
   static const String logo = "$IMAGE_PATH/Logo.svg";
   static const String menuBg = "$IMAGE_PATH/menubg.svg";
   static const String bg = "$IMAGE_PATH/bg.svg";
+  static const String location = "$IMAGE_PATH/location.svg";
 }
 
 class AssetsIcon {
@@ -32,6 +33,7 @@ class AssetsIcon {
   static const String gift = "$ICON_PATH/Gift.svg";
   static const String help = "$ICON_PATH/Help.svg";
   static const String unlocked = "$ICON_PATH/Unlocked.svg";
+  static const String locked = "$ICON_PATH/Locked.svg";
   static const String vehicleBox = "$ICON_PATH/Vehicle box.svg";
   static const String play = "$ICON_PATH/Play.svg";
   static const String pause = "$ICON_PATH/Pause.svg";

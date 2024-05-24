@@ -3,6 +3,7 @@ part of 'ride_bloc.dart';
 
 class RideEvent {}
 
+class RideInitialEvent extends RideEvent {}
 class StartRidingEvent extends RideEvent {}
 
 class ReservingEvent extends RideEvent {

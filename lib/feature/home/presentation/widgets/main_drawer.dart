@@ -59,7 +59,7 @@ class MainDrawer extends StatelessWidget {
                 Positioned(
                   right: width * .075,
                   top: height * .26,
-                  width: width * .65,
+                  width: width > 500 ? width * .4 : width * .65,
                   height: height * .1,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
@@ -128,7 +128,7 @@ class MainDrawer extends StatelessWidget {
                                     bgColor: ColorManager.surfaceTertiary,
                                     frColor: Colors.black,
                                     borderRadius: 12,
-                                    width: width * .2,
+                                    width: width > 500 ? width *.1 : width * .2,
                                   ),
                                 ],
                               ),

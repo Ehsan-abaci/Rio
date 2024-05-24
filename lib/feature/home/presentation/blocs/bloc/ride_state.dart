@@ -41,7 +41,7 @@ class RideInProgress extends RideState {
 }
 
 class RidePaused extends RideState {
-    RideDetailEntity rideDetail;
+  RideDetailEntity rideDetail;
   RidePaused({
     required this.rideDetail,
   });
@@ -50,6 +50,10 @@ class RidePaused extends RideState {
 }
 
 class RideFinished extends RideState {
+  RideDetailEntity rideDetail;
+  RideFinished({
+    required this.rideDetail,
+  });
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [rideDetail];
 }

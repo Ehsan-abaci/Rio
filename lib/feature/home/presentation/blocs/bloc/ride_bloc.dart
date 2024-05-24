@@ -17,6 +17,9 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     RideState? currentState;
     double _increaseAmount = 0.0;
 
+    on<RideInitialEvent>((event, emit) {
+      emit(RideInitial());
+    });
 
     on<ReservingEvent>(
       (event, emit) {
@@ -35,7 +38,6 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     });
 
     on<StartRidingEvent>((event, emit) async {
-
       emit(RideInProgress(rideDetail: rideDetailEntity));
       _increaseAmount = 500;
       currentState = RideInProgress(rideDetail: rideDetailEntity);
@@ -50,7 +52,11 @@ class RideBloc extends Bloc<RideEvent, RideState> {
 
     on<FinishedEvent>((event, emit) {
       _moneyController.dispose();
-      emit(RideFinished());
+      emit(
+        RideFinished(
+          rideDetail: rideDetailEntity,
+        ),
+      );
     });
 
     on<IncreaseAmount>((event, emit) async {

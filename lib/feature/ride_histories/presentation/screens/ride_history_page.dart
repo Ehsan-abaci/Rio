@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
@@ -8,16 +9,19 @@ import 'package:share_scooter/core/utils/extensions.dart';
 
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
+import 'package:share_scooter/feature/ride_details/domain/entities/ride_detail_entity.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RideHistory {
   Duration duration;
+  DateTime startTime;
   String distance;
   double price;
   Uint8List? image;
   RideHistory({
     required this.duration,
+    required this.startTime,
     required this.distance,
     required this.price,
     this.image,
@@ -36,18 +40,25 @@ class _RideHistoriesPageState extends State<RideHistoriesPage> {
   final sp = di<SharedPreferences>();
   @override
   void initState() {
-    List<dynamic> rawData = jsonDecode(sp.getString('ride_image') ?? '[]');
+    List<dynamic> rawData = jsonDecode(sp.getString('RIDE_HISTORY') ?? '[]');
 
-    _rideHistories = rawData.map(
+    log(rawData.toString());
+    final rideDetails = rawData.map(
       (e) {
-        return RideHistory(
-          distance: "6",
-          duration: const Duration(minutes: 18),
-          price: 4000,
-          image: Uint8List.fromList(List<int>.from(e)),
-        );
+        return RideDetailEntity.fromJson(e);
       },
     ).toList();
+    _rideHistories = rideDetails
+        .map(
+          (e) => RideHistory(
+            distance: "6",
+            startTime: e.startTime,
+            duration: e.duration ?? Duration.zero,
+            price: e.totalCost ?? 0.0,
+            image: Uint8List.fromList(List<int>.from(e.img)),
+          ),
+        )
+        .toList();
     super.initState();
   }
 
@@ -87,12 +98,7 @@ class _RideHistoriesPageState extends State<RideHistoriesPage> {
         child: ListView(
           children: [
             ..._rideHistories.map(
-              (e) => RideHistoryItem(
-                duration: e.duration,
-                distance: e.distance,
-                price: e.price,
-                image: e.image,
-              ),
+              (e) => RideHistoryItem(rideHistory: e),
             ),
           ],
         ),
@@ -105,17 +111,10 @@ class RideHistoryItem extends StatelessWidget {
   RideHistoryItem({
     super.key,
     // required this.date,
-    required this.duration,
-    required this.distance,
-    required this.price,
-    required this.image,
+    required this.rideHistory,
   });
 
-  // DateTime date;
-  Duration duration;
-  String distance;
-  double price;
-  Uint8List? image;
+  RideHistory rideHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -139,9 +138,9 @@ class RideHistoryItem extends StatelessWidget {
                   flex: 3,
                   child: Stack(
                     children: [
-                      (image != null)
+                      (rideHistory.image != null)
                           ? Image.memory(
-                              image!,
+                              rideHistory.image!,
                               fit: BoxFit.cover,
                               width: 500,
                             )
@@ -190,7 +189,7 @@ class RideHistoryItem extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    const Text.rich(
+                                    Text.rich(
                                       TextSpan(
                                         children: [
                                           TextSpan(
@@ -200,7 +199,8 @@ class RideHistoryItem extends StatelessWidget {
                                                 fontSize: 16),
                                           ),
                                           TextSpan(
-                                            text: "   19:12",
+                                            text:
+                                                "   ${rideHistory.startTime.hour}:${rideHistory.startTime.minute}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 16),
@@ -224,7 +224,7 @@ class RideHistoryItem extends StatelessWidget {
                                             ),
                                             SizedBox(width: 2),
                                             Text(
-                                              "${duration.inMinutes} دقیقه",
+                                              "${rideHistory.duration.inMinutes} دقیقه",
                                               style: TextStyle(
                                                   color:
                                                       ColorManager.placeholder,
@@ -244,7 +244,7 @@ class RideHistoryItem extends StatelessWidget {
                                             ),
                                             SizedBox(width: 2),
                                             Text(
-                                              "${distance}KM",
+                                              "${rideHistory.distance}KM",
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: ColorManager.placeholder,
@@ -272,7 +272,9 @@ class RideHistoryItem extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       textDirection: TextDirection.ltr,
-                                      price.toStringAsFixed(0).to3Dot(),
+                                      rideHistory.price
+                                          .toStringAsFixed(0)
+                                          .to3Dot(),
                                       style: TextStyle(
                                         fontSize: 12,
                                         overflow: TextOverflow.ellipsis,
@@ -308,4 +310,3 @@ class RideHistoryItem extends StatelessWidget {
     );
   }
 }
-

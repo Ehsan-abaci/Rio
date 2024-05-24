@@ -53,7 +53,7 @@ class NotificationDialog extends StatelessWidget {
                   FittedBox(
                     child: Text(
                       title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),

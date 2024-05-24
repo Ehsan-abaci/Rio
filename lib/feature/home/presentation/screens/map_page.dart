@@ -1,13 +1,16 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-// import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -19,11 +22,11 @@ import 'package:share_scooter/feature/home/presentation/widgets/main_drawer.dart
 import 'package:share_scooter/feature/home/presentation/widgets/notification_dialog.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/vehicle_bottom_sheet.dart';
 import 'package:share_scooter/feature/qr_code/presentation/screens/qr_code_page.dart';
+import 'package:share_scooter/feature/ride_details/domain/entities/ride_detail_entity.dart';
 
 import 'package:share_scooter/line_anim.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 class Scooter {
   String id;
@@ -34,6 +37,22 @@ class Scooter {
     required this.name,
     required this.location,
   });
+
+  Map<String, dynamic> tojson() {
+    return <String, dynamic>{
+      'id': id,
+      'name': name,
+      'location': location.toJson(),
+    };
+  }
+
+  factory Scooter.fromJson(Map<String, dynamic> map) {
+    return Scooter(
+      id: map['id'] as String,
+      name: map['name'] as String,
+      location: LatLng.fromJson(map['location'] as Map<String, dynamic>),
+    );
+  }
 }
 
 class MapPage extends StatefulWidget {
@@ -135,6 +154,26 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
     mapController.rotate(0);
   }
 
+  final sp = di<SharedPreferences>();
+
+  Future<void> saveTrip(RideDetailEntity rideDetail) async {
+    final img = await takeImage(previewContainer);
+    rideDetail = rideDetail.copyWith(
+      img: img,
+      endTime: DateTime.now(),
+    );
+    final List<dynamic> trips =
+        jsonDecode(sp.getString('RIDE_HISTORY') ?? '[]');
+    final List<RideDetailEntity> rideHostories = trips
+        .map(
+          (e) => RideDetailEntity.fromMap(e),
+        )
+        .toList();
+    await sp
+        .setString('RIDE_HISTORY', jsonEncode(rideHostories..add(rideDetail)))
+        .then((_) => context.read<RideBloc>().add(RideInitialEvent()));
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -142,7 +181,13 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
     final bottomSheetHeight = height * .3;
-    return BlocBuilder<RideBloc, RideState>(
+    return BlocConsumer<RideBloc, RideState>(
+      buildWhen: (previous, current) => previous != current,
+      listener: (context, state) async {
+        if (state is RideFinished) {
+          await saveTrip(state.rideDetail);
+        }
+      },
       builder: (context, state) {
         Widget? bottomSheet;
         if (state is! RideInitial && state is! RideFirst) {
@@ -168,8 +213,9 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
                       ),
                       children: [
                         TileLayer(
-                          // tileProvider:
-                          //     const FMTCStore('mapStore').getTileProvider(),
+                          tileProvider: CancellableNetworkTileProvider(),
+
+                          // const FMTCStore('mapStore').getTileProvider(),
                           keepBuffer: 100,
                           urlTemplate:
                               'https://api.mapbox.com/styles/v1/hamidaslami2/clob8flgd012t01qsdwnf70md/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaGFtaWRhc2xhbWkyIiwiYSI6ImNsbm9wcm5idjAyaWUya255enF0bmZyNnoifQ.eD-IuFdTBd9rDEgqyPyQEA',
@@ -179,17 +225,22 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
                           alignDirectionOnUpdate: AlignOnUpdate.never,
                           style: LocationMarkerStyle(
                             marker: Container(
-                              decoration: BoxDecoration(boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey.shade300,
-                                    spreadRadius: 5,
-                                    blurRadius: 5)
-                              ], color: Colors.white, shape: BoxShape.circle),
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.grey.shade300,
+                                      spreadRadius: 5,
+                                      blurRadius: 5)
+                                ],
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
                               child: Container(
                                 margin: const EdgeInsets.all(3),
                                 decoration: const BoxDecoration(
-                                    color: Colors.blueAccent,
-                                    shape: BoxShape.circle),
+                                  color: Colors.blueAccent,
+                                  shape: BoxShape.circle,
+                                ),
                               ),
                             ),
                             markerSize: const Size.square(25),
@@ -341,30 +392,32 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
                     ColorManager.white,
                     ColorManager.primaryDark,
                     () async {
-                      await takeImage(previewContainer, selectedScooter!);
+                      await sp.clear();
                     },
                   ),
                 ),
-                if(state is RideInitial || state is RideFirst || state is RideReserving)
-                Positioned(
-                  bottom: (bottomSheet == null)
-                      ? width * .08
-                      : width * .08 + bottomSheetHeight,
-                  left: width * .08,
-                  child: LowLevelCircleButton(
-                    AssetsIcon.code,
-                    height * .09,
-                    ColorManager.primaryDark,
-                    ColorManager.white,
-                    () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const QrCodePage(),
-                        ),
-                      );
-                    },
+                if (state is RideInitial ||
+                    state is RideFirst ||
+                    state is RideReserving)
+                  Positioned(
+                    bottom: (bottomSheet == null)
+                        ? width * .08
+                        : width * .08 + bottomSheetHeight,
+                    left: width * .08,
+                    child: LowLevelCircleButton(
+                      AssetsIcon.code,
+                      height * .09,
+                      ColorManager.primaryDark,
+                      ColorManager.white,
+                      () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const QrCodePage(),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
               ],
             ),
             drawer: const MainDrawer(),
@@ -377,29 +430,21 @@ class _MapPageState extends State<MapPage> with AutomaticKeepAliveClientMixin {
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
-}
+  Future<Uint8List?> takeImage(GlobalKey previewContainer) async {
+    try {
+      RenderRepaintBoundary? boundary = previewContainer.currentContext!
+          .findRenderObject() as RenderRepaintBoundary?;
 
-Future<void> takeImage(
-    GlobalKey previewContainer, Scooter selectedScooter) async {
-  final sp = di<SharedPreferences>();
-  try {
-    RenderRepaintBoundary? boundary = previewContainer.currentContext!
-        .findRenderObject() as RenderRepaintBoundary?;
-
-    final image = await boundary!.toImage();
-    final byteData = await image.toByteData(format: ImageByteFormat.png);
-    final pngBytes = byteData?.buffer.asUint8List();
-    log(pngBytes.toString());
-    List<dynamic> images = jsonDecode(sp.getString('ride_image') ?? "[]");
-    await sp.setString(
-      'ride_image',
-      jsonEncode(
-        images..add(pngBytes),
-      ),
-    );
-    // await sp.clear();
-    log("success");
-  } catch (e) {
-    log("Error: $e");
+      final image = await boundary!.toImage();
+      final byteData = await image.toByteData(format: ImageByteFormat.png);
+      final pngBytes = byteData?.buffer.asUint8List();
+      log(pngBytes.toString());
+      // await sp.clear();
+      log("success");
+      return pngBytes;
+    } catch (e) {
+      log("Error: $e");
+    }
+    return null;
   }
 }
