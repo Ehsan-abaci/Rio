@@ -5,6 +5,7 @@ class AssetsImage {
   static const String logo = "$IMAGE_PATH/Logo.svg";
   static const String menuBg = "$IMAGE_PATH/menubg.svg";
   static const String bg = "$IMAGE_PATH/bg.svg";
+  static const String bgSignup = "$IMAGE_PATH/bgSignup.png";
   static const String location = "$IMAGE_PATH/location.svg";
 }
 
