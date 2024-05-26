@@ -4,6 +4,7 @@ part of 'ride_bloc.dart';
 class RideEvent {}
 
 class RideInitialEvent extends RideEvent {}
+
 class StartRidingEvent extends RideEvent {}
 
 class ReservingEvent extends RideEvent {
@@ -13,15 +14,12 @@ class ReservingEvent extends RideEvent {
   });
 }
 
-class ReservedEvent extends RideEvent {
-  // RideDetailEntity rideDetail;
-  // ReservedEvent({
-  //   required this.rideDetail,
-  // });
-}
+class ReservedEvent extends RideEvent {}
 
 class PausedEvent extends RideEvent {}
 
 class FinishedEvent extends RideEvent {}
 
 class IncreaseAmount extends RideEvent {}
+
+class LoadingEvent extends RideEvent {}

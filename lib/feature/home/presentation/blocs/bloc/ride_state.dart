@@ -14,7 +14,7 @@ class RideFirst extends RideState {
 }
 
 class RideReserving extends RideState {
-  Scooter selectedScooter;
+  final Scooter selectedScooter;
   RideReserving({
     required this.selectedScooter,
   });
@@ -23,7 +23,7 @@ class RideReserving extends RideState {
 }
 
 class RideReserved extends RideState {
-  RideDetailEntity rideDetail;
+  final RideDetailEntity rideDetail;
   RideReserved({
     required this.rideDetail,
   });
@@ -32,7 +32,7 @@ class RideReserved extends RideState {
 }
 
 class RideInProgress extends RideState {
-  RideDetailEntity rideDetail;
+  final RideDetailEntity rideDetail;
   RideInProgress({
     required this.rideDetail,
   });
@@ -41,7 +41,7 @@ class RideInProgress extends RideState {
 }
 
 class RidePaused extends RideState {
-  RideDetailEntity rideDetail;
+  final RideDetailEntity rideDetail;
   RidePaused({
     required this.rideDetail,
   });
@@ -50,10 +50,24 @@ class RidePaused extends RideState {
 }
 
 class RideFinished extends RideState {
-  RideDetailEntity rideDetail;
+  final RideDetailEntity rideDetail;
   RideFinished({
     required this.rideDetail,
   });
   @override
   List<Object?> get props => [rideDetail];
+}
+
+class RideLoading extends RideState {
+  @override
+  List<Object?> get props => [];
+}
+
+class RideError extends RideState {
+  final String message;
+  RideError({
+    required this.message,
+  });
+  @override
+  List<Object?> get props => [message];
 }

@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:share_scooter/feature/home/presentation/screens/map_page.dart';
+import 'package:share_scooter/feature/home/presentation/screens/home_page.dart';
 import 'package:share_scooter/feature/ride_details/domain/entities/ride_detail_entity.dart';
 
 part 'ride_event.dart';
@@ -13,9 +13,9 @@ class RideBloc extends Bloc<RideEvent, RideState> {
   RideBloc() : super(RideInitial()) {
     late Scooter selectedScooter;
     late RideDetailEntity rideDetailEntity;
-    var _moneyController = MoneyController();
+    var moneyController = MoneyController();
     RideState? currentState;
-    double _increaseAmount = 0.0;
+    double increaseAmount = 0.0;
 
     on<RideInitialEvent>((event, emit) {
       emit(RideInitial());
@@ -39,19 +39,19 @@ class RideBloc extends Bloc<RideEvent, RideState> {
 
     on<StartRidingEvent>((event, emit) async {
       emit(RideInProgress(rideDetail: rideDetailEntity));
-      _increaseAmount = 500;
+      increaseAmount = 500;
       currentState = RideInProgress(rideDetail: rideDetailEntity);
       add(IncreaseAmount());
     });
     on<PausedEvent>((event, emit) async {
       emit(RidePaused(rideDetail: rideDetailEntity));
-      _increaseAmount = 100;
+      increaseAmount = 100;
       currentState = RidePaused(rideDetail: rideDetailEntity);
       add(IncreaseAmount());
     });
 
     on<FinishedEvent>((event, emit) {
-      _moneyController.dispose();
+      moneyController.dispose();
       emit(
         RideFinished(
           rideDetail: rideDetailEntity,
@@ -60,10 +60,10 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     });
 
     on<IncreaseAmount>((event, emit) async {
-      _moneyController.dispose();
-      _moneyController = MoneyController();
-      _moneyController.startTimer(_increaseAmount);
-      await for (final val in _moneyController.stream) {
+      moneyController.dispose();
+      moneyController = MoneyController();
+      moneyController.startTimer(increaseAmount);
+      await for (final val in moneyController.stream) {
         rideDetailEntity = rideDetailEntity.copyWith(
           ridingCost: rideDetailEntity.ridingCost! + val,
         );
@@ -73,11 +73,13 @@ class RideBloc extends Bloc<RideEvent, RideState> {
           currentState = RidePaused(rideDetail: rideDetailEntity);
         }
         emit(currentState!);
-        log(currentState.toString());
-        log(rideDetailEntity.ridingCost.toString());
       }
     });
+
+    on<LoadingEvent>((event, emit) => emit(RideLoading()));
+    
   }
+  
 }
 
 class MoneyController {

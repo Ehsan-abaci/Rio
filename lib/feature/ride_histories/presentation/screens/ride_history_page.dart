@@ -43,7 +43,6 @@ class _RideHistoriesPageState extends State<RideHistoriesPage> {
   void initState() {
     List<dynamic> rawData = jsonDecode(sp.getString('RIDE_HISTORY') ?? '[]');
 
-    log(rawData.toString());
     final rideDetails = rawData.map(
       (e) {
         return RideDetailEntity.fromJson(e);
@@ -56,7 +55,9 @@ class _RideHistoriesPageState extends State<RideHistoriesPage> {
             startTime: e.startTime,
             duration: e.duration ?? Duration.zero,
             price: e.totalCost ?? 0.0,
-            image: Uint8List.fromList(List<int>.from(e.img)),
+            image: e.img != null
+                ? Uint8List.fromList(List<int>.from(e.img))
+                : null,
           ),
         )
         .toList();
@@ -120,7 +121,7 @@ class RideHistoryItem extends StatelessWidget {
                               fit: BoxFit.cover,
                               width: 500,
                             )
-                          : Placeholder(),
+                          : const Placeholder(),
                       Positioned(
                         left: 10,
                         bottom: 10,

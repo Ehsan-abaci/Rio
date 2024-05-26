@@ -3,9 +3,9 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:share_scooter/feature/home/presentation/screens/home_page.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:share_scooter/feature/home/presentation/screens/map_page.dart';
 
 const uuid = Uuid();
 

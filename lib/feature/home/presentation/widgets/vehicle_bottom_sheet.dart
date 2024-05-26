@@ -6,7 +6,7 @@ import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/feature/home/presentation/blocs/bloc/ride_bloc.dart';
-import 'package:share_scooter/feature/home/presentation/screens/map_page.dart';
+import 'package:share_scooter/feature/home/presentation/screens/home_page.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/reservation_modal.dart';
 
 class VehicleBottomSheet extends StatefulWidget {
@@ -43,8 +43,9 @@ class _VehicleBottomSheetState extends State<VehicleBottomSheet> {
             width: width,
             stopwatch: _stopwatch,
           );
-        } else
-          return SizedBox();
+        } else {
+          return const SizedBox();
+        }
         return Container(
           padding: EdgeInsets.zero,
           margin: EdgeInsets.zero,
@@ -236,8 +237,8 @@ class StartBottomSheetButtons extends StatelessWidget {
         CustomElevatedButton(
           onTap: () {},
           content: "بازگشت",
-          bgColor: ColorManager.primary,
-          frColor: ColorManager.white,
+          bgColor: ColorManager.surface,
+          frColor: ColorManager.primaryDark,
           borderRadius: 12,
           borderColor: ColorManager.border,
           width: width * .4,
@@ -248,8 +249,8 @@ class StartBottomSheetButtons extends StatelessWidget {
             if (!stopwatch.isRunning) stopwatch.start();
           },
           content: "شروع",
-          bgColor: ColorManager.surface,
-          frColor: ColorManager.primaryDark,
+          bgColor: ColorManager.primary,
+          frColor: ColorManager.surface,
           borderRadius: 12,
           borderColor: ColorManager.border,
           width: width * .4,

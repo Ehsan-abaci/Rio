@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:share_scooter/feature/home/presentation/screens/map_page.dart';
+import 'package:share_scooter/feature/home/presentation/screens/home_page.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -81,7 +81,7 @@ class SignupPage extends StatelessWidget {
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const MapPage(),
+                                  builder: (context) => const HomePage(),
                                 )),
                             content: "ورود با شماره همراه",
                             fontSize: 16,
