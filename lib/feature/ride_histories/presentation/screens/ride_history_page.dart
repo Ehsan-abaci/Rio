@@ -9,6 +9,7 @@ import 'package:share_scooter/core/utils/extensions.dart';
 
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
+import 'package:share_scooter/core/widgets/custom_appbar_widget.dart';
 import 'package:share_scooter/feature/ride_details/domain/entities/ride_detail_entity.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,31 +67,7 @@ class _RideHistoriesPageState extends State<RideHistoriesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.surface,
-      appBar: AppBar(
-        backgroundColor: ColorManager.surface,
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(30),
-          child: Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: EdgeInsets.only(right: 20, bottom: 5),
-              child: Text(
-                "تاریخچه سواری",
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 25,
-                ),
-              ),
-            ),
-          ),
-        ),
-        leading: SvgPicture.asset(
-          AssetsIcon.back,
-          color: ColorManager.primaryDark,
-          matchTextDirection: true,
-          fit: BoxFit.scaleDown,
-        ),
-      ),
+      appBar: const CustomAppBarWidget(title: "تاریخچه سواری"),
       body: Container(
         decoration: BoxDecoration(
           color: Colors.grey.shade100,

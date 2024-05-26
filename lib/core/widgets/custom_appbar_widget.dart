@@ -35,7 +35,7 @@ class CustomAppBarWidget extends StatelessWidget
           matchTextDirection: true,
           fit: BoxFit.scaleDown,
         ),
-        onPressed: () {},
+        onPressed: () => Navigator.pop(context),
       ),
     );
   }
