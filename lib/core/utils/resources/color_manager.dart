@@ -33,7 +33,7 @@ class ColorManager {
   static Color surfaceWarning = HexColor.fromHexColor('#FFFBED');
   static Color surfaceDanger = HexColor.fromHexColor('#FFE5E5');
   static Color walletBg = HexColor.fromHexColor('#FFCEC3');
-
+  static Color lemonYellow = HexColor.fromHexColor('#FCE778');
 // Foreground colors
 
   static Color highEmphasis = HexColor.fromHexColor('#000000').withOpacity(.87);
