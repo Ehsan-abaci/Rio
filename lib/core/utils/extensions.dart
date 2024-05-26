@@ -1,5 +1,3 @@
-
-
 extension ToMS on Duration {
   String toMs() {
     var minute = inMinutes;
@@ -9,15 +7,33 @@ extension ToMS on Duration {
   }
 }
 
-extension PriceChanger on String {
+extension PriceChanger on double {
   String to3Dot() {
     String res = '';
+    if (this == 0) return "0.000";
+    String str = toStringAsFixed(0);
     int k = 0;
-    for (int i = length - 1; i >= 0; i--) {
-      res = this[i] + res;
+    for (int i = str.length - 1; i >= 0; i--) {
+      res = str[i] + res;
       k++;
-      if (k % 3 == 0 && length != k) {
-        res = ",$res";
+      if (k % 3 == 0 && str.length != k) {
+        res = ".$res";
+      }
+    }
+    return res;
+  }
+}
+
+extension CardNumberHider on String {
+  String toCardNumberHider() {
+    String res = '';
+    if (length != 16) return "invalid";
+    for (int i = 0; i < length; i++) {
+      if (i % 4 == 0) res += ' ';
+      if (i < 12) {
+        res += "*";
+      } else {
+        res += this[i];
       }
     }
     return res;

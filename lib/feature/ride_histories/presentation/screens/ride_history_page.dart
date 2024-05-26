@@ -108,13 +108,12 @@ class _RideHistoriesPageState extends State<RideHistoriesPage> {
 }
 
 class RideHistoryItem extends StatelessWidget {
-  RideHistoryItem({
+  const RideHistoryItem({
     super.key,
-    // required this.date,
     required this.rideHistory,
   });
 
-  RideHistory rideHistory;
+  final RideHistory rideHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -273,7 +272,7 @@ class RideHistoryItem extends StatelessWidget {
                                     child: Text(
                                       textDirection: TextDirection.ltr,
                                       rideHistory.price
-                                          .toStringAsFixed(0)
+                                          // .toStringAsFixed(0)
                                           .to3Dot(),
                                       style: TextStyle(
                                         fontSize: 12,

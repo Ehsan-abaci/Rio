@@ -2,21 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 
 class NotificationDialog extends StatelessWidget {
-  NotificationDialog({
+  const NotificationDialog({
     super.key,
     required this.leadingIcon,
     required this.title,
     required this.subtitle,
     required this.greenSubtitle,
   });
-  String leadingIcon;
-  String title;
-  String subtitle;
-  String greenSubtitle;
+  final String leadingIcon;
+  final String title;
+  final String subtitle;
+  final String greenSubtitle;
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;

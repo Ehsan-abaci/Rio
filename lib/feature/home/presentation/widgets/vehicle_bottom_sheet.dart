@@ -1,8 +1,4 @@
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
@@ -14,9 +10,8 @@ import 'package:share_scooter/feature/home/presentation/screens/map_page.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/reservation_modal.dart';
 
 class VehicleBottomSheet extends StatefulWidget {
-  VehicleBottomSheet({
+  const VehicleBottomSheet({
     super.key,
-    // required this.selectedScooter,
   });
 
   @override
@@ -96,7 +91,8 @@ class _VehicleBottomSheetState extends State<VehicleBottomSheet> {
                                 FittedBox(
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "شماره دستگاه : ${selectedScooter.id} ",
@@ -275,7 +271,7 @@ class PausedBottomSheetButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         CustomElevatedButton(
           onTap: () {
@@ -334,7 +330,7 @@ class RidingBottomSheetButtons extends StatelessWidget {
         ),
         CustomElevatedButton(
           onTap: () {
-              context.read<RideBloc>().add(FinishedEvent());
+            context.read<RideBloc>().add(FinishedEvent());
           },
           content: "پایان",
           icon: AssetsIcon.locked,

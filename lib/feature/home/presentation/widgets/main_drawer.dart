@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
+import 'package:share_scooter/feature/payment/presentation/screens/credit_payment_page.dart';
 import 'package:share_scooter/feature/ride_histories/presentation/screens/ride_history_page.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -128,7 +129,8 @@ class MainDrawer extends StatelessWidget {
                                     bgColor: ColorManager.surfaceTertiary,
                                     frColor: Colors.black,
                                     borderRadius: 12,
-                                    width: width > 500 ? width *.1 : width * .2,
+                                    width:
+                                        width > 500 ? width * .1 : width * .2,
                                   ),
                                 ],
                               ),
@@ -159,7 +161,11 @@ class MainDrawer extends StatelessWidget {
                 MenuListTile(
                   title: "پرداخت اعتباری",
                   icon: AssetsIcon.payment,
-                  onTap: () {},
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreditPaymentPage(),
+                      )),
                 ),
                 MenuListTile(
                   title: "اعتبار معرفی به دوستان",
@@ -200,15 +206,15 @@ class MainDrawer extends StatelessWidget {
 }
 
 class MenuListTile extends StatelessWidget {
-  MenuListTile({
+  const MenuListTile({
     super.key,
     required this.title,
     required this.icon,
     required this.onTap,
   });
-  String title;
-  String icon;
-  void Function()? onTap;
+  final String title;
+  final String icon;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {

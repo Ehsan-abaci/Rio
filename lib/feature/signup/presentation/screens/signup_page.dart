@@ -4,7 +4,6 @@ import 'package:share_scooter/feature/home/presentation/screens/map_page.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
-import '../../../payment/presentation/screens/credit_payment_page.dart';
 
 class SignupPage extends StatelessWidget {
   const SignupPage({super.key});
