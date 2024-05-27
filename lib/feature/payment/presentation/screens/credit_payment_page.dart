@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:share_scooter/core/widgets/custom_appbar_widget.dart';
-import '../widgets/credit_cards_widget.dart';
+import '../widgets/active_gift_credit.dart';
+import '../widgets/active_saved_card.dart';
+import '../widgets/gift_credit.dart';
+import '../widgets/saved_card.dart';
+import '../widgets/wallet_balance.dart';
 
 class CreditPaymentPage extends StatelessWidget {
   const CreditPaymentPage({super.key});
@@ -13,12 +17,11 @@ class CreditPaymentPage extends StatelessWidget {
           padding: const EdgeInsets.only(top: 24),
           child: ListView(
             children: const [
-              CreditCardsWidget(walletBalance: true),
-              CreditCardsWidget(
-                  savedCard: true, activeSavedCard: true, walletBalance: false),
-              CreditCardsWidget(giftCredit: true, activeGiftCredit: true),
-              CreditCardsWidget(savedCard: true),
-              CreditCardsWidget(giftCredit: true),
+              WalletBalance(),
+              SavedCard(),
+              ActiveSavedCard(),
+              GiftCredit(),
+              ActiveGiftCredit()
             ],
           ),
         ));
