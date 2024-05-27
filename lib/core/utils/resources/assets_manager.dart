@@ -9,6 +9,7 @@ class AssetsImage {
   static const String location = "$IMAGE_PATH/location.svg";
   static const String bgCard = "$IMAGE_PATH/bgCard.png";
   static const String bgGiftCard = "$IMAGE_PATH/bgGiftCard.png";
+  static const String bgBody = "$IMAGE_PATH/bgBody.svg";
 }
 
 class AssetsIcon {
