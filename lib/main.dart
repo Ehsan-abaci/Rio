@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hive_flutter/adapters.dart';
 // import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:share_scooter/feature/home/presentation/blocs/bloc/ride_bloc.dart';
+import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
 import 'package:share_scooter/feature/splash/presentation/screens/splash_screen_page.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'feature/payment/presentation/screens/recharge_the_wallet_page.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initAppMoudule();
+  await Hive.initFlutter();
+  Hive.registerAdapter<RideDetailEntity>(RideDetailEntityAdapter());
 
+  await Hive.openBox<RideDetailEntity>("ride_history");
   // await FMTCObjectBoxBackend().initialise();
 
   // if (!await const FMTCStore('mapStore').manage.ready) {
@@ -59,7 +61,7 @@ class MyApp extends StatelessWidget {
           fontFamily: "Vazir",
           useMaterial3: true,
         ),
-        home: const RechargeTheWalletPage(),
+        home: const SplashScreenPage(),
       ),
     );
   }

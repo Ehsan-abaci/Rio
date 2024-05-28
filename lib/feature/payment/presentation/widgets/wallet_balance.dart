@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
@@ -34,13 +35,15 @@ class WalletBalance extends StatelessWidget {
           const SizedBox(
             height: 8,
           ),
-          Text(
-            "${50000.0.to3Dot()} T",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.w800,
-                color: ColorManager.highEmphasis),
+          FittedBox(
+            child: Text(
+              "${50000.0.to3Dot()} T",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.w800,
+                  color: ColorManager.highEmphasis),
+            ),
           ),
           const SizedBox(
             height: 16,

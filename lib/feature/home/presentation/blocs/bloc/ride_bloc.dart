@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:share_scooter/feature/home/presentation/screens/home_page.dart';
-import 'package:share_scooter/feature/ride_details/domain/entities/ride_detail_entity.dart';
+import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
 
 part 'ride_event.dart';
 part 'ride_state.dart';

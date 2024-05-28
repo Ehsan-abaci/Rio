@@ -1,30 +1,30 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:typed_data';
-
-import 'package:flutter/foundation.dart';
+import 'dart:isolate';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
 
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_appbar_widget.dart';
-import 'package:share_scooter/feature/ride_details/domain/entities/ride_detail_entity.dart';
+import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RideHistory {
-  Duration duration;
-  DateTime startTime;
-  String distance;
-  double price;
-  Uint8List? image;
+  Duration? duration;
+  DateTime? startTime;
+  String? distance;
+  double? price;
+  String? image;
   RideHistory({
-    required this.duration,
-    required this.startTime,
-    required this.distance,
-    required this.price,
+    this.duration,
+    this.startTime,
+    this.distance,
+    this.price,
     this.image,
   });
 }
@@ -38,16 +38,20 @@ class RideHistoriesPage extends StatefulWidget {
 
 class _RideHistoriesPageState extends State<RideHistoriesPage> {
   List<RideHistory> _rideHistories = [];
+  List<dynamic> rawData = [];
+  List<RideDetailEntity> rideDetails = [];
   final sp = di<SharedPreferences>();
   @override
   void initState() {
-    List<dynamic> rawData = jsonDecode(sp.getString('RIDE_HISTORY') ?? '[]');
+    loadData();
+    super.initState();
+  }
 
-    final rideDetails = rawData.map(
-      (e) {
-        return RideDetailEntity.fromJson(e);
-      },
-    ).toList();
+  Future<void> loadData() async {
+    final jsonString = sp.getString('RIDE_HISTORY') ?? '[]';
+    rawData = jsonDecode(jsonString);
+    // rideDetails = rawData.map((e) => RideDetailEntity.fromJson(e)).toList();
+
     _rideHistories = rideDetails
         .map(
           (e) => RideHistory(
@@ -55,13 +59,15 @@ class _RideHistoriesPageState extends State<RideHistoriesPage> {
             startTime: e.startTime,
             duration: e.duration ?? Duration.zero,
             price: e.totalCost ?? 0.0,
-            image: e.img != null
-                ? Uint8List.fromList(List<int>.from(e.img))
-                : null,
+            image: e.img,
           ),
         )
         .toList();
-    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -73,13 +79,15 @@ class _RideHistoriesPageState extends State<RideHistoriesPage> {
         decoration: BoxDecoration(
           color: Colors.grey.shade100,
         ),
-        child: ListView(
-          children: [
-            ..._rideHistories.map(
-              (e) => RideHistoryItem(rideHistory: e),
-            ),
-          ],
-        ),
+        child: _rideHistories.isEmpty
+            ? const Center(child: CircularProgressIndicator.adaptive())
+            : ListView(
+                children: [
+                  ..._rideHistories.map(
+                    (e) => RideHistoryItem(rideHistory: e),
+                  ),
+                ],
+              ),
       ),
     );
   }
@@ -117,7 +125,8 @@ class RideHistoryItem extends StatelessWidget {
                     children: [
                       (rideHistory.image != null)
                           ? Image.memory(
-                              rideHistory.image!,
+                              Uint8List.fromList(
+                                  base64Decode(rideHistory.image!).toList()),
                               fit: BoxFit.cover,
                               width: 500,
                             )
@@ -177,7 +186,7 @@ class RideHistoryItem extends StatelessWidget {
                                           ),
                                           TextSpan(
                                             text:
-                                                "   ${rideHistory.startTime.hour}:${rideHistory.startTime.minute}",
+                                                "   ${rideHistory.startTime?.hour}:${rideHistory.startTime?.minute}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 16),
@@ -201,7 +210,7 @@ class RideHistoryItem extends StatelessWidget {
                                             ),
                                             SizedBox(width: 2),
                                             Text(
-                                              "${rideHistory.duration.inMinutes} دقیقه",
+                                              "${rideHistory.duration?.inMinutes} دقیقه",
                                               style: TextStyle(
                                                   color:
                                                       ColorManager.placeholder,
@@ -251,6 +260,7 @@ class RideHistoryItem extends StatelessWidget {
                                       textDirection: TextDirection.ltr,
                                       rideHistory.price
                                           // .toStringAsFixed(0)
+                                          !
                                           .to3Dot(),
                                       style: TextStyle(
                                         fontSize: 12,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_scooter/core/utils/extensions.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -16,7 +17,9 @@ class ActiveGiftCredit extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           color: ColorManager.lemonYellow,
           image: const DecorationImage(
-            image: AssetImage(AssetsImage.bgCard),
+            image: AssetImage(
+              AssetsImage.bgCard,
+            ),
             fit: BoxFit.cover,
           ),
         ),
@@ -31,50 +34,14 @@ class ActiveGiftCredit extends StatelessWidget {
                   color: ColorManager.highEmphasis),
             ),
             const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "کد تخفیف اولین سفر",
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
-                      color: ColorManager.highEmphasis),
-                ),
-                Text(
-                  "10.000 T",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: ColorManager.highEmphasis),
-                ),
-              ],
-            ),
+            _getRioCouponTile("کد تخفیف اولین سفر", 10000),
             const SizedBox(height: 16),
             Divider(
               height: 20,
               color: ColorManager.border,
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "اعتبار معرفی به دوستان",
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
-                      color: ColorManager.highEmphasis),
-                ),
-                Text(
-                  "25.000 T",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: ColorManager.highEmphasis),
-                ),
-              ],
-            ),
+            _getRioCouponTile("اعتبار معرفی به دوستان", 2500),
             const SizedBox(height: 16),
             CustomElevatedButton(
               content: "افزودن کد",
@@ -87,5 +54,37 @@ class ActiveGiftCredit extends StatelessWidget {
             ),
           ],
         ));
+  }
+
+  Widget _getRioCouponTile(String title, double amount) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          flex: 2,
+          child: Text(
+            title,
+            overflow: TextOverflow.fade,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+              color: ColorManager.highEmphasis,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            "${amount.to3Dot()} T",
+            textAlign: TextAlign.left,
+            maxLines: 1,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: ColorManager.highEmphasis,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
