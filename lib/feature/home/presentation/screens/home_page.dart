@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -20,7 +21,7 @@ import 'package:share_scooter/feature/home/presentation/widgets/main_drawer.dart
 import 'package:share_scooter/feature/home/presentation/widgets/notification_dialog.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/vehicle_bottom_sheet.dart';
 import 'package:share_scooter/feature/qr_code/presentation/screens/qr_code_page.dart';
-import 'package:share_scooter/feature/ride_details/domain/entities/ride_detail_entity.dart';
+import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -447,7 +448,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<Uint8List?> takeImage(GlobalKey previewContainer) async {
+  FutureOr<String?> takeImage(GlobalKey previewContainer) async {
     try {
       RenderRepaintBoundary? boundary = previewContainer.currentContext!
           .findRenderObject() as RenderRepaintBoundary?;
@@ -455,7 +456,7 @@ class _HomePageState extends State<HomePage> {
       final image = await boundary!.toImage();
       final byteData = await image.toByteData(format: ImageByteFormat.png);
       final pngBytes = byteData?.buffer.asUint8List();
-      return pngBytes;
+      return pngBytes != null ? base64Encode(pngBytes) : null;
     } catch (e) {
       return null;
     }

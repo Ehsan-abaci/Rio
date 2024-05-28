@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
@@ -64,20 +66,31 @@ class ActiveSavedCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "08/25",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                      color: ColorManager.reversedEmphasis),
+                Expanded(
+                  child: FittedBox(
+                    child: Text(
+                      "08/25",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: ColorManager.reversedEmphasis),
+                    ),
+                  ),
                 ),
-                Text(
-                  "6104337624493415".toCardNumberHider(),
-                  textDirection: TextDirection.ltr,
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                      color: ColorManager.reversedEmphasis),
+                SizedBox(width: 5),
+                Expanded(
+                  flex: 3,
+                  child: FittedBox(
+                    child: Text(
+                      "6104337624493415".toCardNumberHider(),
+                      maxLines: 1,
+                      textDirection: TextDirection.ltr,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: ColorManager.reversedEmphasis),
+                    ),
+                  ),
                 ),
               ],
             )
