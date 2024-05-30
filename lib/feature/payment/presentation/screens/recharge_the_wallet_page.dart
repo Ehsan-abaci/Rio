@@ -109,7 +109,7 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
                       Text(
                         "موجودی کیف پول",
                         style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 14,
                             fontWeight: FontWeight.w800,
                             color: ColorManager.highEmphasis),
                       ),
@@ -125,11 +125,12 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
                             fontWeight: FontWeight.w800,
                             color: ColorManager.highEmphasis),
                       ),
-                      const SizedBox(
-                        height: 8,
+                      SizedBox(
+                        height: height * .01,
                       ),
                       Text(
                         'اگر در هنگام سواری، موجودی کیف پول شما تمام شود؛ تا سواری بعدی باید اعتبار خود را شارژ نمائید.',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -137,25 +138,25 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
                           height: 1.8,
                         ),
                       ),
-                      const SizedBox(
-                        height: 24,
+                      SizedBox(
+                        height: height * .02,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           customRadioButton(1, "5.000", "50.000"),
-                          const SizedBox(
-                            width: 10,
+                          SizedBox(
+                            width: width * .01,
                           ),
                           customRadioButton(0, "10.000", "100.000"),
                         ],
                       ),
-                      const SizedBox(
-                        height: 52,
+                      SizedBox(
+                        height: height * .05,
                       ),
                       DesiredAmountCardWidget(width: width),
-                      const SizedBox(
-                        height: 24,
+                      SizedBox(
+                        height: height * .02,
                       ),
                       Text(
                         'به ازای مبالغ بالای 50.000 تومان، 10% جایزه به اعتبار شما افزوده می شود.',
@@ -171,7 +172,7 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
                   ),
                 ),
                 SizedBox(
-                  height: height * .15,
+                  height: height * .14,
                 ),
               ],
             ),
@@ -219,6 +220,8 @@ class DesiredAmountCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.sizeOf(context).height * .18,
+      width: width,
       decoration: BoxDecoration(
         color: ColorManager.surfacePrimary,
         borderRadius: BorderRadius.circular(8),
@@ -227,33 +230,36 @@ class DesiredAmountCardWidget extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            children: [
-              CustomElevatedButton(
-                onTap: null,
-                content: "مبلغ دلخواه",
-                fontSize: 16,
-                bgColor: ColorManager.primaryExtraLight,
-                frColor: Colors.white,
-                borderRadius: 12,
-                width: width,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              CircleElevatedButton(
-                onTap: () {},
-                icon: AssetsIcon.add,
-                bgColor: ColorManager.surface,
-                frColor: ColorManager.primaryDark,
-              ),
-              const SizedBox(
-                height: 17,
-              ),
-            ],
-          )),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              children: [
+                CustomElevatedButton(
+                  onTap: null,
+                  content: "مبلغ دلخواه",
+                  fontSize: 16,
+                  bgColor: ColorManager.primaryExtraLight,
+                  frColor: Colors.white,
+                  borderRadius: 12,
+                  width: width,
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CircleElevatedButton(
+                  onTap: () {},
+                  icon: AssetsIcon.add,
+                  bgColor: ColorManager.surface,
+                  frColor: ColorManager.primaryDark,
+                ),
+                const SizedBox(
+                  height: 17,
+                ),
+              ],
+            )),
+      ),
     );
   }
 }

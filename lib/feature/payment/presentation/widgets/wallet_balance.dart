@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
+import 'package:share_scooter/feature/payment/presentation/screens/recharge_the_wallet_page.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -55,7 +56,11 @@ class WalletBalance extends StatelessWidget {
             frColor: ColorManager.highEmphasis,
             borderRadius: 8,
             width: width * .3,
-            onTap: () {},
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RechargeTheWalletPage(),
+                )),
           ),
         ],
       ),

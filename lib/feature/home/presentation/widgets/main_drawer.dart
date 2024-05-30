@@ -5,6 +5,7 @@ import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/feature/payment/presentation/screens/credit_payment_page.dart';
+import 'package:share_scooter/feature/payment/presentation/screens/recharge_the_wallet_page.dart';
 import 'package:share_scooter/feature/ride_histories/presentation/screens/ride_history_page.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -123,7 +124,12 @@ class MainDrawer extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 5),
                                   CustomElevatedButton(
-                                    onTap: () {},
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const RechargeTheWalletPage(),
+                                        )),
                                     content: "شارژ",
                                     fontSize: 16,
                                     bgColor: ColorManager.surfaceTertiary,
