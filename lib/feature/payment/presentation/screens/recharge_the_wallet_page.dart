@@ -21,15 +21,16 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
 
   Widget customRadioButton(int index, String numberPlus, String number) {
     final width = MediaQuery.sizeOf(context).width;
-    return Expanded(
-      child: InkWell(
-          onTap: () {
-            setState(() {
-              selected = index;
-            });
-          },
+    final height = MediaQuery.sizeOf(context).height;
+    return InkWell(
+        onTap: () {
+          setState(() {
+            selected = index;
+          });
+        },
+        child: AspectRatio(
+          aspectRatio: width > 450 ? 5 / 3 : 3 / 2,
           child: Container(
-            width: width * 0.45,
             decoration: BoxDecoration(
               color: ColorManager.surface,
               border: (selected == index)
@@ -37,41 +38,52 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
                   : Border.all(color: ColorManager.border, width: 1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  FittedBox(
-                    child: Text(
-                      "+ $numberPlus T",
-                      textDirection: TextDirection.ltr,
-                      style: TextStyle(
-                        color: ColorManager.primary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
+            child: LayoutBuilder(
+              builder: (context, constraints) => Padding(
+                padding: EdgeInsets.only(
+                  top: constraints.maxHeight * .25,
+                  left: constraints.maxWidth * .1,
+                  right: constraints.maxWidth * .05,
+                ),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: FittedBox(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        FittedBox(
+                          child: Text(
+                            "+ $numberPlus T",
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                              color: ColorManager.primary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * .02,
+                        ),
+                        FittedBox(
+                          child: Text(
+                            "$number T",
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                              color: ColorManager.highEmphasis,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  FittedBox(
-                    child: Text(
-                      "$number T",
-                      textDirection: TextDirection.ltr,
-                      style: TextStyle(
-                        color: ColorManager.highEmphasis,
-                        fontSize: 28,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          )),
-    );
+          ),
+        ));
   }
 
   @override
@@ -141,15 +153,18 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
                       SizedBox(
                         height: height * .02,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customRadioButton(1, "5.000", "50.000"),
-                          SizedBox(
-                            width: width * .01,
-                          ),
-                          customRadioButton(0, "10.000", "100.000"),
-                        ],
+                      SizedBox(
+                        height: width > 450 ? height * .25 : height * .15,
+                        child: ListView.separated(
+                          padding: EdgeInsets.zero,
+                          scrollDirection: Axis.horizontal,
+                          reverse: true,
+                          itemCount: 4,
+                          itemBuilder: (context, i) =>
+                              customRadioButton(i, "5000", '10000'),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(width: 10),
+                        ),
                       ),
                       SizedBox(
                         height: height * .05,
