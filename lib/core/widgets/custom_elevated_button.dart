@@ -30,60 +30,58 @@ class CustomElevatedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
-    return FittedBox(
-      child: ElevatedButton(
-          onPressed: onTap,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: bgColor,
-            foregroundColor: frColor,
-            surfaceTintColor: bgColor,
-            elevation: 0,
-            fixedSize: Size(width, height * 0.06),
-            padding: EdgeInsets.symmetric(
-                vertical: height * .01, horizontal: width * .04),
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                color: borderColor ?? Colors.transparent,
-              ),
-              borderRadius: BorderRadius.circular(
-                borderRadius,
-              ),
+    return ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: bgColor,
+          foregroundColor: frColor,
+          surfaceTintColor: bgColor,
+          elevation: 0,
+          fixedSize: Size(width, height * 0.06),
+          padding: EdgeInsets.symmetric(
+              vertical: height * .01, horizontal: width * .04),
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: borderColor ?? Colors.transparent,
+            ),
+            borderRadius: BorderRadius.circular(
+              borderRadius,
             ),
           ),
-          child: Align(
-            alignment: Alignment.center,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Row(
-                children: [
-                  if (icon != null)
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          icon!,
-                          color: frColor,
-                        ),
-                        const SizedBox(width: 5),
-                      ],
-                    ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: FittedBox(
-                      child: Text(
-                        content,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: fontSize,
-                          color: frColor,
-                        ),
+        ),
+        child: Align(
+          alignment: Alignment.center,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              children: [
+                if (icon != null)
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        icon!,
+                        color: frColor,
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                  ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: FittedBox(
+                    child: Text(
+                      content,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: fontSize,
+                        color: frColor,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          )),
-    );
+          ),
+        ));
   }
 }

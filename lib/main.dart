@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 // import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:share_scooter/feature/home/presentation/blocs/bloc/ride_bloc.dart';
+import 'package:share_scooter/feature/payment/presentation/screens/recharge_the_wallet_page.dart';
 import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
 import 'package:share_scooter/feature/splash/presentation/screens/splash_screen_page.dart';
 import 'package:share_scooter/locator.dart';
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
           fontFamily: "Vazir",
           useMaterial3: true,
         ),
-        home: const SplashScreenPage(),
+        home: const RechargeTheWalletPage(),
       ),
     );
   }

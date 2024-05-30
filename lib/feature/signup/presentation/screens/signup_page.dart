@@ -1,5 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:share_scooter/core/widgets/scroll_column_expandable.dart';
 import 'package:share_scooter/feature/home/presentation/screens/home_page.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
@@ -13,19 +15,18 @@ class SignupPage extends StatelessWidget {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
     return Scaffold(
-        body: Center(
-      child: Stack(
-        children: [
-          Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Image.asset(
-                AssetsImage.bgSignup,
-                fit: BoxFit.cover,
-              )),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+        body: Stack(
+      children: [
+        Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Image.asset(
+              AssetsImage.bgSignup,
+              fit: BoxFit.cover,
+            )),
+        Positioned.fill(
+          child: ScrollColumnExpandable(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Align(
@@ -51,16 +52,18 @@ class SignupPage extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Text(
-                        "بهترین راه برای رسیدن به مقصد",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w800,
-                          color: ColorManager.highEmphasis,
+                      FittedBox(
+                        child: Text(
+                          "بهترین راه برای رسیدن به مقصد",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: ColorManager.highEmphasis,
+                          ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 16,
+                      SizedBox(
+                        height: height * .025,
                       ),
                       Text(
                         "از سفر با وسایل نقلیه دوستدار محیط زیست لذت ببرید. همین حالا شروع کنید.",
@@ -69,13 +72,14 @@ class SignupPage extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           color: ColorManager.highEmphasis,
-                          height: 1.8,
+                          // height: 1.8,
                         ),
                       ),
-                      const SizedBox(
-                        height: 32,
+                      SizedBox(
+                        height: height * .05,
                       ),
                       Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomElevatedButton(
                             onTap: () => Navigator.push(
@@ -90,8 +94,8 @@ class SignupPage extends StatelessWidget {
                             borderRadius: 12,
                             width: width,
                           ),
-                          const SizedBox(
-                            height: 16,
+                          SizedBox(
+                            height: height * .02,
                           ),
                           CustomElevatedButton(
                             onTap: () {},
@@ -109,9 +113,9 @@ class SignupPage extends StatelessWidget {
                 ),
               )
             ],
-          )
-        ],
-      ),
+          ),
+        ),
+      ],
     ));
   }
 }
