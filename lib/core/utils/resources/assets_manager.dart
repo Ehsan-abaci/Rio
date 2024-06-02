@@ -44,4 +44,5 @@ class AssetsIcon {
   static const String navigation = "$ICON_PATH/Navigation.svg";
   static const String edit = "$ICON_PATH/Edit.svg";
   static const String add = "$ICON_PATH/Add.svg";
+  static const String profile = "$ICON_PATH/Profile.svg";
 }

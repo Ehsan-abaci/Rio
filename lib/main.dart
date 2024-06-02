@@ -9,6 +9,8 @@ import 'package:share_scooter/feature/splash/presentation/screens/splash_screen_
 import 'package:share_scooter/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'feature/settings/presentation/screens/setting_page.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -61,7 +63,7 @@ class MyApp extends StatelessWidget {
           fontFamily: "Vazir",
           useMaterial3: true,
         ),
-        home: const SplashScreenPage(),
+        home: const SettingPage(),
       ),
     );
   }
