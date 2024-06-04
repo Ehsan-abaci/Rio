@@ -11,6 +11,7 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorManager.appBg,
         appBar: const CustomAppBarWidget(title: "تنظیمات"),
         body: Padding(
             padding: const EdgeInsets.all(24.0),

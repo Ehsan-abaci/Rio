@@ -40,7 +40,6 @@ class AddCreditCodePage extends StatelessWidget {
                       TextFormField(
                         keyboardType: TextInputType.multiline,
                         maxLines: 3,
-                        initialValue: "AZSDF432AA",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -48,6 +47,7 @@ class AddCreditCodePage extends StatelessWidget {
                         ),
                         decoration: InputDecoration(
                           filled: true,
+                          hintText: "کد اعتبار خود را وارد کنید",
                           fillColor: ColorManager.reversedEmphasis,
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),

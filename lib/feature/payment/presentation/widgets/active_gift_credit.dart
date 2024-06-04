@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
+import 'package:share_scooter/feature/payment/presentation/screens/add_credit_code_page.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -50,7 +51,11 @@ class ActiveGiftCredit extends StatelessWidget {
               frColor: ColorManager.highEmphasis,
               borderRadius: 8,
               width: width * .3,
-              onTap: () {},
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddCreditCodePage(),
+                  )),
             ),
           ],
         ));

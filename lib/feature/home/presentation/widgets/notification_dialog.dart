@@ -10,12 +10,12 @@ class NotificationDialog extends StatelessWidget {
     required this.leadingIcon,
     required this.title,
     required this.subtitle,
-    required this.greenSubtitle,
+    required this.indexOfGreenSubtitle,
   });
   final String leadingIcon;
   final String title;
-  final String subtitle;
-  final String greenSubtitle;
+  final List<String> subtitle;
+  final int indexOfGreenSubtitle;
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
@@ -26,7 +26,7 @@ class NotificationDialog extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(15.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -59,28 +59,70 @@ class NotificationDialog extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: height * .01),
-                  FittedBox(
-                    child: RichText(
-                      text: TextSpan(
-                        text: subtitle,
-                        style: TextStyle(
-                          color: ColorManager.mediumEmphasis,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: greenSubtitle,
-                            style: TextStyle(
-                              color: ColorManager.success,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
+                  RichText(
+                    text: TextSpan(children: [
+                      for (int i = 0; i < subtitle.length; i++)
+                        TextSpan(
+                          spellOut: true,
+                          text: subtitle[i],
+                          style: TextStyle(
+                            color: i == indexOfGreenSubtitle
+                                ? ColorManager.success
+                                : ColorManager.mediumEmphasis,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                    ]),
                   ),
+
+                  // ...subtitle.map(
+                  //   (sub) {
+                  //     if (sub != subtitle[indexOfGreenSubtitle]) {
+                  //       return RichText(
+                  //         text: TextSpan(
+                  //           text: sub,
+                  //           style: TextStyle(
+                  //             color: ColorManager.mediumEmphasis,
+                  //             fontSize: 16,
+                  //             fontWeight: FontWeight.w500,
+                  //           ),
+                  //           children: [
+                  //             TextSpan(
+                  //               text: subtitle[indexOfGreenSubtitle],
+                  //               style: TextStyle(
+                  //                 color: ColorManager.success,
+                  //                 fontSize: 16,
+                  //                 fontWeight: FontWeight.w400,
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       );
+                  //     }
+                  //     return Align();
+                  //   },
+                  // ),
+                  // RichText(
+                  //   text: TextSpan(
+                  //     text: subtitle,
+                  //     style: TextStyle(
+                  //       color: ColorManager.mediumEmphasis,
+                  //       fontSize: 16,
+                  //       fontWeight: FontWeight.w500,
+                  //     ),
+                  //     children: [
+                  //       TextSpan(
+                  //         text: greenSubtitle,
+                  //         style: TextStyle(
+                  //           color: ColorManager.success,
+                  //           fontSize: 16,
+                  //           fontWeight: FontWeight.w400,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ),

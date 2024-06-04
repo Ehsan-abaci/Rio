@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -156,6 +157,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _getBottomSheet(double bottomSheetHeight) {
     return BlocBuilder<RideBloc, RideState>(
+   
       builder: (context, state) {
         if (state is! RideInitial && state is! RideFirst) {
           return Positioned(
@@ -219,28 +221,44 @@ class _HomePageState extends State<HomePage> {
 
   Widget _getNotification(double width, double height) {
     return BlocBuilder<RideBloc, RideState>(
+      buildWhen: (previous, current) =>
+          current is RideReserved ||
+          current is RideInProgress ||
+          current is RidePaused ||
+          current is RideInitial,
       builder: (context, state) {
+        log("build _getNotification");
         Widget? notificationDialog;
         if (state is RideReserved) {
           notificationDialog = NotificationDialog(
             leadingIcon: AssetsIcon.reservation,
             title: "یک اسکوتر رزرو کرده اید",
-            subtitle: "هزینه شما تا الان: ",
-            greenSubtitle: "${state.rideDetail.totalCost} T",
+            subtitle: [
+              "هزینه شما تا الان: ",
+              "${state.rideDetail.totalCost} T"
+            ],
+            indexOfGreenSubtitle: 1,
           );
         } else if (state is RideInProgress) {
           notificationDialog = NotificationDialog(
             leadingIcon: AssetsIcon.navigation,
             title: "درحال سواری هستید",
-            subtitle: "هزینه شما تا الان: ",
-            greenSubtitle: "${state.rideDetail.totalCost} T",
+            subtitle: [
+              "هزینه شما تا الان: ",
+              "${state.rideDetail.totalCost} T"
+            ],
+            indexOfGreenSubtitle: 1,
           );
         } else if (state is RidePaused) {
-          notificationDialog = NotificationDialog(
+          notificationDialog = const NotificationDialog(
             leadingIcon: AssetsIcon.pause,
-            title: "توقف کرده اید",
-            subtitle: "هزینه شما تا الان: ",
-            greenSubtitle: "${state.rideDetail.totalCost} T",
+            title: "سواری متوقف شده است",
+            subtitle: [
+              'زمانی که دستگاه متوقف است؛ به علت مصرف باتری و عدم اجاره مجدد اسکوتر، به ازای هر دقیقه هزینه ',
+              "\nT 100.0",
+              ' برای شما لحاظ می شود',
+            ],
+            indexOfGreenSubtitle: 1,
           );
         }
         return Positioned(
@@ -256,6 +274,8 @@ class _HomePageState extends State<HomePage> {
   Widget _getQrCodeButton(
       double width, double height, double bottomSheetHeight) {
     return BlocBuilder<RideBloc, RideState>(
+      buildWhen: (previous, current) =>
+          current is! RidePaused && current is! RideInProgress,
       builder: (context, state) {
         var bottomSheetExpanded = false;
         if (state is! RideInitial && state is! RideFirst) {
@@ -293,7 +313,10 @@ class _HomePageState extends State<HomePage> {
   Widget _getLocationButton(
       double width, double height, double bottomSheetHeight) {
     return BlocBuilder<RideBloc, RideState>(
+      buildWhen: (previous, current) =>
+          current is! RideInitial || current is! RideFirst,
       builder: (context, state) {
+        log("build _getLocationButton");
         var bottomSheetExpanded = false;
         if (state is! RideInitial && state is! RideFirst) {
           bottomSheetExpanded = true;
@@ -369,6 +392,7 @@ class _HomePageState extends State<HomePage> {
             ),
             BlocBuilder<RideBloc, RideState>(
               builder: (context, state) {
+                log("log getMapContent");
                 if (state is RideReserving) {
                   selectedScooter = state.selectedScooter;
                 }

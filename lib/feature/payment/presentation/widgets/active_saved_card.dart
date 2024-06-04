@@ -67,29 +67,25 @@ class ActiveSavedCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: FittedBox(
-                    child: Text(
-                      "08/25",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                          color: ColorManager.reversedEmphasis),
-                    ),
+                  child: Text(
+                    "08/25",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: ColorManager.reversedEmphasis),
                   ),
                 ),
                 SizedBox(width: 5),
                 Expanded(
                   flex: 3,
-                  child: FittedBox(
-                    child: Text(
-                      "6104337624493415".toCardNumberHider(),
-                      maxLines: 1,
-                      textDirection: TextDirection.ltr,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                          color: ColorManager.reversedEmphasis),
-                    ),
+                  child: Text(
+                    "6104337624493415".toCardNumberHider(),
+                    maxLines: 1,
+                    textDirection: TextDirection.ltr,
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: ColorManager.reversedEmphasis),
                   ),
                 ),
               ],

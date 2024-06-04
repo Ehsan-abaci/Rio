@@ -18,6 +18,7 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
     return Scaffold(
+      backgroundColor: ColorManager.appBg,
         appBar: const CustomAppBarWidget(title: "تغییر زبان"),
         body: Stack(
           children: [

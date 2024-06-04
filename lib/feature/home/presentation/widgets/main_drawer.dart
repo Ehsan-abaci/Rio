@@ -9,6 +9,7 @@ import 'package:share_scooter/feature/payment/presentation/screens/credit_paymen
 import 'package:share_scooter/feature/payment/presentation/screens/recharge_the_wallet_page.dart';
 import 'package:share_scooter/feature/ride_histories/presentation/bloc/ride_history_bloc.dart';
 import 'package:share_scooter/feature/ride_histories/presentation/screens/ride_history_page.dart';
+import 'package:share_scooter/feature/settings/presentation/screens/setting_page.dart';
 import 'package:share_scooter/locator.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -51,11 +52,14 @@ class MainDrawer extends StatelessWidget {
           MenuListTile(
             title: "پرداخت اعتباری",
             icon: AssetsIcon.payment,
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CreditPaymentPage(),
-                )),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreditPaymentPage(),
+                  ));
+            },
           ),
           MenuListTile(
             title: "اعتبار معرفی به دوستان",
@@ -85,6 +89,15 @@ class MainDrawer extends StatelessWidget {
                 fontSize: 18,
               ),
             ),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingPage(),
+                ),
+              );
+            },
           ),
         ],
       ),

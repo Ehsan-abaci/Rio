@@ -8,6 +8,7 @@ class TermsOfUsePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorManager.appBg,
       appBar: const CustomAppBarWidget(title: "شرایط استفاده"),
       body: ListView(
         children: [
