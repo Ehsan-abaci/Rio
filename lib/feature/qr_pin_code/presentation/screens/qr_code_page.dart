@@ -12,6 +12,7 @@ import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/reservation_modal.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/ring_modal.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/start_riding_modal.dart';
+import 'package:share_scooter/feature/qr_pin_code/presentation/screens/pin_code_page.dart';
 
 class QrCodePage extends StatefulWidget {
   const QrCodePage({super.key});
@@ -24,6 +25,12 @@ class _QrCodePageState extends State<QrCodePage> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +104,18 @@ class _QrCodePageState extends State<QrCodePage> {
                       );
                     }),
                 CustomElevatedButton(
-                  onTap: () {},
+                  onTap: () {
+                    controller?.pauseCamera();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PinCodePage(
+                            controller: controller!,
+                          ),
+                        )).then(
+                      (_) => controller?.resumeCamera(),
+                    );
+                  },
                   content: "کد دستگاه",
                   icon: AssetsIcon.keyboard,
                   bgColor: Colors.transparent,
@@ -109,87 +127,6 @@ class _QrCodePageState extends State<QrCodePage> {
               ],
             ),
           ),
-          // Expanded(
-          //   flex: 1,
-          //   child: FittedBox(
-          //     fit: BoxFit.contain,
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //       children: <Widget>[
-          //         if (result != null)
-          //           Text(
-          //               'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-          //         else
-          //           const Text('Scan a code'),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           crossAxisAlignment: CrossAxisAlignment.center,
-          //           children: <Widget>[
-          //             Container(
-          //               margin: const EdgeInsets.all(8),
-          //               child: ElevatedButton(
-          //                   onPressed: () async {
-          //                     await controller?.toggleFlash();
-          //                     setState(() {});
-          //                   },
-          //                   child: FutureBuilder(
-          //                     future: controller?.getFlashStatus(),
-          //                     builder: (context, snapshot) {
-          //                       return Text('Flash: ${snapshot.data}');
-          //                     },
-          //                   )),
-          //             ),
-          //             Container(
-          //               margin: const EdgeInsets.all(8),
-          //               child: ElevatedButton(
-          //                   onPressed: () async {
-          //                     await controller?.flipCamera();
-          //                     setState(() {});
-          //                   },
-          //                   child: FutureBuilder(
-          //                     future: controller?.getCameraInfo(),
-          //                     builder: (context, snapshot) {
-          //                       if (snapshot.data != null) {
-          //                         return Text(
-          //                             'Camera facing ${describeEnum(snapshot.data!)}');
-          //                       } else {
-          //                         return const Text('loading');
-          //                       }
-          //                     },
-          //                   )),
-          //             )
-          //           ],
-          //         ),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           crossAxisAlignment: CrossAxisAlignment.center,
-          //           children: <Widget>[
-          //             Container(
-          //               margin: const EdgeInsets.all(8),
-          //               child: ElevatedButton(
-          //                 onPressed: () async {
-          //                   await controller?.pauseCamera();
-          //                 },
-          //                 child: const Text('pause',
-          //                     style: TextStyle(fontSize: 20)),
-          //               ),
-          //             ),
-          //             Container(
-          //               margin: const EdgeInsets.all(8),
-          //               child: ElevatedButton(
-          //                 onPressed: () async {
-          //                   await controller?.resumeCamera();
-          //                 },
-          //                 child: const Text('resume',
-          //                     style: TextStyle(fontSize: 20)),
-          //               ),
-          //             )
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // )
         ],
       ),
     );
@@ -238,11 +175,5 @@ class _QrCodePageState extends State<QrCodePage> {
         const SnackBar(content: Text('no Permission')),
       );
     }
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
   }
 }

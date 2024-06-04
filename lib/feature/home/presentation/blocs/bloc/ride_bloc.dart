@@ -2,23 +2,26 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:share_scooter/feature/home/presentation/screens/home_page.dart';
+import 'package:share_scooter/feature/ride_histories/data/data_source/local/ride_history_hive.dart';
 import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
+import 'package:share_scooter/feature/ride_histories/domain/entities/scooter_entity.dart';
 
 part 'ride_event.dart';
 part 'ride_state.dart';
 
 class RideBloc extends Bloc<RideEvent, RideState> {
-  RideBloc() : super(RideInitial()) {
+  final RideHistoryHive _rideHistoryHiveImpl;
+  RideBloc(
+    this._rideHistoryHiveImpl,
+  ) : super(RideInitial()) {
     late Scooter selectedScooter;
     late RideDetailEntity rideDetailEntity;
     var moneyController = MoneyController();
     RideState? currentState;
     double increaseAmount = 0.0;
 
-    on<RideInitialEvent>((event, emit) {
-      emit(RideInitial());
-    });
 
     on<ReservingEvent>(
       (event, emit) {
@@ -74,11 +77,21 @@ class RideBloc extends Bloc<RideEvent, RideState> {
         emit(currentState!);
       }
     });
-
-    on<LoadingEvent>((event, emit) => emit(RideLoading()));
-    
+    on<AddNewRideEvent>((event, emit) async {
+      emit(RideLoading());
+      try {
+        final img = await takeImage(event.previewContainer);
+        final rideDetailEntity = event.rideDetailEntity.copyWith(
+          img: img,
+          endTime: DateTime.now(),
+        );
+        await _rideHistoryHiveImpl.saveRide(rideDetailEntity);
+        emit(RideInitial());
+      } catch (e) {
+        emit(RideError(message: e.toString()));
+      }
+    });
   }
-  
 }
 
 class MoneyController {

@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:isolate';
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
 
@@ -11,6 +11,7 @@ import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_appbar_widget.dart';
 import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
+import 'package:share_scooter/feature/ride_histories/presentation/bloc/ride_history_bloc.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,57 +38,67 @@ class RideHistoriesPage extends StatefulWidget {
 }
 
 class _RideHistoriesPageState extends State<RideHistoriesPage> {
-  List<RideHistory> _rideHistories = [];
-  List<dynamic> rawData = [];
-  List<RideDetailEntity> rideDetails = [];
-  final sp = di<SharedPreferences>();
-  @override
-  void initState() {
-    loadData();
-    super.initState();
-  }
-
-  Future<void> loadData() async {
-    final jsonString = sp.getString('RIDE_HISTORY') ?? '[]';
-    rawData = jsonDecode(jsonString);
-    // rideDetails = rawData.map((e) => RideDetailEntity.fromJson(e)).toList();
-
-    _rideHistories = rideDetails
-        .map(
-          (e) => RideHistory(
-            distance: "6",
-            startTime: e.startTime,
-            duration: e.duration ?? Duration.zero,
-            price: e.totalCost ?? 0.0,
-            image: e.img,
-          ),
-        )
-        .toList();
+  void loadData() {
+    context.read<RideHistoryBloc>().add(FetchRideHisyoriesEvent());
   }
 
   @override
   void didChangeDependencies() {
+    loadData();
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorManager.surface,
+      backgroundColor: ColorManager.appBg,
       appBar: const CustomAppBarWidget(title: "تاریخچه سواری"),
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey.shade100,
-        ),
-        child: _rideHistories.isEmpty
-            ? const Center(child: CircularProgressIndicator.adaptive())
-            : ListView(
-                children: [
-                  ..._rideHistories.map(
-                    (e) => RideHistoryItem(rideHistory: e),
+      body: BlocBuilder<RideHistoryBloc, RideHistoryState>(
+        builder: (context, state) {
+          if (state is LoadingState) {
+            return const Center(child: CircularProgressIndicator.adaptive());
+          } else if (state is CompleteState) {
+            if (state.rideHistories.isEmpty) {
+              return const Center(
+                child: Text("There is no ride"),
+              );
+            } else {
+              return CustomScrollView(
+                cacheExtent: 1000,
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        ...state.rideHistories.map(
+                          (e) => RideHistoryItem(rideHistory: e),
+                        ),
+                        ...state.rideHistories.map(
+                          (e) => RideHistoryItem(rideHistory: e),
+                        ),
+                        ...state.rideHistories.map(
+                          (e) => RideHistoryItem(rideHistory: e),
+                        ),
+                        ...state.rideHistories.map(
+                          (e) => RideHistoryItem(rideHistory: e),
+                        ),
+                        ...state.rideHistories.map(
+                          (e) => RideHistoryItem(rideHistory: e),
+                        ),
+                        ...state.rideHistories.map(
+                          (e) => RideHistoryItem(rideHistory: e),
+                        ),
+                        ...state.rideHistories.map(
+                          (e) => RideHistoryItem(rideHistory: e),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
-              ),
+              );
+            }
+          }
+          return const SizedBox();
+        },
       ),
     );
   }
@@ -99,7 +110,7 @@ class RideHistoryItem extends StatelessWidget {
     required this.rideHistory,
   });
 
-  final RideHistory rideHistory;
+  final RideDetailEntity rideHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -117,20 +128,25 @@ class RideHistoryItem extends StatelessWidget {
             elevation: 5,
             surfaceTintColor: ColorManager.surface,
             color: ColorManager.surface,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Column(
               children: [
                 Expanded(
                   flex: 3,
                   child: Stack(
                     children: [
-                      (rideHistory.image != null)
-                          ? Image.memory(
-                              Uint8List.fromList(
-                                  base64Decode(rideHistory.image!).toList()),
-                              fit: BoxFit.cover,
-                              width: 500,
-                            )
-                          : const Placeholder(),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: (rideHistory.img != null)
+                            ? Image.memory(
+                                Uint8List.fromList(
+                                    base64Decode(rideHistory.img!).toList()),
+                                fit: BoxFit.cover,
+                                width: 500,
+                              )
+                            : const Placeholder(),
+                      ),
                       Positioned(
                         left: 10,
                         bottom: 10,
@@ -186,7 +202,7 @@ class RideHistoryItem extends StatelessWidget {
                                           ),
                                           TextSpan(
                                             text:
-                                                "   ${rideHistory.startTime?.hour}:${rideHistory.startTime?.minute}",
+                                                rideHistory.startTime.toTime(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 16),
@@ -210,7 +226,7 @@ class RideHistoryItem extends StatelessWidget {
                                             ),
                                             SizedBox(width: 2),
                                             Text(
-                                              "${rideHistory.duration?.inMinutes} دقیقه",
+                                              "${Duration(milliseconds: rideHistory.durationInMilliSeconds!).inMinutes} دقیقه",
                                               style: TextStyle(
                                                   color:
                                                       ColorManager.placeholder,
@@ -230,7 +246,7 @@ class RideHistoryItem extends StatelessWidget {
                                             ),
                                             SizedBox(width: 2),
                                             Text(
-                                              "${rideHistory.distance}KM",
+                                              "${6}KM",
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: ColorManager.placeholder,
@@ -258,7 +274,7 @@ class RideHistoryItem extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       textDirection: TextDirection.ltr,
-                                      rideHistory.price
+                                      rideHistory.totalCost
                                           // .toStringAsFixed(0)
                                           !
                                           .to3Dot(),

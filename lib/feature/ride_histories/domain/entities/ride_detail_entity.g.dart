@@ -21,7 +21,7 @@ class RideDetailEntityAdapter extends TypeAdapter<RideDetailEntity> {
       scooter: fields[1] as Scooter,
       startTime: fields[2] as DateTime,
       endTime: fields[3] as DateTime?,
-      duration: fields[4] as Duration?,
+      durationInMilliSeconds: fields[4] as int?,
       img: fields[6] as String?,
       reservationCost: fields[5] as double,
       ridingCost: fields[7] as double?,
@@ -43,7 +43,7 @@ class RideDetailEntityAdapter extends TypeAdapter<RideDetailEntity> {
       ..writeByte(3)
       ..write(obj.endTime)
       ..writeByte(4)
-      ..write(obj.duration)
+      ..write(obj.durationInMilliSeconds)
       ..writeByte(5)
       ..write(obj.reservationCost)
       ..writeByte(6)

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
 import 'package:share_scooter/feature/payment/presentation/screens/recharge_the_wallet_page.dart';
 import '../../../../core/utils/resources/assets_manager.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:share_scooter/feature/home/presentation/screens/home_page.dart';
 import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
+import 'package:share_scooter/feature/ride_histories/domain/entities/scooter_entity.dart';
 
 class RideDetailModel extends RideDetailEntity {
   RideDetailModel({
@@ -9,7 +9,7 @@ class RideDetailModel extends RideDetailEntity {
     required super.startTime,
     required super.ridingCost,
     super.endTime,
-    super.duration,
+    super.durationInMilliSeconds,
     super.img,
     super.reservationCost,
     super.rideId,
@@ -21,7 +21,7 @@ class RideDetailModel extends RideDetailEntity {
       'scooter': scooter.tojson(),
       'startTime': startTime.millisecondsSinceEpoch,
       'endTime': endTime?.millisecondsSinceEpoch,
-      'duration': duration?.toString(),
+      'durationInMilliSeconds': durationInMilliSeconds?.toString(),
       'img': img,
       'reservationCost': reservationCost,
       'ridingCost': ridingCost,

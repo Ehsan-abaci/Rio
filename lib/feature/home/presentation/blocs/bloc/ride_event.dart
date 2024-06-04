@@ -3,7 +3,6 @@ part of 'ride_bloc.dart';
 
 class RideEvent {}
 
-class RideInitialEvent extends RideEvent {}
 
 class StartRidingEvent extends RideEvent {}
 
@@ -22,4 +21,13 @@ class FinishedEvent extends RideEvent {}
 
 class IncreaseAmount extends RideEvent {}
 
-class LoadingEvent extends RideEvent {}
+class AddNewRideEvent extends RideEvent {
+  final RideDetailEntity rideDetailEntity;
+  final GlobalKey previewContainer;
+  AddNewRideEvent({
+    required this.rideDetailEntity,
+    required this.previewContainer,
+  });
+  @override
+  List<Object?> get props => [rideDetailEntity];
+}

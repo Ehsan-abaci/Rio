@@ -6,8 +6,8 @@ import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/feature/home/presentation/blocs/bloc/ride_bloc.dart';
-import 'package:share_scooter/feature/home/presentation/screens/home_page.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/reservation_modal.dart';
+import 'package:share_scooter/feature/ride_histories/domain/entities/scooter_entity.dart';
 
 class VehicleBottomSheet extends StatefulWidget {
   const VehicleBottomSheet({

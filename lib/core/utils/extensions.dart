@@ -7,6 +7,15 @@ extension ToMS on Duration {
   }
 }
 
+extension ToTime on DateTime {
+  String toTime() {
+    var hour = this.hour;
+    var minute = this.minute ;
+
+    return " ${hour < 10 ? "0$hour" : hour}:${minute < 10 ? "0$minute" : minute}";
+  }
+}
+
 extension PriceChanger on double {
   String to3Dot() {
     String res = '';

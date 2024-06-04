@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:share_scooter/core/utils/constants.dart';
 // import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:share_scooter/feature/home/presentation/blocs/bloc/ride_bloc.dart';
 import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
+import 'package:share_scooter/feature/ride_histories/domain/entities/scooter_entity.dart';
+import 'package:share_scooter/feature/ride_histories/presentation/bloc/ride_history_bloc.dart';
 import 'package:share_scooter/feature/splash/presentation/screens/splash_screen_page.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,8 +18,9 @@ void main() async {
   await initAppMoudule();
   await Hive.initFlutter();
   Hive.registerAdapter<RideDetailEntity>(RideDetailEntityAdapter());
+  Hive.registerAdapter<Scooter>(ScooterAdapter());
 
-  await Hive.openBox<RideDetailEntity>("ride_history");
+  await Hive.openBox<RideDetailEntity>(Constant.rideHistoryBox);
   // await FMTCObjectBoxBackend().initialise();
 
   // if (!await const FMTCStore('mapStore').manage.ready) {
@@ -40,8 +44,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => RideBloc(),
-        )
+          create: (context) => di<RideBloc>(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

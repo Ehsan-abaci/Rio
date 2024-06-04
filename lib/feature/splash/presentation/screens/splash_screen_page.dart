@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../signup/presentation/screens/signup_page.dart';
@@ -22,28 +23,39 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     super.initState();
   }
 
+  String? imgRaw;
+  @override
+  void didChangeDependencies() async {
+    imgRaw = await rootBundle.loadString("$IMAGE_PATH/bg.svg");
+    setState(() {
+      
+    });
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: SvgPicture.asset(
-                  AssetsImage.bg,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: SvgPicture.asset(
-                  AssetsImage.logo,
-                  fit: BoxFit.scaleDown,
-                  width: MediaQuery.sizeOf(context).width * .4,
-                ),
-              ),
-            ],
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: SvgPicture.asset(
+              AssetsImage.bg,
+              fit: BoxFit.cover,
+            ),
+            
           ),
-        ));
+          Align(
+            alignment: Alignment.center,
+            child: SvgPicture.asset(
+              AssetsImage.logo,
+              fit: BoxFit.scaleDown,
+              width: MediaQuery.sizeOf(context).width * .4,
+            ),
+          ),
+        ],
+      ),
+    ));
   }
 }

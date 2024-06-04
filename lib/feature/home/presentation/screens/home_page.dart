@@ -20,37 +20,10 @@ import 'package:share_scooter/feature/home/presentation/blocs/bloc/ride_bloc.dar
 import 'package:share_scooter/feature/home/presentation/widgets/main_drawer.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/notification_dialog.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/vehicle_bottom_sheet.dart';
-import 'package:share_scooter/feature/qr_code/presentation/screens/qr_code_page.dart';
-import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
+import 'package:share_scooter/feature/qr_pin_code/presentation/screens/qr_code_page.dart';
+import 'package:share_scooter/feature/ride_histories/domain/entities/scooter_entity.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-class Scooter {
-  String id;
-  String name;
-  LatLng location;
-  Scooter({
-    required this.id,
-    required this.name,
-    required this.location,
-  });
-
-  Map<String, dynamic> tojson() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'location': location.toJson(),
-    };
-  }
-
-  factory Scooter.fromJson(Map<String, dynamic> map) {
-    return Scooter(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      location: LatLng.fromJson(map['location'] as Map<String, dynamic>),
-    );
-  }
-}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -75,7 +48,8 @@ class _HomePageState extends State<HomePage> {
     super.didChangeDependencies();
     mapController = MapController();
     if (mounted) {
-      currentLocation = await determinePosition();
+      // currentLocation = await determinePosition();
+      currentLocation = const LatLng(36.312309, 59.599125);
     }
   }
 
@@ -83,38 +57,31 @@ class _HomePageState extends State<HomePage> {
     Scooter(
       id: "#1",
       name: "Apple Scooter",
-      location: const LatLng(36.304436, 59.594230),
+      lat: 36.304436,
+      lng: 59.594230,
     ),
     Scooter(
       id: "#2",
       name: "Apple Scooter",
-      location: const LatLng(36.304436, 57.594230),
+      lat: 36.304436,
+      lng: 57.594230,
     ),
     Scooter(
       name: "Apple Scooter",
       id: "#3",
-      location: const LatLng(36.304436, 58.594230),
+      lat: 36.304436,
+      lng: 58.594230,
     ),
     Scooter(
       name: "Apple Scooter",
       id: "#4",
-      location: const LatLng(38.304436, 59.594230),
+      lat: 38.304436,
+      lng: 59.594230,
     ),
   ];
 
-  Future<void> saveTrip(RideDetailEntity rideDetail) async {
-    context.read<RideBloc>().add(LoadingEvent());
-    final img = await takeImage(previewContainer);
-    rideDetail = rideDetail.copyWith(
-      img: img,
-      endTime: DateTime.now(),
-    );
-    final List<dynamic> trips =
-        jsonDecode(sp.getString('RIDE_HISTORY') ?? '[]');
-
-    await sp
-        .setString('RIDE_HISTORY', jsonEncode(trips..add(rideDetail)))
-        .then((_) => context.read<RideBloc>().add(RideInitialEvent()));
+  goToCurrentLocation() {
+    mapController.move(currentLocation!, 14);
   }
 
   selecetScooter(Scooter scooter) {
@@ -128,7 +95,7 @@ class _HomePageState extends State<HomePage> {
         minZoom: 2,
         maxZoom: 15,
         bounds: LatLngBounds(
-          scooter.location,
+          LatLng(scooter.lat, scooter.lng),
           currentLocation!,
         ),
       ),
@@ -145,7 +112,7 @@ class _HomePageState extends State<HomePage> {
       canPop: context.watch<RideBloc>().state is! RideReserving,
       onPopInvoked: (_) {
         if (context.read<RideBloc>().state is RideReserving) {
-          context.read<RideBloc>().add(RideInitialEvent());
+          context.read<RideBloc>().emit(RideInitial());
         }
       },
       child: Scaffold(
@@ -153,7 +120,12 @@ class _HomePageState extends State<HomePage> {
         body: BlocListener<RideBloc, RideState>(
           listener: (context, state) async {
             if (state is RideFinished) {
-              await saveTrip(state.rideDetail);
+              context.read<RideBloc>().add(
+                    AddNewRideEvent(
+                      rideDetailEntity: state.rideDetail,
+                      previewContainer: previewContainer,
+                    ),
+                  );
             } else if (state is RideLoading) {
               showAdaptiveDialog(
                 context: context,
@@ -323,8 +295,9 @@ class _HomePageState extends State<HomePage> {
     return BlocBuilder<RideBloc, RideState>(
       builder: (context, state) {
         var bottomSheetExpanded = false;
-        if (state is! RideInitial && state is! RideFirst)
+        if (state is! RideInitial && state is! RideFirst) {
           bottomSheetExpanded = true;
+        }
         return Positioned(
           bottom: (!bottomSheetExpanded)
               ? width * .08
@@ -335,8 +308,8 @@ class _HomePageState extends State<HomePage> {
             height * .06,
             ColorManager.white,
             ColorManager.primaryDark,
-            () async {
-              // await sp.clear();
+            () {
+              goToCurrentLocation();
             },
           ),
         );
@@ -409,7 +382,7 @@ class _HomePageState extends State<HomePage> {
                           return Marker(
                             width: 70,
                             height: 70,
-                            point: e.location,
+                            point: LatLng(e.lat, e.lng),
                             child: GestureDetector(
                               onTap: () {
                                 selecetScooter(e);
@@ -432,7 +405,8 @@ class _HomePageState extends State<HomePage> {
                       Marker(
                         width: 70,
                         height: 70,
-                        point: selectedScooter!.location,
+                        point:
+                            LatLng(selectedScooter!.lat, selectedScooter!.lng),
                         child: SvgPicture.asset(
                           AssetsIcon.point,
                         ),
@@ -447,18 +421,18 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
 
-  FutureOr<String?> takeImage(GlobalKey previewContainer) async {
-    try {
-      RenderRepaintBoundary? boundary = previewContainer.currentContext!
-          .findRenderObject() as RenderRepaintBoundary?;
+FutureOr<String?> takeImage(GlobalKey previewContainer) async {
+  try {
+    RenderRepaintBoundary? boundary = previewContainer.currentContext!
+        .findRenderObject() as RenderRepaintBoundary?;
 
-      final image = await boundary!.toImage();
-      final byteData = await image.toByteData(format: ImageByteFormat.png);
-      final pngBytes = byteData?.buffer.asUint8List();
-      return pngBytes != null ? base64Encode(pngBytes) : null;
-    } catch (e) {
-      return null;
-    }
+    final image = await boundary!.toImage();
+    final byteData = await image.toByteData(format: ImageByteFormat.png);
+    final pngBytes = byteData?.buffer.asUint8List();
+    return pngBytes != null ? base64Encode(pngBytes) : null;
+  } catch (e) {
+    return null;
   }
 }
