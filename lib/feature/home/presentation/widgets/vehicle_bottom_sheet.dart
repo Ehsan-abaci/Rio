@@ -1,11 +1,16 @@
+import 'dart:developer';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:share_scooter/core/utils/constants.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/feature/home/presentation/blocs/bloc/ride_bloc.dart';
+import 'package:share_scooter/feature/home/presentation/widgets/battery_level_widget.dart';
 import 'package:share_scooter/feature/home/presentation/widgets/reservation_modal.dart';
 import 'package:share_scooter/feature/ride_histories/domain/entities/scooter_entity.dart';
 
@@ -18,17 +23,42 @@ class VehicleBottomSheet extends StatefulWidget {
   State<VehicleBottomSheet> createState() => _VehicleBottomSheetState();
 }
 
-class _VehicleBottomSheetState extends State<VehicleBottomSheet> {
+class _VehicleBottomSheetState extends State<VehicleBottomSheet>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+  late final Animation<double> _animation;
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _animation = Tween<double>(
+      end: 0,
+      begin: MediaQuery.sizeOf(context).height * -.3,
+    ).animate(_animationController);
+    super.didChangeDependencies();
+  }
+
   final Stopwatch _stopwatch = Stopwatch();
-  late Scooter selectedScooter;
+  Scooter? selectedScooter;
+  double? bottomPadding;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
+
     return BlocBuilder<RideBloc, RideState>(
+      buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         Widget? bottomSheetButtons;
         if (state is RideReserving) {
+          _animationController.forward();
           selectedScooter = state.selectedScooter;
           bottomSheetButtons = ReserveBottomSheetButtons(width: width);
         } else if (state is RideInProgress) {
@@ -44,131 +74,137 @@ class _VehicleBottomSheetState extends State<VehicleBottomSheet> {
             stopwatch: _stopwatch,
           );
         } else {
-          return const SizedBox();
+          _animationController.reverse();
         }
-        return Container(
-          padding: EdgeInsets.zero,
-          margin: EdgeInsets.zero,
-          height: height * .3,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(25),
-              topRight: Radius.circular(25),
+        return AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) => Positioned(
+            right: 0,
+            left: 0,
+            bottom: _animation.value,
+            height: height * .3,
+            child: Container(
+              padding: EdgeInsets.zero,
+              margin: EdgeInsets.zero,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25),
+                ),
+                color: ColorManager.surface,
+              ),
+              child: Column(
+                children: [
+                  _getVehicleDetails(height, state),
+                  const Divider(height: 0),
+                  SizedBox(
+                    height: height * .17,
+                    child: bottomSheetButtons,
+                  ),
+                ],
+              ),
             ),
-            color: ColorManager.surface,
           ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: height * .13,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: height * .02, horizontal: height * .02),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+        );
+      },
+    );
+  }
+
+  SizedBox _getVehicleDetails(double height, RideState state) {
+    return SizedBox(
+      height: height * .13,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: height * .025, horizontal: height * .025),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SvgPicture.asset(
+              AssetsIcon.scooter,
+              width: 60,
+              matchTextDirection: true,
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SvgPicture.asset(
-                        AssetsIcon.scooter,
-                        width: 60,
-                        matchTextDirection: true,
+                      Text(
+                        selectedScooter?.name ?? "Unknow",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  selectedScooter.name,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                      const SizedBox(height: 10),
+                      FittedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "شماره دستگاه : ${selectedScooter?.id} ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: ColorManager.mediumEmphasis,
+                              ),
+                            ),
+                            if (state is RideInProgress || state is RidePaused)
+                              StreamBuilder<Duration>(
+                                stream: Stream.periodic(
+                                  const Duration(seconds: 1),
+                                  (_) => _stopwatch.elapsed,
                                 ),
-                                SizedBox(height: 10),
-                                FittedBox(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "شماره دستگاه : ${selectedScooter.id} ",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: ColorManager.mediumEmphasis,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return FittedBox(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text: " •  ",
+                                          style: TextStyle(
+                                            color: ColorManager.mediumEmphasis,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          children: [
+                                            TextSpan(
+                                              text: snapshot.data!.toMs(),
+                                              style: TextStyle(
+                                                fontFamily: Constant.fontFamily,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: state is RideInProgress
+                                                    ? ColorManager.success
+                                                    : ColorManager.danger,
+                                              ),
+                                            )
+                                          ],
                                         ),
                                       ),
-                                      if (state is RideInProgress ||
-                                          state is RidePaused)
-                                        StreamBuilder<Duration>(
-                                          stream: Stream.periodic(
-                                            const Duration(seconds: 1),
-                                            (_) => _stopwatch.elapsed,
-                                          ),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.hasData) {
-                                              return FittedBox(
-                                                child: RichText(
-                                                  text: TextSpan(
-                                                    text: " •  ",
-                                                    style: TextStyle(
-                                                      color: ColorManager
-                                                          .mediumEmphasis,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                                    children: [
-                                                      TextSpan(
-                                                        text: snapshot.data!
-                                                            .toMs(),
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color: state
-                                                                  is RideInProgress
-                                                              ? ColorManager
-                                                                  .success
-                                                              : ColorManager
-                                                                  .danger,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              );
-                                            } else {
-                                              return const SizedBox();
-                                            }
-                                          },
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                    );
+                                  } else {
+                                    return const SizedBox();
+                                  }
+                                },
+                              ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              Divider(height: 0),
-              SizedBox(
-                height: height * .17,
-                child: bottomSheetButtons,
-              ),
-            ],
-          ),
-        );
-      },
+            ),
+            const BatteryLevelWidget(),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -19,7 +19,7 @@ class RechargeTheWalletPage extends StatefulWidget {
 class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
   int selected = 0;
 
-  Widget customRadioButton(int index, String numberPlus, String number) {
+  Widget customRadioButton(int index, double numberPlus, double number) {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
     return InkWell(
@@ -53,7 +53,7 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
                       children: [
                         FittedBox(
                           child: Text(
-                            "+ $numberPlus T",
+                            "+ ${numberPlus.to3Dot()} T",
                             textDirection: TextDirection.ltr,
                             style: TextStyle(
                               color: ColorManager.primary,
@@ -67,7 +67,7 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
                         ),
                         FittedBox(
                           child: Text(
-                            "$number T",
+                            "${number.to3Dot()} T",
                             textDirection: TextDirection.ltr,
                             style: TextStyle(
                               color: ColorManager.highEmphasis,
@@ -102,100 +102,94 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
             child: SvgPicture.asset(
               AssetsImage.bgBody,
               fit: BoxFit.cover,
-              // width: MediaQuery.sizeOf(context).width * .4,
             ),
           ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ListView(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: width * 0.04,
-                    right: width * 0.04,
-                    top: height * 0.04,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "موجودی کیف پول",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                            color: ColorManager.highEmphasis),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        "${50000.0.to3Dot()} T",
-                        textAlign: TextAlign.center,
-                        textDirection: TextDirection.ltr,
-                        style: TextStyle(
-                            fontSize: 48,
-                            fontWeight: FontWeight.w800,
-                            color: ColorManager.highEmphasis),
-                      ),
-                      SizedBox(
-                        height: height * .01,
-                      ),
-                      Text(
-                        'اگر در هنگام سواری، موجودی کیف پول شما تمام شود؛ تا سواری بعدی باید اعتبار خود را شارژ نمائید.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: ColorManager.mediumEmphasis,
-                          height: 1.8,
-                        ),
-                      ),
-                      SizedBox(
-                        height: height * .02,
-                      ),
-                      SizedBox(
-                        height: width > 450 ? height * .25 : height * .15,
-                        child: ListView.separated(
-                          padding: EdgeInsets.zero,
-                          scrollDirection: Axis.horizontal,
-                          reverse: true,
-                          itemCount: 4,
-                          itemBuilder: (context, i) =>
-                              customRadioButton(i, "5000", '10000'),
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(width: 10),
-                        ),
-                      ),
-                      SizedBox(
-                        height: height * .05,
-                      ),
-                      DesiredAmountCardWidget(width: width),
-                      SizedBox(
-                        height: height * .02,
-                      ),
-                      Text(
-                        'به ازای مبالغ بالای 50.000 تومان، 10% جایزه به اعتبار شما افزوده می شود.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: ColorManager.mediumEmphasis,
-                          height: 1.8,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: height * .14,
-                ),
-              ],
+          ListView(
+            padding: EdgeInsets.only(
+              left: width * 0.04,
+              right: width * 0.04,
+              top: height * 0.04,
+              bottom: MediaQuery.of(context).viewInsets.bottom * .4,
             ),
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "موجودی کیف پول",
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: ColorManager.highEmphasis),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    "${50000.0.to3Dot()} T",
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.ltr,
+                    style: TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.w800,
+                        color: ColorManager.highEmphasis),
+                  ),
+                  SizedBox(
+                    height: height * .01,
+                  ),
+                  Text(
+                    'اگر در هنگام سواری، موجودی کیف پول شما تمام شود؛ تا سواری بعدی باید اعتبار خود را شارژ نمائید.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: ColorManager.mediumEmphasis,
+                      height: 1.8,
+                    ),
+                  ),
+                  SizedBox(
+                    height: height * .02,
+                  ),
+                  SizedBox(
+                    height: width > 450 ? height * .25 : height * .15,
+                    child: ListView.separated(
+                      padding: EdgeInsets.zero,
+                      scrollDirection: Axis.horizontal,
+                      reverse: true,
+                      itemCount: 4,
+                      itemBuilder: (context, i) =>
+                          customRadioButton(i, 5000.0, 10000.0),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 10),
+                    ),
+                  ),
+                  SizedBox(
+                    height: height * .05,
+                  ),
+                  DesiredAmountCardWidget(width: width),
+                  SizedBox(
+                    height: height * .01,
+                  ),
+                  Text(
+                    'به ازای مبالغ بالای 50.000 تومان، 10% جایزه به اعتبار شما افزوده می شود.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: ColorManager.mediumEmphasis,
+                      height: 1.8,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
+          Positioned(
+            bottom: 0,
+            right: 0,
+            left: 0,
             child: Container(
-              height: height * .15,
+              height: height * .1,
               width: double.infinity,
               padding: EdgeInsets.zero,
               color: ColorManager.appBg,
@@ -203,8 +197,8 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
                 padding: EdgeInsets.only(
                   left: width * 0.04,
                   right: width * 0.04,
-                  bottom: height * 0.04,
-                  top: height * 0.04,
+                  bottom: height * 0.015,
+                  top: height * 0.015,
                 ),
                 child: CustomElevatedButton(
                   onTap: () {},

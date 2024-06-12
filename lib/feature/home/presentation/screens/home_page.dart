@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -39,7 +38,6 @@ class _HomePageState extends State<HomePage> {
 
   LatLng? currentLocation;
   late MapController mapController;
-  final sp = di<SharedPreferences>();
 
   final GlobalKey previewContainer = GlobalKey();
   Scooter? selectedScooter;
@@ -109,46 +107,43 @@ class _HomePageState extends State<HomePage> {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
     final bottomSheetHeight = height * .3;
-    return PopScope(
-      canPop: context.watch<RideBloc>().state is! RideReserving,
-      onPopInvoked: (_) {
-        if (context.read<RideBloc>().state is RideReserving) {
-          context.read<RideBloc>().emit(RideInitial());
+    return BlocListener<RideBloc, RideState>(
+      listenWhen: (previous, current) =>
+          current is RideInitial ||
+          current is RideFinished ||
+          current is RideLoading,
+      listener: (context, state) async {
+        if (state is RideFinished) {
+          context.read<RideBloc>().add(
+                AddNewRideEvent(
+                  rideDetailEntity: state.rideDetail,
+                  previewContainer: previewContainer,
+                ),
+              );
+        } else if (state is RideLoading) {
+          showAdaptiveDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) => ProcessingModal(
+              key: _loadinDialogKey,
+            ),
+          );
+        } else if (state is RideInitial) {
+          dismissDialog(context, _loadinDialogKey);
         }
       },
       child: Scaffold(
         key: _scaffoldKey,
-        body: BlocListener<RideBloc, RideState>(
-          listener: (context, state) async {
-            if (state is RideFinished) {
-              context.read<RideBloc>().add(
-                    AddNewRideEvent(
-                      rideDetailEntity: state.rideDetail,
-                      previewContainer: previewContainer,
-                    ),
-                  );
-            } else if (state is RideLoading) {
-              showAdaptiveDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (context) => ProcessingModal(
-                  key: _loadinDialogKey,
-                ),
-              );
-            } else if (state is RideInitial) {
-              dismissDialog(context, _loadinDialogKey);
-            }
-          },
-          child: Stack(
-            children: [
-              _getMapContent(),
-              _getAppbar(width, height),
-              _getNotification(width, height),
-              _getLocationButton(width, height, bottomSheetHeight),
-              _getQrCodeButton(width, height, bottomSheetHeight),
-              _getBottomSheet(bottomSheetHeight),
-            ],
-          ),
+        body: Stack(
+          children: [
+            _getMapContent(),
+            _getAppbar(width, height),
+            // _getNotification(width, height),
+            NotificationDialog(),
+            _getLocationButton(width, height, bottomSheetHeight),
+            _getQrCodeButton(width, height, bottomSheetHeight),
+            _getBottomSheet(bottomSheetHeight),
+          ],
         ),
         drawer: const MainDrawer(),
       ),
@@ -157,18 +152,17 @@ class _HomePageState extends State<HomePage> {
 
   Widget _getBottomSheet(double bottomSheetHeight) {
     return BlocBuilder<RideBloc, RideState>(
-   
       builder: (context, state) {
-        if (state is! RideInitial && state is! RideFirst) {
-          return Positioned(
-            right: 0,
-            left: 0,
-            bottom: 0,
-            height: bottomSheetHeight,
-            child: const VehicleBottomSheet(),
-          );
-        }
-        return const Align();
+        return PopScope(
+          canPop: state is RideInitial,
+          onPopInvoked: (_) {
+            final state = context.read<RideBloc>().state;
+            if (state is! RideInitial) {
+              context.read<RideBloc>().emit(RideInitial());
+            }
+          },
+          child: const VehicleBottomSheet(),
+        );
       },
     );
   }
@@ -219,64 +213,43 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _getNotification(double width, double height) {
-    return BlocBuilder<RideBloc, RideState>(
-      buildWhen: (previous, current) =>
-          current is RideReserved ||
-          current is RideInProgress ||
-          current is RidePaused ||
-          current is RideInitial,
-      builder: (context, state) {
-        log("build _getNotification");
-        Widget? notificationDialog;
-        if (state is RideReserved) {
-          notificationDialog = NotificationDialog(
-            leadingIcon: AssetsIcon.reservation,
-            title: "یک اسکوتر رزرو کرده اید",
-            subtitle: [
-              "هزینه شما تا الان: ",
-              "${state.rideDetail.totalCost} T"
-            ],
-            indexOfGreenSubtitle: 1,
-          );
-        } else if (state is RideInProgress) {
-          notificationDialog = NotificationDialog(
-            leadingIcon: AssetsIcon.navigation,
-            title: "درحال سواری هستید",
-            subtitle: [
-              "هزینه شما تا الان: ",
-              "${state.rideDetail.totalCost} T"
-            ],
-            indexOfGreenSubtitle: 1,
-          );
-        } else if (state is RidePaused) {
-          notificationDialog = const NotificationDialog(
-            leadingIcon: AssetsIcon.pause,
-            title: "سواری متوقف شده است",
-            subtitle: [
-              'زمانی که دستگاه متوقف است؛ به علت مصرف باتری و عدم اجاره مجدد اسکوتر، به ازای هر دقیقه هزینه ',
-              "\nT 100.0",
-              ' برای شما لحاظ می شود',
-            ],
-            indexOfGreenSubtitle: 1,
-          );
-        }
-        return Positioned(
-          right: width * .1,
-          left: width * .1,
-          top: height * .15,
-          child: notificationDialog ?? const Align(),
-        );
-      },
-    );
-  }
+  // Widget _getNotification(double width, double height) {
+  //   return BlocBuilder<RideBloc, RideState>(
+  //     buildWhen: (previous, current) =>
+  //         current is RideReserved ||
+  //         current is RideInProgress ||
+  //         current is RidePaused ||
+  //         previous is RideFinished,
+  //     builder: (context, state) {
+  //       return Positioned(
+  //         right: width * .1,
+  //         left: width * .1,
+  //         top: height * .15,
+  //         child: (state is RideReserved ||
+  //                 state is RideInProgress ||
+  //                 state is RidePaused)
+  //             ?
+  //             : const Align(),
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _getQrCodeButton(
       double width, double height, double bottomSheetHeight) {
     return BlocBuilder<RideBloc, RideState>(
-      buildWhen: (previous, current) =>
-          current is! RidePaused && current is! RideInProgress,
+      buildWhen: (previous, current) {
+        if (current is RideInitial ||
+            current is RideFirst ||
+            current is RideReserved ||
+            current is RideReserving) {
+          return true;
+        } else {
+          return false;
+        }
+      },
       builder: (context, state) {
+        log("build _getQrCodeButton");
         var bottomSheetExpanded = false;
         if (state is! RideInitial && state is! RideFirst) {
           bottomSheetExpanded = true;
@@ -313,10 +286,15 @@ class _HomePageState extends State<HomePage> {
   Widget _getLocationButton(
       double width, double height, double bottomSheetHeight) {
     return BlocBuilder<RideBloc, RideState>(
-      buildWhen: (previous, current) =>
-          current is! RideInitial || current is! RideFirst,
+      buildWhen: (previous, current) {
+        if ((current is RideInitial || current is RideFirst) ||
+            current is RideReserving) {
+          return true;
+        } else {
+          return false;
+        }
+      },
       builder: (context, state) {
-        log("build _getLocationButton");
         var bottomSheetExpanded = false;
         if (state is! RideInitial && state is! RideFirst) {
           bottomSheetExpanded = true;
@@ -391,8 +369,17 @@ class _HomePageState extends State<HomePage> {
               moveAnimationDuration: Duration.zero, // disable animation
             ),
             BlocBuilder<RideBloc, RideState>(
+              buildWhen: (previous, current) {
+                if (current is RideReserving ||
+                    current is RideReserved ||
+                    current is RideInitial ||
+                    current is RideFirst) {
+                  return true;
+                } else {
+                  return false;
+                }
+              },
               builder: (context, state) {
-                log("log getMapContent");
                 if (state is RideReserving) {
                   selectedScooter = state.selectedScooter;
                 }

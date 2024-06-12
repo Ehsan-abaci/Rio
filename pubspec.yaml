@@ -64,14 +64,16 @@ flutter:
   fonts:
     - family: Vazir
       fonts:
-        - asset: assets/font/Vazir.ttf
+        - asset: assets/font/Vazir-Regular.ttf
           weight: 500
         - asset: assets/font/Vazir-Medium.ttf
           weight: 600
         - asset: assets/font/Vazir-Bold.ttf
           weight: 700
-        - asset: assets/font/Vazir-Thin.ttf
+        - asset: assets/font/Vazir-Light.ttf
           weight: 400
+        - asset: assets/font/Vazir-Thin.ttf
+          weight: 300 
 
   # fonts:
   #   - family: Schyler

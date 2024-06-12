@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
@@ -14,14 +15,19 @@ class RideHistoryBloc extends Bloc<RideHistoryEvent, RideHistoryState> {
   RideHistoryBloc(
     this._rideHistoryHiveImpl,
   ) : super(RideHistoryInitial()) {
-    on<FetchRideHisyoriesEvent>((event, emit) {
-      emit(LoadingState());
-      try {
-        final rideHistories = _rideHistoryHiveImpl.fetchRideHistories();
-        emit(CompleteState(rideHistories: rideHistories));
-      } catch (e) {
-        emit(ErrorState());
-      }
-    });
+    on<FetchRideHisyoriesEvent>(_fetchRideHistories);
+    add(FetchRideHisyoriesEvent());
   }
+
+  FutureOr<void> _fetchRideHistories(event, emit) {
+    emit(LoadingState());
+    try {
+      final rideHistories = _rideHistoryHiveImpl.fetchRideHistories();
+      emit(CompleteState(rideHistories: rideHistories));
+    } catch (e) {
+      emit(ErrorState());
+    }
+  }
+
+
 }

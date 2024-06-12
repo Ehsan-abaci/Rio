@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:share_scooter/core/utils/constants.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
@@ -76,6 +77,7 @@ class ReservationModal extends StatelessWidget {
                             TextSpan(
                               text: "500 T/min",
                               style: TextStyle(
+                                fontFamily: Constant.fontFamily,
                                 color: ColorManager.success,
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16,
