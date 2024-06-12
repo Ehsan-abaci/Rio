@@ -47,7 +47,10 @@ class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8,
+        vertical: 2
+      ),
       child: TextFormField(
         keyboardType: widget.value == "phone"
             ? TextInputType.phone
@@ -61,6 +64,7 @@ class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
             fontWeight: FontWeight.w500),
         controller: widget.nameController,
         decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
             errorText: _errorText,
             border: const OutlineInputBorder(
               borderSide: BorderSide.none,

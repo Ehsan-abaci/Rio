@@ -54,80 +54,83 @@ class _AccountPageState extends State<AccountPage> {
         TextEditingController(text: "+98 915 756 88 97");
 
     return Scaffold(
+      backgroundColor: ColorManager.appBg,
       appBar: const CustomAppBarWidget(title: "حساب کاربری"),
-      body: Stack(
-        children: [
-          Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: ListView(
-                    children: [
-                      Material(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          side: BorderSide(
-                              color: ColorManager.border, width: 1.0),
-                        ),
-                        color: ColorManager.surface,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Column(
-                            children: [
-                              CustomTextFormFieldWidget(
-                                value: "text",
-                                errorText: "نام و نام خانوادکی نامعتبر",
-                                hintText: "نام و نام خانوادکی",
-                                nameController: firstNameController,
-                              ),
-                              Divider(
-                                color: ColorManager.border,
-                                thickness: 1,
-                              ),
-                              CustomTextFormFieldWidget(
-                                errorText: "تاریخ تولد نامعتبر",
-                                value: "date",
-                                hintText: "تاریخ تولد",
-                                nameController: dateController,
-                              ),
-                              Divider(
-                                color: ColorManager.border,
-                                thickness: 1,
-                              ),
-                              CustomTextFormFieldWidget(
-                                errorText: "کدملی / شماره دانشجویی نامعتبر",
-                                value: "nationalIdOrStudentNumber",
-                                hintText: "کدملی / شماره دانشجویی",
-                                nameController: studentController,
-                              ),
-                            ],
+      body: Padding(
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom * .2),
+        child: Stack(
+          children: [
+            Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                    padding:
+                        const EdgeInsets.only(top: 24.0, right: 24, left: 24),
+                    child: ListView(
+                      children: [
+                        Material(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            side: BorderSide(
+                                color: ColorManager.border, width: 1.0),
+                          ),
+                          color: ColorManager.surface,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Column(
+                              children: [
+                                CustomTextFormFieldWidget(
+                                  value: "text",
+                                  errorText: "نام و نام خانوادکی نامعتبر",
+                                  hintText: "نام و نام خانوادکی",
+                                  nameController: firstNameController,
+                                ),
+                                Divider(
+                                  color: ColorManager.border,
+                                  thickness: 1,
+                                ),
+                                CustomTextFormFieldWidget(
+                                  errorText: "تاریخ تولد نامعتبر",
+                                  value: "date",
+                                  hintText: "تاریخ تولد",
+                                  nameController: dateController,
+                                ),
+                                Divider(
+                                  color: ColorManager.border,
+                                  thickness: 1,
+                                ),
+                                CustomTextFormFieldWidget(
+                                  errorText: "کدملی / شماره دانشجویی نامعتبر",
+                                  value: "nationalIdOrStudentNumber",
+                                  hintText: "کدملی / شماره دانشجویی",
+                                  nameController: studentController,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Text(
-                        'شماره دانشجویی و یا کد ملی معتبر وارد نمائید.',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: ColorManager.mediumEmphasis,
-                          height: 1.8,
+                        const SizedBox(
+                          height: 16,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      Material(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          side: BorderSide(
-                              color: ColorManager.border, width: 1.0),
+                        Text(
+                          'شماره دانشجویی و یا کد ملی معتبر وارد نمائید.',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: ColorManager.mediumEmphasis,
+                            height: 1.8,
+                          ),
                         ),
-                        color: ColorManager.surface,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        Material(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            side: BorderSide(
+                                color: ColorManager.border, width: 1.0),
+                          ),
+                          color: ColorManager.surface,
                           child: CustomTextFormFieldWidget(
                             errorText: "شماره تلفن نامعتبر",
                             // validate: _validatePhoneNumber,
@@ -136,29 +139,22 @@ class _AccountPageState extends State<AccountPage> {
                             nameController: numberController,
                           ),
                         ),
-                      ),
-                    ],
-                  ))),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: width * 0.04,
-                right: width * 0.04,
-                bottom: height * 0.04,
-              ),
-              child: CustomElevatedButton(
-                onTap: () {},
-                content: "ذخیره",
-                fontSize: 16,
-                bgColor: ColorManager.primary,
-                frColor: Colors.white,
-                borderRadius: 12,
-                width: width,
-              ),
-            ),
-          ),
-        ],
+                      ],
+                    ))),
+          ],
+        ),
+      ),
+      bottomSheet: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: CustomElevatedButton(
+          onTap: () {},
+          content: "ذخیره",
+          fontSize: 16,
+          bgColor: ColorManager.primary,
+          frColor: Colors.white,
+          borderRadius: 12,
+          width: width * .9,
+        ),
       ),
     );
   }
