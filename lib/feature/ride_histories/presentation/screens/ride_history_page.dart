@@ -9,43 +9,20 @@ import 'package:share_scooter/core/utils/extensions.dart';
 
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
+import 'package:share_scooter/core/widgets/animate_in_effect.dart';
 import 'package:share_scooter/core/widgets/custom_appbar_widget.dart';
 import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
 import 'package:share_scooter/feature/ride_histories/presentation/bloc/ride_history_bloc.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RideHistory {
-  Duration? duration;
-  DateTime? startTime;
-  String? distance;
-  double? price;
-  String? image;
-  RideHistory({
-    this.duration,
-    this.startTime,
-    this.distance,
-    this.price,
-    this.image,
-  });
-}
 
-class RideHistoriesPage extends StatefulWidget {
+
+class RideHistoriesPage extends StatelessWidget {
   const RideHistoriesPage({super.key});
 
-  @override
-  State<RideHistoriesPage> createState() => _RideHistoriesPageState();
-}
-
-class _RideHistoriesPageState extends State<RideHistoriesPage> {
-  void loadData() {
+  void loadData(BuildContext context) {
     context.read<RideHistoryBloc>().add(FetchRideHisyoriesEvent());
-  }
-
-  @override
-  void didChangeDependencies() {
-    loadData();
-    super.didChangeDependencies();
   }
 
   @override
@@ -63,43 +40,39 @@ class _RideHistoriesPageState extends State<RideHistoriesPage> {
                 child: Text("There is no ride"),
               );
             } else {
-              return CustomScrollView(
-                cacheExtent: 1000,
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        ...state.rideHistories.map(
-                          (e) => RideHistoryItem(rideHistory: e),
-                        ),
-                        ...state.rideHistories.map(
-                          (e) => RideHistoryItem(rideHistory: e),
-                        ),
-                        ...state.rideHistories.map(
-                          (e) => RideHistoryItem(rideHistory: e),
-                        ),
-                        ...state.rideHistories.map(
-                          (e) => RideHistoryItem(rideHistory: e),
-                        ),
-                        ...state.rideHistories.map(
-                          (e) => RideHistoryItem(rideHistory: e),
-                        ),
-                        ...state.rideHistories.map(
-                          (e) => RideHistoryItem(rideHistory: e),
-                        ),
-                        ...state.rideHistories.map(
-                          (e) => RideHistoryItem(rideHistory: e),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              return RioRideHistoryScrollView(
+                rideHistories: state.rideHistories,
               );
             }
           }
           return const SizedBox();
         },
       ),
+    );
+  }
+}
+
+class RioRideHistoryScrollView extends StatelessWidget {
+  RioRideHistoryScrollView({
+    super.key,
+    required this.rideHistories,
+  });
+  List<RideDetailEntity> rideHistories;
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverList.builder(
+          itemCount: rideHistories.length,
+          itemBuilder: (context, i) => AnimateInEffect(
+            intervalStart: (i / rideHistories.length),
+            keepAlive: true,
+            child: RideHistoryItem(
+              rideHistory: rideHistories[i],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -21,7 +22,6 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     var moneyController = MoneyController();
     RideState? currentState;
     double increaseAmount = 0.0;
-
 
     on<ReservingEvent>(
       (event, emit) {
@@ -96,13 +96,15 @@ class RideBloc extends Bloc<RideEvent, RideState> {
 
 class MoneyController {
   // Create a StreamController that will manage the stream
-  StreamController<double>? _controller = StreamController<double>();
+  final StreamController<double>? _controller = StreamController<double>();
   Timer? _timer;
 
   // Getter to expose the stream
   Stream<double> get stream => _controller!.stream;
+  Stopwatch? stopwatch;
   // Function to start the timer and update the stream
   void startTimer(double amount) {
+     stopwatch = Stopwatch()..start();
     // Set up a periodic timer that triggers every minute
     _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
       // Add the updated amount to the stream

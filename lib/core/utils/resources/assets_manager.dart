@@ -46,4 +46,8 @@ class AssetsIcon {
   static const String add = "$ICON_PATH/Add.svg";
   static const String profile = "$ICON_PATH/Profile.svg";
   static const String logout = "$ICON_PATH/Logout.svg";
+  static const String level25 = "$ICON_PATH/25.svg";
+  static const String level50 = "$ICON_PATH/50.svg";
+  static const String level75 = "$ICON_PATH/75.svg";
+  static const String level100 = "$ICON_PATH/Full.svg";
 }

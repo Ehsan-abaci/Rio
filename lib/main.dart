@@ -7,11 +7,9 @@ import 'package:share_scooter/core/utils/constants.dart';
 import 'package:share_scooter/feature/home/presentation/blocs/bloc/ride_bloc.dart';
 import 'package:share_scooter/feature/ride_histories/domain/entities/ride_detail_entity.dart';
 import 'package:share_scooter/feature/ride_histories/domain/entities/scooter_entity.dart';
-import 'package:share_scooter/feature/ride_histories/presentation/bloc/ride_history_bloc.dart';
 import 'package:share_scooter/feature/splash/presentation/screens/splash_screen_page.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'feature/settings/presentation/screens/account_page.dart';
 import 'feature/settings/presentation/screens/change_language_page.dart';
 import 'feature/settings/presentation/screens/setting_page.dart';
@@ -66,7 +64,7 @@ class MyApp extends StatelessWidget {
         title: 'RIO',
         themeMode: ThemeMode.light,
         theme: ThemeData(
-          fontFamily: "Vazir",
+          fontFamily: Constant.fontFamily,
           useMaterial3: true,
         ),
         home: const AccountPage(),
