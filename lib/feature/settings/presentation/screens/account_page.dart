@@ -3,6 +3,7 @@ import '../../../../core/widgets/custom_appbar_widget.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/custom_text_form_field_widget.dart';
+import 'package:flutter/services.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -12,39 +13,9 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.addListener(_formatPhoneNumber);
-  }
-
-  void _formatPhoneNumber() {
-    String value = _controller.text;
-    if (value.startsWith('0')) {
-      setState(() {
-        _controller.value = TextEditingValue(
-          text: '+98${value.substring(1)}',
-          selection: TextSelection.fromPosition(
-            TextPosition(offset: _controller.text.length + 2),
-          ),
-        );
-      });
-    } else if (!value.startsWith('+98')) {
-      setState(() {
-        _controller.value = TextEditingValue(
-          text: '+98$value',
-          selection: TextSelection.fromPosition(
-            TextPosition(offset: _controller.text.length + 3),
-          ),
-        );
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final persianRegExp = RegExp(r'^[\u0600-\u06FF\s]*$');
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
     final firstNameController = TextEditingController();
@@ -53,6 +24,9 @@ class _AccountPageState extends State<AccountPage> {
     final TextEditingController numberController =
         TextEditingController(text: "+98 915 756 88 97");
 
+    final RegExp dateRegExp = RegExp(r'^\d{4}/\d{1,2}/\d{1,2}$');
+    final RegExp studentRegExp = RegExp(r'^\d{8,10}$');
+    final RegExp phoneRegExp = RegExp(r'^\d{11}$');
     return Scaffold(
       appBar: const CustomAppBarWidget(title: "حساب کاربری"),
       body: Stack(
@@ -75,30 +49,53 @@ class _AccountPageState extends State<AccountPage> {
                           child: Column(
                             children: [
                               CustomTextFormFieldWidget(
-                                value: "text",
-                                errorText: "نام و نام خانوادکی نامعتبر",
+                                inputFormatters: [PersianTextInputFormatter()],
+                                valid: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'لطفا نام را وارد کنید';
+                                  } else if (!persianRegExp.hasMatch(value)) {
+                                    return 'فقط حروف فارسی مجاز است';
+                                  }
+                                  return null;
+                                },
                                 hintText: "نام و نام خانوادکی",
-                                nameController: firstNameController,
+                                controllers: firstNameController,
                               ),
                               Divider(
                                 color: ColorManager.border,
                                 thickness: 1,
                               ),
                               CustomTextFormFieldWidget(
-                                errorText: "تاریخ تولد نامعتبر",
-                                value: "date",
                                 hintText: "تاریخ تولد",
-                                nameController: dateController,
+                                controllers: dateController,
+                                inputFormatters: [DateTextInputFormatter()],
+                                valid: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'لطفا تاریخ را وارد کنید';
+                                  } else if (!dateRegExp.hasMatch(value)) {
+                                    return 'فرمت تاریخ باید به صورت yyyy/MM/dd باشد';
+                                  }
+                                  return null;
+                                },
                               ),
                               Divider(
                                 color: ColorManager.border,
                                 thickness: 1,
                               ),
                               CustomTextFormFieldWidget(
-                                errorText: "کدملی / شماره دانشجویی نامعتبر",
-                                value: "nationalIdOrStudentNumber",
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                valid: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'لطفا کد ملی یا شماره دانشجویی را وارد کنید';
+                                  } else if (!studentRegExp.hasMatch(value)) {
+                                    return 'کد ملی یا شماره دانشجویی باید حداقل 8 و حداکثر شامل 10 عدد باشد';
+                                  }
+                                  return null;
+                                },
                                 hintText: "کدملی / شماره دانشجویی",
-                                nameController: studentController,
+                                controllers: studentController,
                               ),
                             ],
                           ),
@@ -108,7 +105,7 @@ class _AccountPageState extends State<AccountPage> {
                         height: 16,
                       ),
                       Text(
-                        'شماره دانشجویی و یا کد ملی معتبر وارد نمائید.',
+                        'شماره دانشجویی و یا کد ملی معتبر وارد نمائید',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -129,13 +126,25 @@ class _AccountPageState extends State<AccountPage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: CustomTextFormFieldWidget(
-                            errorText: "شماره تلفن نامعتبر",
-                            // validate: _validatePhoneNumber,
-                            value: "phone",
-                            hintText: "شماره همراه",
-                            nameController: numberController,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(11),
+                            ],
+                            valid: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'لطفا شماره تلفن خود را وارد کنید';
+                              } else if (!phoneRegExp.hasMatch(value)) {
+                                return 'شماره تلفن باید 11 رقمی باشد';
+                              }
+                              return null;
+                            },
+                            hintText: "شماره تماس",
+                            controllers: numberController,
                           ),
                         ),
+                      ),
+                      const SizedBox(
+                        height: 40,
                       ),
                     ],
                   ))),
@@ -161,5 +170,33 @@ class _AccountPageState extends State<AccountPage> {
         ],
       ),
     );
+  }
+}
+
+class PersianTextInputFormatter extends TextInputFormatter {
+  final RegExp _persianRegExp = RegExp(r'^[\u0600-\u06FF\s]*$');
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (_persianRegExp.hasMatch(newValue.text)) {
+      return newValue;
+    }
+    return oldValue;
+  }
+}
+
+class DateTextInputFormatter extends TextInputFormatter {
+  final RegExp _regExp = RegExp(r'^\d{0,4}(/(\d{0,2}(/(\d{0,2})?)?)?)?$');
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (_regExp.hasMatch(newValue.text)) {
+      return newValue;
+    }
+    return oldValue;
   }
 }

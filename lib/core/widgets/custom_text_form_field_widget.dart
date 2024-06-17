@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../utils/resources/color_manager.dart';
 
 class CustomTextFormFieldWidget extends StatefulWidget {
-  const CustomTextFormFieldWidget(
-      {super.key,
-      required this.hintText,
-      required this.nameController,
-      required this.errorText,
-      required this.value});
+  const CustomTextFormFieldWidget({
+    super.key,
+    required this.hintText,
+    required this.controllers,
+    required this.valid,
+    this.inputFormatters,
+  });
 
   final String hintText;
-  final TextEditingController nameController;
-  final String errorText;
-  final String value;
+  final TextEditingController controllers;
+  final String? Function(String?)? valid;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<CustomTextFormFieldWidget> createState() =>
@@ -20,56 +22,33 @@ class CustomTextFormFieldWidget extends StatefulWidget {
 }
 
 class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
-  final _phoneRegExp = RegExp(r'^(?:\+98|0)?9\d{9}$');
-  final RegExp nationalIdOrStudentNumberRegExp = RegExp(r'^\d{1,10}$');
-  final RegExp dateRegExp = RegExp(r'^\d{4}/\d{2}/\d{2}$');
-  final RegExp anyRegExp = RegExp(r'.*');
-  String? _errorText;
-
-  void _validatePhoneNumber(String value) {
-    setState(() {
-      if (widget.value == "phone"
-          ? _phoneRegExp.hasMatch(value)
-          : widget.value == "nationalIdOrStudentNumber"
-              ? nationalIdOrStudentNumberRegExp.hasMatch(value)
-              : widget.value == "date"
-                  ? dateRegExp.hasMatch(value)
-                  : widget.value == "text"
-                      ? anyRegExp.hasMatch(value)
-                      : anyRegExp.hasMatch(value)) {
-        _errorText = null;
-      } else {
-        _errorText = widget.errorText;
-      }
-    });
-  }
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: TextFormField(
-        keyboardType: widget.value == "phone"
-            ? TextInputType.phone
-            : widget.value == "date"
-                ? TextInputType.datetime
-                : TextInputType.name,
-        onChanged: _validatePhoneNumber,
-        style: TextStyle(
-            fontSize: 16,
-            color: ColorManager.highEmphasis,
-            fontWeight: FontWeight.w500),
-        controller: widget.nameController,
-        decoration: InputDecoration(
-            errorText: _errorText,
-            border: const OutlineInputBorder(
-              borderSide: BorderSide.none,
-            ),
-            hintText: widget.hintText,
-            hintStyle: TextStyle(
-                color: ColorManager.lowEmphasis,
-                fontSize: 16,
-                fontWeight: FontWeight.w500)),
+      child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        key: formKey,
+        child: TextFormField(
+          validator: widget.valid,
+          inputFormatters: widget.inputFormatters ?? [],
+          style: TextStyle(
+              fontSize: 16,
+              color: ColorManager.highEmphasis,
+              fontWeight: FontWeight.w500),
+          controller: widget.controllers,
+          decoration: InputDecoration(
+              hintText: widget.hintText,
+              border: const OutlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+              hintStyle: TextStyle(
+                  color: ColorManager.lowEmphasis,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500)),
+        ),
       ),
     );
   }
