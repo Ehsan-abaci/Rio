@@ -27,29 +27,29 @@ class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        key: formKey,
-        child: TextFormField(
-          validator: widget.valid,
-          inputFormatters: widget.inputFormatters ?? [],
-          style: TextStyle(
-              fontSize: 16,
-              color: ColorManager.highEmphasis,
-              fontWeight: FontWeight.w500),
-          controller: widget.controllers,
-          decoration: InputDecoration(
-              hintText: widget.hintText,
-              border: const OutlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-              hintStyle: TextStyle(
-                  color: ColorManager.lowEmphasis,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        child: Form(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            key: formKey,
+            child: TextFormField(
+              validator: widget.valid,
+              inputFormatters: widget.inputFormatters ?? [],
+              style: TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.w500)),
-        ),
-      ),
-    );
+                  color: ColorManager.highEmphasis,
+                  fontWeight: FontWeight.w500),
+              controller: widget.controllers,
+              decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                  hintText: widget.hintText,
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
+                  hintStyle: TextStyle(
+                      color: ColorManager.lowEmphasis,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500)),
+            )));
   }
 }

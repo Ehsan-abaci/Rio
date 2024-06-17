@@ -17,159 +17,155 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     final persianRegExp = RegExp(r'^[\u0600-\u06FF\s]*$');
     final width = MediaQuery.sizeOf(context).width;
-    final height = MediaQuery.sizeOf(context).height;
     final firstNameController = TextEditingController();
     final dateController = TextEditingController();
     final studentController = TextEditingController();
     final TextEditingController numberController =
         TextEditingController(text: "+98 915 756 88 97");
-
     final RegExp dateRegExp = RegExp(r'^\d{4}/\d{1,2}/\d{1,2}$');
     final RegExp studentRegExp = RegExp(r'^\d{8,10}$');
     final RegExp phoneRegExp = RegExp(r'^\d{11}$');
     return Scaffold(
-      appBar: const CustomAppBarWidget(title: "حساب کاربری"),
-      body: Stack(
-        children: [
-          Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: ListView(
-                    children: [
-                      Material(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          side: BorderSide(
-                              color: ColorManager.border, width: 1.0),
-                        ),
-                        color: ColorManager.surface,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Column(
-                            children: [
-                              CustomTextFormFieldWidget(
-                                inputFormatters: [PersianTextInputFormatter()],
-                                valid: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'لطفا نام را وارد کنید';
-                                  } else if (!persianRegExp.hasMatch(value)) {
-                                    return 'فقط حروف فارسی مجاز است';
-                                  }
-                                  return null;
-                                },
-                                hintText: "نام و نام خانوادکی",
-                                controllers: firstNameController,
-                              ),
-                              Divider(
-                                color: ColorManager.border,
-                                thickness: 1,
-                              ),
-                              CustomTextFormFieldWidget(
-                                hintText: "تاریخ تولد",
-                                controllers: dateController,
-                                inputFormatters: [DateTextInputFormatter()],
-                                valid: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'لطفا تاریخ را وارد کنید';
-                                  } else if (!dateRegExp.hasMatch(value)) {
-                                    return 'فرمت تاریخ باید به صورت yyyy/MM/dd باشد';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              Divider(
-                                color: ColorManager.border,
-                                thickness: 1,
-                              ),
-                              CustomTextFormFieldWidget(
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly
+        appBar: const CustomAppBarWidget(title: "حساب کاربری"),
+        body: Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom * .2),
+          child: Stack(
+            children: [
+              Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                      padding:
+                          const EdgeInsets.only(top: 24.0, right: 24, left: 24),
+                      child: ListView(
+                        children: [
+                          Material(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(
+                                  color: ColorManager.border, width: 1.0),
+                            ),
+                            color: ColorManager.surface,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Column(
+                                children: [
+                                  CustomTextFormFieldWidget(
+                                    inputFormatters: [
+                                      PersianTextInputFormatter()
+                                    ],
+                                    valid: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'لطفا نام را وارد کنید';
+                                      } else if (!persianRegExp
+                                          .hasMatch(value)) {
+                                        return 'فقط حروف فارسی مجاز است';
+                                      }
+                                      return null;
+                                    },
+                                    hintText: "نام و نام خانوادکی",
+                                    controllers: firstNameController,
+                                  ),
+                                  Divider(
+                                    color: ColorManager.border,
+                                    thickness: 1,
+                                  ),
+                                  CustomTextFormFieldWidget(
+                                    hintText: "تاریخ تولد",
+                                    controllers: dateController,
+                                    inputFormatters: [DateTextInputFormatter()],
+                                    valid: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'لطفا تاریخ را وارد کنید';
+                                      } else if (!dateRegExp.hasMatch(value)) {
+                                        return 'فرمت تاریخ باید به صورت yyyy/MM/dd باشد';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  Divider(
+                                    color: ColorManager.border,
+                                    thickness: 1,
+                                  ),
+                                  CustomTextFormFieldWidget(
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    valid: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'لطفا کد ملی یا شماره دانشجویی را وارد کنید';
+                                      } else if (!studentRegExp
+                                          .hasMatch(value)) {
+                                        return 'کد ملی یا شماره دانشجویی باید حداقل 8 و حداکثر شامل 10 عدد باشد';
+                                      }
+                                      return null;
+                                    },
+                                    hintText: "کدملی / شماره دانشجویی",
+                                    controllers: studentController,
+                                  ),
                                 ],
-                                valid: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'لطفا کد ملی یا شماره دانشجویی را وارد کنید';
-                                  } else if (!studentRegExp.hasMatch(value)) {
-                                    return 'کد ملی یا شماره دانشجویی باید حداقل 8 و حداکثر شامل 10 عدد باشد';
-                                  }
-                                  return null;
-                                },
-                                hintText: "کدملی / شماره دانشجویی",
-                                controllers: studentController,
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Text(
-                        'شماره دانشجویی و یا کد ملی معتبر وارد نمائید',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: ColorManager.mediumEmphasis,
-                          height: 1.8,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      Material(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          side: BorderSide(
-                              color: ColorManager.border, width: 1.0),
-                        ),
-                        color: ColorManager.surface,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: CustomTextFormFieldWidget(
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(11),
-                            ],
-                            valid: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'لطفا شماره تلفن خود را وارد کنید';
-                              } else if (!phoneRegExp.hasMatch(value)) {
-                                return 'شماره تلفن باید 11 رقمی باشد';
-                              }
-                              return null;
-                            },
-                            hintText: "شماره تماس",
-                            controllers: numberController,
+                          const SizedBox(
+                            height: 16,
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                    ],
-                  ))),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: width * 0.04,
-                right: width * 0.04,
-                bottom: height * 0.04,
-              ),
-              child: CustomElevatedButton(
-                onTap: () {},
-                content: "ذخیره",
-                fontSize: 16,
-                bgColor: ColorManager.primary,
-                frColor: Colors.white,
-                borderRadius: 12,
-                width: width,
-              ),
-            ),
+                          Text(
+                            'شماره دانشجویی و یا کد ملی معتبر وارد نمائید',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: ColorManager.mediumEmphasis,
+                              height: 1.8,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Material(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(
+                                  color: ColorManager.border, width: 1.0),
+                            ),
+                            color: ColorManager.surface,
+                            child: CustomTextFormFieldWidget(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(11),
+                              ],
+                              valid: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'لطفا شماره تلفن خود را وارد کنید';
+                                } else if (!phoneRegExp.hasMatch(value)) {
+                                  return 'شماره تلفن باید 11 رقمی باشد';
+                                }
+                                return null;
+                              },
+                              hintText: "شماره تماس",
+                              controllers: numberController,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                        ],
+                      ))),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+        bottomSheet: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: CustomElevatedButton(
+            onTap: () {},
+            content: "ذخیره",
+            fontSize: 16,
+            bgColor: ColorManager.primary,
+            frColor: Colors.white,
+            borderRadius: 12,
+            width: width * .9,
+          ),
+        ));
   }
 }
 
