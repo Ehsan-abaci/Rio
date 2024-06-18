@@ -13,18 +13,32 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
+  String formatNumber(String number) {
+    number = number.replaceFirst(RegExp(r'^0+'), '');
+
+    if (phoneRegExp.hasMatch(number.replaceAll(' ', ''))) {
+      number = number.replaceAll(' ', '');
+      return number
+          .replaceAllMapped(RegExp(r".{7}$"), (match) => ' ${match[0]}')
+          .replaceAllMapped(RegExp(r".{4}$"), (match) => ' ${match[0]}')
+          .replaceAllMapped(RegExp(r".{2}$"), (match) => ' ${match[0]}');
+    } else {
+      return number;
+    }
+  }
+
+  final persianRegExp = RegExp(r'^[\u0600-\u06FF\s]*$');
+  final firstNameController = TextEditingController();
+  final dateController = TextEditingController();
+  final studentController = TextEditingController();
+  final numberController = TextEditingController();
+  final RegExp dateRegExp = RegExp(r'^\d{4}/\d{1,2}/\d{1,2}$');
+  final RegExp studentRegExp = RegExp(r'^\d{8,10}$');
+  RegExp phoneRegExp = RegExp(r'^9[0-9]{9}$');
+
   @override
   Widget build(BuildContext context) {
-    final persianRegExp = RegExp(r'^[\u0600-\u06FF\s]*$');
     final width = MediaQuery.sizeOf(context).width;
-    final firstNameController = TextEditingController();
-    final dateController = TextEditingController();
-    final studentController = TextEditingController();
-    final TextEditingController numberController =
-        TextEditingController(text: "+98 915 756 88 97");
-    final RegExp dateRegExp = RegExp(r'^\d{4}/\d{1,2}/\d{1,2}$');
-    final RegExp studentRegExp = RegExp(r'^\d{8,10}$');
-    final RegExp phoneRegExp = RegExp(r'^\d{11}$');
     return Scaffold(
         appBar: const CustomAppBarWidget(title: "حساب کاربری"),
         body: Padding(
@@ -129,21 +143,30 @@ class _AccountPageState extends State<AccountPage> {
                                   color: ColorManager.border, width: 1.0),
                             ),
                             color: ColorManager.surface,
-                            child: CustomTextFormFieldWidget(
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(11),
-                              ],
-                              valid: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'لطفا شماره تلفن خود را وارد کنید';
-                                } else if (!phoneRegExp.hasMatch(value)) {
-                                  return 'شماره تلفن باید 11 رقمی باشد';
-                                }
-                                return null;
-                              },
-                              hintText: "شماره تماس",
-                              controllers: numberController,
+                            child: Directionality(
+                              textDirection: TextDirection.ltr,
+                              child: CustomTextFormFieldWidget(
+                                phoneNumberPrefix: true,
+                                textAlign: TextAlign.start,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(13),
+                                ],
+                                onChanged: (value) {
+                                  numberController.text =
+                                      formatNumber(value).trimRight();
+                                },
+                                valid: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'لطفا شماره تلفن خود را وارد کنید';
+                                  } else if (!phoneRegExp
+                                      .hasMatch(value.replaceAll(' ', ''))) {
+                                    return 'شماره تلفن معتبر نیست';
+                                  }
+                                  return null;
+                                },
+                                hintText: "شماره تماس",
+                                controllers: numberController,
+                              ),
                             ),
                           ),
                           const SizedBox(
