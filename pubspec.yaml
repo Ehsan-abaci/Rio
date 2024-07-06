@@ -21,7 +21,7 @@ dependencies:
   flutter_svg: ^2.0.8
   http: ^1.2.1
   flutter_map_location_marker: any # or latest verion
-  flutter_map_tile_caching: ^9.0.1
+  # flutter_map_tile_caching: ^9.0.1
   qr_code_scanner: ^1.0.1
   shared_preferences: ^2.2.3
   uuid: ^4.4.0
@@ -33,7 +33,6 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   shamsi_date: ^1.0.2
-  flutter_datetime_picker: ^1.5.1
 
 dev_dependencies:
   flutter_test:

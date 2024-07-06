@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:share_scooter/core/utils/constants.dart';
-// import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:share_scooter/feature/home/view/blocs/bloc/ride_bloc.dart';
 import 'package:share_scooter/feature/ride_histories/model/ride_history_model.dart';
 import 'package:share_scooter/feature/splash/view/screens/splash_screen_page.dart';
@@ -22,11 +20,11 @@ void main() async {
   Hive.registerAdapter<Scooter>(ScooterAdapter());
 
   await Hive.openBox<RideHistoryModel>(Constant.rideHistoryBox);
-  await FMTCObjectBoxBackend().initialise();
+  // await FMTCObjectBoxBackend().initialise();
 
-  if (!await const FMTCStore('mapStore').manage.ready) {
-    await const FMTCStore('mapStore').manage.create();
-  }
+  // if (!await const FMTCStore('mapStore').manage.ready) {
+  //   await const FMTCStore('mapStore').manage.create();
+  // }
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemNavigationBarIconBrightness: Brightness.dark,

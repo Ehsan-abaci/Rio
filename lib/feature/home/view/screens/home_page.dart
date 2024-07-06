@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
+// import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
@@ -330,8 +330,8 @@ class _HomePageState extends State<HomePage> {
           ),
           children: [
             TileLayer(
-              // tileProvider: CancellableNetworkTileProvider(),
-              tileProvider: const FMTCStore('mapStore').getTileProvider(),
+              tileProvider: CancellableNetworkTileProvider(),
+              // tileProvider: const FMTCStore('mapStore').getTileProvider(),
               keepBuffer: 100,
               urlTemplate:
                   'https://api.mapbox.com/styles/v1/hamidaslami2/clob8flgd012t01qsdwnf70md/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaGFtaWRhc2xhbWkyIiwiYSI6ImNsbm9wcm5idjAyaWUya255enF0bmZyNnoifQ.eD-IuFdTBd9rDEgqyPyQEA',
