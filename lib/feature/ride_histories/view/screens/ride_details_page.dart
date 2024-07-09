@@ -56,11 +56,13 @@ class WidgetColumnDetails extends StatelessWidget {
         WidgetDetailsRow(title: "سواری", description: '25.000 T', color: "red"),
         WidgetDetailsRow(
             title: "مالیات (%10)", description: '2.600 T', color: "red"),
-        WidgetDivider(),
         WidgetDetailsRow(
             title: "جمع هزینه ها", description: '28.600 T', color: "red"),
+        WidgetDivider(),
         WidgetDetailsRow(
             title: "موجودی کیف پول", description: '8.600 T', color: "green"),
+        WidgetDetailsRow(
+            title: "پرداخت اینترنتی", description: '20.000 T', color: "green"),
       ]),
     );
   }
