@@ -42,6 +42,8 @@ class ColorManager {
   static Color reversedEmphasis = HexColor.fromHexColor('FFFFFF');
   static Color placeholder = HexColor.fromHexColor('#8C8C8C');
   static Color border = HexColor.fromHexColor('DBDBDB');
+  static Color red = HexColor.fromHexColor('FA0000');
+  static Color green = HexColor.fromHexColor('5AD362');
 }
 
 extension HexColor on Color {
