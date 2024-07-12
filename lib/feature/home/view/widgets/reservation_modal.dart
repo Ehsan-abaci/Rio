@@ -5,7 +5,7 @@ import 'package:share_scooter/core/utils/constants.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
-import 'package:share_scooter/feature/home/view/blocs/bloc/ride_bloc.dart';
+import 'package:share_scooter/feature/home/view/blocs/ride/ride_bloc.dart';
 import 'package:share_scooter/feature/home/view/widgets/ring_modal.dart';
 
 class ReservationModal extends StatelessWidget {
@@ -116,13 +116,8 @@ class ReservationModal extends StatelessWidget {
                       borderRadius: 8,
                       width: width * .2,
                       onTap: () {
-                        context.read<RideBloc>().add(ReservedEvent());
                         Navigator.pop(context);
-                        showAdaptiveDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) => const RingModal(),
-                        );
+                        context.read<RideBloc>().add(ReservedEvent());
                       },
                     ),
                     const SizedBox(width: 10),

@@ -3,12 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:share_scooter/core/utils/constants.dart';
-import 'package:share_scooter/feature/home/view/blocs/bloc/ride_bloc.dart';
+import 'package:share_scooter/feature/home/view/blocs/battery/battery_bloc.dart';
+import 'package:share_scooter/feature/home/view/blocs/ride/ride_bloc.dart';
 import 'package:share_scooter/feature/ride_histories/model/ride_history_model.dart';
 import 'package:share_scooter/feature/splash/view/screens/splash_screen_page.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'feature/home/view/blocs/location/location_bloc.dart';
 import 'feature/ride_histories/model/scooter_model.dart';
 
 void main() async {
@@ -44,6 +46,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => di<RideBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di<LocationBloc>(),
         ),
       ],
       child: MaterialApp(

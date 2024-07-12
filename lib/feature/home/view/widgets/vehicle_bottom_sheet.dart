@@ -6,7 +6,8 @@ import 'package:share_scooter/core/utils/extensions.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
-import 'package:share_scooter/feature/home/view/blocs/bloc/ride_bloc.dart';
+import 'package:share_scooter/feature/home/view/blocs/battery/battery_bloc.dart';
+import 'package:share_scooter/feature/home/view/blocs/ride/ride_bloc.dart';
 import 'package:share_scooter/feature/home/view/widgets/battery_level_widget.dart';
 import 'package:share_scooter/feature/home/view/widgets/reservation_modal.dart';
 import 'package:share_scooter/feature/ride_histories/model/scooter_model.dart';
@@ -26,6 +27,7 @@ class _VehicleBottomSheetState extends State<VehicleBottomSheet>
   late final Animation<double> _animation;
   @override
   void initState() {
+    context.read<BatteryBloc>().add(GetBatteryLevel());
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
@@ -40,6 +42,12 @@ class _VehicleBottomSheetState extends State<VehicleBottomSheet>
       begin: MediaQuery.sizeOf(context).height * -.3,
     ).animate(_animationController);
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   final Stopwatch _stopwatch = Stopwatch();
@@ -59,18 +67,19 @@ class _VehicleBottomSheetState extends State<VehicleBottomSheet>
           selectedScooter = state.selectedScooter;
           bottomSheetButtons = ReserveBottomSheetButtons(width: width);
         } else if (state is RideInProgress) {
+          // _animationController.forward();
           selectedScooter = state.rideDetail.scooter;
           bottomSheetButtons = RidingBottomSheetButtons(width: width);
         } else if (state is RidePaused) {
+          // _animationController.forward();
           selectedScooter = state.rideDetail.scooter;
           bottomSheetButtons = PausedBottomSheetButtons(width: width);
         } else if (state is RideReserved) {
+          // _animationController.forward();
           selectedScooter = state.rideDetail.scooter;
-          bottomSheetButtons = StartBottomSheetButtons(
-            width: width,
-            stopwatch: _stopwatch,
-          );
-        } else {
+          bottomSheetButtons =
+              StartBottomSheetButtons(width: width, stopwatch: _stopwatch);
+        } else if (state is RideInitial) {
           _animationController.reverse();
         }
         return AnimatedBuilder(
@@ -235,7 +244,7 @@ class ReserveBottomSheetButtons extends StatelessWidget {
             showAdaptiveDialog(
               barrierDismissible: false,
               context: context,
-              builder: (context) => ReservationModal(),
+              builder: (context) => const ReservationModal(),
             );
           },
           content: "رزرو",

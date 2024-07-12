@@ -1,14 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
-void dismissDialog(BuildContext context, GlobalKey key) {
-  if (_isThereCurrentDialogShowing(key)) {
-    Navigator.pop(context);
-  }
-}
+import '../../widgets/processing_modal.dart';
 
-bool _isThereCurrentDialogShowing(GlobalKey key) => key.currentContext != null;
+GlobalKey _loadinDialogKey = GlobalKey();
 
 ///get  LocationPermission
 Future<LatLng> determinePosition() async {
@@ -18,6 +16,7 @@ Future<LatLng> determinePosition() async {
   // Test if location services are enabled.
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
+    Geolocator.openLocationSettings();
     return Future.error('Location services are disabled.');
   }
 
@@ -38,3 +37,22 @@ Future<LatLng> determinePosition() async {
 
   return LatLng(currentPosition.latitude, currentPosition.longitude);
 }
+
+void showProcssingModal(BuildContext context) {
+  showAdaptiveDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (context) => ProcessingModal(
+      key: _loadinDialogKey,
+    ),
+  );
+}
+
+void dismissDialog(BuildContext context) {
+  if (_isThereCurrentDialogShowing(_loadinDialogKey)) {
+    log("dismiss");
+    Navigator.pop(context);
+  }
+}
+
+bool _isThereCurrentDialogShowing(GlobalKey key) => key.currentContext != null;

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive/hive.dart';
 
 part 'scooter_model.g.dart';
@@ -12,14 +13,16 @@ class Scooter {
   double lat;
   @HiveField(3)
   double lng;
+  @HiveField(4)
+  double batteryLevel;
 
   Scooter({
     required this.id,
     required this.name,
     required this.lat,
     required this.lng,
+    this.batteryLevel = 100.0,
   });
-
 
   Map<String, dynamic> tojson() {
     return <String, dynamic>{
@@ -27,6 +30,7 @@ class Scooter {
       'name': name,
       'lat': lat,
       'lng': lng,
+      'batteryLevel': batteryLevel,
     };
   }
 
@@ -36,7 +40,23 @@ class Scooter {
       name: map['name'] as String,
       lat: map['lat'] as double,
       lng: map['lng'] as double,
+      batteryLevel: map['batteryLevel'] as double,
     );
   }
 
+  Scooter copyWith({
+    String? id,
+    String? name,
+    double? lat,
+    double? lng,
+    double? batteryLevel,
+  }) {
+    return Scooter(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      lat: lat ?? this.lat,
+      lng: lng ?? this.lng,
+      batteryLevel: batteryLevel ?? this.batteryLevel,
+    );
+  }
 }

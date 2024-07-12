@@ -16,13 +16,17 @@ import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/utils/resources/functions.dart';
 import 'package:share_scooter/core/widgets/low_level_circle_button.dart';
-import 'package:share_scooter/core/widgets/processing_modal.dart';
-import 'package:share_scooter/feature/home/view/blocs/bloc/ride_bloc.dart';
+import 'package:share_scooter/feature/home/view/blocs/battery/battery_bloc.dart';
+import 'package:share_scooter/feature/home/view/blocs/location/location_bloc.dart';
+import 'package:share_scooter/feature/home/view/blocs/ride/ride_bloc.dart';
 import 'package:share_scooter/feature/home/view/widgets/main_drawer.dart';
 import 'package:share_scooter/feature/home/view/widgets/notification_dialog.dart';
+import 'package:share_scooter/feature/home/view/widgets/ring_modal.dart';
 import 'package:share_scooter/feature/home/view/widgets/vehicle_bottom_sheet.dart';
 import 'package:share_scooter/feature/qr_pin_code/view/screens/qr_code_page.dart';
 import 'package:share_scooter/feature/ride_histories/model/scooter_model.dart';
+
+import '../../../../locator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,7 +37,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final GlobalKey _loadinDialogKey = GlobalKey();
 
   LatLng? currentLocation;
   late MapController mapController;
@@ -42,12 +45,15 @@ class _HomePageState extends State<HomePage> {
   Scooter? selectedScooter;
 
   @override
+  void initState() {
+    context.read<LocationBloc>().add(GetLocationEvent());
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
     mapController = MapController();
-    if (mounted) {
-      currentLocation = await determinePosition();
-    }
   }
 
   List<Scooter> scooters = [
@@ -105,31 +111,42 @@ class _HomePageState extends State<HomePage> {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
     final bottomSheetHeight = height * .3;
-    return BlocListener<RideBloc, RideState>(
-      listenWhen: (previous, current) =>
-          current is RideInitial ||
-          current is RideFinished ||
-          current is RideLoading,
-      listener: (context, state) async {
-        if (state is RideFinished) {
-          context.read<RideBloc>().add(
-                AddNewRideEvent(
-                  rideDetailModel: state.rideDetail,
-                  previewContainer: previewContainer,
-                ),
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<RideBloc, RideState>(
+          listener: (context, state) async {
+            if (state is! RideFinished) {
+              dismissDialog(context);
+            }
+
+            if (state is RideFinished) {
+              context.read<RideBloc>().add(
+                    AddNewRideEvent(
+                      rideDetailModel: state.rideDetail,
+                      previewContainer: previewContainer,
+                    ),
+                  );
+            } else if (state is RideLoading) {
+              showProcssingModal(context);
+            } else if (state is RideReserved) {
+              showAdaptiveDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const RingModal(),
               );
-        } else if (state is RideLoading) {
-          showAdaptiveDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (context) => ProcessingModal(
-              key: _loadinDialogKey,
-            ),
-          );
-        } else if (state is RideInitial) {
-          dismissDialog(context, _loadinDialogKey);
-        }
-      },
+            }
+          },
+        ),
+        BlocListener<LocationBloc, LocationState>(
+          listener: (context, state) {
+            if (state is LocationLoading) {
+              showProcssingModal(context);
+            } else if (state is LocationComplete || state is LocationError) {
+              dismissDialog(context);
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         key: _scaffoldKey,
         body: Stack(
@@ -137,7 +154,7 @@ class _HomePageState extends State<HomePage> {
             _getMapContent(),
             _getAppbar(width, height),
             // _getNotification(width, height),
-            NotificationDialog(),
+            const NotificationDialog(),
             _getLocationButton(width, height, bottomSheetHeight),
             _getQrCodeButton(width, height, bottomSheetHeight),
             _getBottomSheet(bottomSheetHeight),
@@ -151,6 +168,11 @@ class _HomePageState extends State<HomePage> {
   Widget _getBottomSheet(double bottomSheetHeight) {
     return BlocBuilder<RideBloc, RideState>(
       builder: (context, state) {
+        if (state is RideInitial ||
+            state is RideFirst ||
+            state is RideFinished) {
+          return const Align();
+        }
         return PopScope(
           canPop: state is RideInitial,
           onPopInvoked: (_) {
@@ -159,7 +181,11 @@ class _HomePageState extends State<HomePage> {
               context.read<RideBloc>().emit(RideInitial());
             }
           },
-          child: const VehicleBottomSheet(),
+          child: BlocProvider(
+            lazy: false,
+            create: (context) => BatteryBloc(di()),
+            child: const VehicleBottomSheet(),
+          ),
         );
       },
     );
@@ -211,28 +237,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Widget _getNotification(double width, double height) {
-  //   return BlocBuilder<RideBloc, RideState>(
-  //     buildWhen: (previous, current) =>
-  //         current is RideReserved ||
-  //         current is RideInProgress ||
-  //         current is RidePaused ||
-  //         previous is RideFinished,
-  //     builder: (context, state) {
-  //       return Positioned(
-  //         right: width * .1,
-  //         left: width * .1,
-  //         top: height * .15,
-  //         child: (state is RideReserved ||
-  //                 state is RideInProgress ||
-  //                 state is RidePaused)
-  //             ?
-  //             : const Align(),
-  //       );
-  //     },
-  //   );
-  // }
-
   Widget _getQrCodeButton(
       double width, double height, double bottomSheetHeight) {
     return BlocBuilder<RideBloc, RideState>(
@@ -247,7 +251,6 @@ class _HomePageState extends State<HomePage> {
         }
       },
       builder: (context, state) {
-        log("build _getQrCodeButton");
         var bottomSheetExpanded = false;
         if (state is! RideInitial && state is! RideFirst) {
           bottomSheetExpanded = true;
@@ -317,117 +320,129 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _getMapContent() {
-    return Positioned.fill(
-      right: 0,
-      left: 0,
-      child: RepaintBoundary(
-        key: previewContainer,
-        child: FlutterMap(
-          mapController: mapController,
-          options: const MapOptions(
-            keepAlive: true,
-            initialZoom: 16,
-          ),
-          children: [
-            TileLayer(
-              tileProvider: CancellableNetworkTileProvider(),
-              // tileProvider: const FMTCStore('mapStore').getTileProvider(),
-              keepBuffer: 100,
-              urlTemplate:
-                  'https://api.mapbox.com/styles/v1/hamidaslami2/clob8flgd012t01qsdwnf70md/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaGFtaWRhc2xhbWkyIiwiYSI6ImNsbm9wcm5idjAyaWUya255enF0bmZyNnoifQ.eD-IuFdTBd9rDEgqyPyQEA',
+    return BlocBuilder<LocationBloc, LocationState>(
+      builder: (context, state) {
+        if (state is LocationComplete) {
+          currentLocation = state.userLocation;
+          scooters.add(
+            Scooter(
+              id: "#5",
+              name: "Apple Scooter",
+              lat: currentLocation!.latitude,
+              lng: currentLocation!.longitude + .002,
             ),
-            CurrentLocationLayer(
-              alignPositionOnUpdate: AlignOnUpdate.once,
-              alignDirectionOnUpdate: AlignOnUpdate.never,
-              style: LocationMarkerStyle(
-                marker: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.shade300,
-                          spreadRadius: 5,
-                          blurRadius: 5)
-                    ],
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Container(
-                    margin: const EdgeInsets.all(3),
-                    decoration: const BoxDecoration(
-                      color: Colors.blueAccent,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
+          );
+          return Positioned.fill(
+            right: 0,
+            left: 0,
+            child: RepaintBoundary(
+              key: previewContainer,
+              child: FlutterMap(
+                mapController: mapController,
+                options: const MapOptions(
+                  keepAlive: true,
+                  initialZoom: 16,
                 ),
-                markerSize: const Size.square(25),
-                accuracyCircleColor: Colors.blueAccent.withOpacity(0.1),
-                headingSectorColor: Colors.blueAccent.withOpacity(0.8),
-                headingSectorRadius: 50,
-              ),
-              moveAnimationDuration: Duration.zero, // disable animation
-            ),
-            BlocBuilder<RideBloc, RideState>(
-              buildWhen: (previous, current) {
-                if (current is RideReserving ||
-                    current is RideReserved ||
-                    current is RideInitial ||
-                    current is RideFirst) {
-                  return true;
-                } else {
-                  return false;
-                }
-              },
-              builder: (context, state) {
-                if (state is RideReserving) {
-                  selectedScooter = state.selectedScooter;
-                }
-                if (state is RideFirst ||
-                    state is RideInitial ||
-                    state is RideReserving) {
-                  return MarkerLayer(
-                    markers: [
-                      ...scooters.map(
-                        (e) {
-                          return Marker(
-                            width: 70,
-                            height: 70,
-                            point: LatLng(e.lat, e.lng),
-                            child: GestureDetector(
-                              onTap: () {
-                                selecetScooter(e);
-                              },
-                              child: SvgPicture.asset(
-                                e.id == selectedScooter?.id &&
-                                        state is RideReserving
-                                    ? AssetsIcon.selectedPoint
-                                    : AssetsIcon.point,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  );
-                } else {
-                  return MarkerLayer(
-                    markers: [
-                      Marker(
-                        width: 70,
-                        height: 70,
-                        point:
-                            LatLng(selectedScooter!.lat, selectedScooter!.lng),
-                        child: SvgPicture.asset(
-                          AssetsIcon.point,
+                children: [
+                  TileLayer(
+                    tileProvider: CancellableNetworkTileProvider(),
+                    // tileProvider: const FMTCStore('mapStore').getTileProvider(),
+                    keepBuffer: 100,
+                    urlTemplate:
+                        'https://api.mapbox.com/styles/v1/hamidaslami2/clob8flgd012t01qsdwnf70md/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaGFtaWRhc2xhbWkyIiwiYSI6ImNsbm9wcm5idjAyaWUya255enF0bmZyNnoifQ.eD-IuFdTBd9rDEgqyPyQEA',
+                  ),
+                  CurrentLocationLayer(
+                    positionStream: Stream.value(LocationMarkerPosition(
+                      accuracy: 10,
+                      latitude: currentLocation!.latitude,
+                      longitude: currentLocation!.longitude,
+                    )),
+                    alignPositionOnUpdate: AlignOnUpdate.once,
+                    alignDirectionOnUpdate: AlignOnUpdate.never,
+                    style: LocationMarkerStyle(
+                      marker: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.shade300,
+                                spreadRadius: 5,
+                                blurRadius: 5)
+                          ],
+                          color: Colors.white,
+                          shape: BoxShape.circle,
                         ),
-                      )
-                    ],
-                  );
-                }
-              },
+                        child: Container(
+                          margin: const EdgeInsets.all(3),
+                          decoration: const BoxDecoration(
+                            color: Colors.blueAccent,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                      markerSize: const Size.square(25),
+                      accuracyCircleColor: Colors.blueAccent.withOpacity(0.1),
+                      headingSectorColor: Colors.blueAccent.withOpacity(0.8),
+                      headingSectorRadius: 50,
+                    ),
+                    moveAnimationDuration: Duration.zero, // disable animation
+                  ),
+                  BlocBuilder<RideBloc, RideState>(
+                    builder: (context, state) {
+                      if (state is RideReserving) {
+                        selectedScooter = state.selectedScooter;
+                      }
+                      if (state is RideFirst ||
+                          state is RideInitial ||
+                          state is RideReserving) {
+                        return MarkerLayer(
+                          markers: [
+                            ...scooters.map(
+                              (e) {
+                                return Marker(
+                                  width: 70,
+                                  height: 70,
+                                  point: LatLng(e.lat, e.lng),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      selecetScooter(e);
+                                    },
+                                    child: SvgPicture.asset(
+                                      e.id == selectedScooter?.id &&
+                                              state is RideReserving
+                                          ? AssetsIcon.selectedPoint
+                                          : AssetsIcon.point,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      } else {
+                        return MarkerLayer(
+                          markers: [
+                            Marker(
+                              width: 70,
+                              height: 70,
+                              point: LatLng(
+                                  selectedScooter!.lat, selectedScooter!.lng),
+                              child: SvgPicture.asset(
+                                AssetsIcon.point,
+                              ),
+                            )
+                          ],
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
+          );
+        } else {
+          return const Positioned.fill(child: Align());
+        }
+      },
     );
   }
 }

@@ -4,8 +4,8 @@ abstract class DataState<T> {
   const DataState(this.data, this.error);
 }
 
-class DateSuccess<T> extends DataState<T> {
-  const DateSuccess(T? data) : super(data, null);
+class DataSuccess<T> extends DataState<T> {
+  const DataSuccess(T? data) : super(data, null);
 }
 
 class DataFailed<T> extends DataState<T> {

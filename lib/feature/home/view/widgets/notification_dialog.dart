@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_scooter/core/utils/constants.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
-import 'package:share_scooter/feature/home/view/blocs/bloc/ride_bloc.dart';
+import 'package:share_scooter/feature/home/view/blocs/ride/ride_bloc.dart';
 
 class NotificationDialog extends StatefulWidget {
   const NotificationDialog({
