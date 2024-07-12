@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'feature/home/view/blocs/location/location_bloc.dart';
 import 'feature/ride_histories/model/scooter_model.dart';
+import 'feature/ride_histories/view/screens/ride_details_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -69,7 +70,7 @@ class MyApp extends StatelessWidget {
           fontFamily: Constant.fontFamily,
           useMaterial3: true,
         ),
-        home: const SplashScreenPage(),
+        home: const RideDetailsPage(),
       ),
     );
   }
