@@ -39,11 +39,14 @@ class _QrCodePageState extends State<QrCodePage> {
             top: 0,
             child: AppBar(
               backgroundColor: Colors.transparent,
-              leading: SvgPicture.asset(
-                AssetsIcon.back,
-                matchTextDirection: true,
-                fit: BoxFit.scaleDown,
-                color: ColorManager.surface,
+              leading: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: SvgPicture.asset(
+                  AssetsIcon.back,
+                  matchTextDirection: true,
+                  fit: BoxFit.scaleDown,
+                  color: ColorManager.surface,
+                ),
               ),
               title: SvgPicture.asset(
                 AssetsImage.logo,

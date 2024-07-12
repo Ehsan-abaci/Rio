@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:share_scooter/feature/payment/view/bloc/account_bloc.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_appbar_widget.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 
 class AddCreditCodePage extends StatelessWidget {
-  const AddCreditCodePage({super.key});
+  AddCreditCodePage({super.key});
+
+  TextEditingController _couponController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +42,7 @@ class AddCreditCodePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextFormField(
+                        controller: _couponController,
                         keyboardType: TextInputType.multiline,
                         maxLines: 3,
                         style: TextStyle(
@@ -96,7 +101,11 @@ class AddCreditCodePage extends StatelessWidget {
                   bottom: height * 0.04,
                 ),
                 child: CustomElevatedButton(
-                  onTap: () {},
+                  onTap: () {
+                    if (_couponController.text.trim() == "RIO") {
+                      context.read<AccountBloc>().add(AddCreditEvent(5000));
+                    }
+                  },
                   content: "تایید",
                   fontSize: 16,
                   bgColor: ColorManager.primary,

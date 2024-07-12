@@ -1,8 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
+import 'package:share_scooter/feature/payment/view/bloc/account_bloc.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_appbar_widget.dart';
@@ -17,7 +19,7 @@ class RechargeTheWalletPage extends StatefulWidget {
 }
 
 class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
-  int selected = 0;
+  int? selected;
 
   Widget customRadioButton(int index, double numberPlus, double number) {
     final width = MediaQuery.sizeOf(context).width;
@@ -26,6 +28,7 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
         onTap: () {
           setState(() {
             selected = index;
+            selectedPrice = number;
           });
         },
         child: AspectRatio(
@@ -86,6 +89,15 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
         ));
   }
 
+  double? selectedPrice;
+
+  double balance = 0.0;
+  @override
+  void initState() {
+    // context.read<AccountBloc>().add(FetchAccountDetailEvent());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
@@ -125,14 +137,22 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
                   const SizedBox(
                     height: 8,
                   ),
-                  Text(
-                    "${50000.0.to3Dot()} T",
-                    textAlign: TextAlign.center,
-                    textDirection: TextDirection.ltr,
-                    style: TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.w800,
-                        color: ColorManager.highEmphasis),
+                  BlocBuilder<AccountBloc, AccountState>(
+                    builder: (context, state) {
+                      log(state.toString());
+                      if (state is AccountComplete) {
+                        balance = state.accountModel.credit;
+                      }
+                      return Text(
+                        "${balance.to3Dot()} T",
+                        textAlign: TextAlign.center,
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.w800,
+                            color: ColorManager.highEmphasis),
+                      );
+                    },
                   ),
                   SizedBox(
                     height: height * .01,
@@ -201,8 +221,14 @@ class _RechargeTheWalletPageState extends State<RechargeTheWalletPage> {
                   top: height * 0.015,
                 ),
                 child: CustomElevatedButton(
-                  onTap: () {},
-                  content: "پرداخت اینترنتی",
+                  onTap: () {
+                    context
+                        .read<AccountBloc>()
+                        .add(AddCreditEvent(selectedPrice ?? 0.0));
+                  },
+                  content: selectedPrice != null
+                      ? "شارژ ${selectedPrice?.to3Dot()} تومان"
+                      : "پرداخت اینترنتی",
                   fontSize: 16,
                   bgColor: ColorManager.primary,
                   frColor: Colors.white,

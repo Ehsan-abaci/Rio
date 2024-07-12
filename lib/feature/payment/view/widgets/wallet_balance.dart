@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
+import 'package:share_scooter/feature/payment/view/bloc/account_bloc.dart';
 import 'package:share_scooter/feature/payment/view/screens/recharge_the_wallet_page.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
@@ -35,15 +37,23 @@ class WalletBalance extends StatelessWidget {
           const SizedBox(
             height: 8,
           ),
-          FittedBox(
-            child: Text(
-              "${50000.0.to3Dot()} T",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.w800,
-                  color: ColorManager.highEmphasis),
-            ),
+          BlocBuilder<AccountBloc, AccountState>(
+            builder: (context, state) {
+              double balance = 0.0;
+              if (state is AccountComplete) {
+                balance = state.accountModel.credit;
+              }
+              return FittedBox(
+                child: Text(
+                  "${balance.to3Dot()} T",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.w800,
+                      color: ColorManager.highEmphasis),
+                ),
+              );
+            },
           ),
           const SizedBox(
             height: 16,

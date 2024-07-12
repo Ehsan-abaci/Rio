@@ -14,7 +14,7 @@ class Scooter {
   @HiveField(3)
   double lng;
   @HiveField(4)
-  double batteryLevel;
+  double? batteryLevel;
 
   Scooter({
     required this.id,

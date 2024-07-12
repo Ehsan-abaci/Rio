@@ -21,13 +21,14 @@ class ScooterAdapter extends TypeAdapter<Scooter> {
       name: fields[1] as String,
       lat: fields[2] as double,
       lng: fields[3] as double,
+      batteryLevel: fields[4] as double?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Scooter obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class ScooterAdapter extends TypeAdapter<Scooter> {
       ..writeByte(2)
       ..write(obj.lat)
       ..writeByte(3)
-      ..write(obj.lng);
+      ..write(obj.lng)
+      ..writeByte(4)
+      ..write(obj.batteryLevel);
   }
 
   @override

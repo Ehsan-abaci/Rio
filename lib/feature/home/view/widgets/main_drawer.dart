@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:share_scooter/core/utils/extensions.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
+import 'package:share_scooter/feature/payment/view/bloc/account_bloc.dart';
 import 'package:share_scooter/feature/payment/view/screens/credit_payment_page.dart';
 import 'package:share_scooter/feature/payment/view/screens/recharge_the_wallet_page.dart';
 import 'package:share_scooter/feature/ride_histories/view/bloc/ride_history_bloc.dart';
@@ -173,7 +175,7 @@ class MainDrawer extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Expanded(
+                            Expanded(
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Column(
@@ -181,7 +183,7 @@ class MainDrawer extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    FittedBox(
+                                    const FittedBox(
                                       child: Text(
                                         "اعتبار کیف پول شما",
                                         style: TextStyle(
@@ -191,15 +193,23 @@ class MainDrawer extends StatelessWidget {
                                             letterSpacing: 1),
                                       ),
                                     ),
-                                    SizedBox(height: 10),
-                                    FittedBox(
-                                      child: Text(
-                                        "50,000 تومان (T)",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 20,
-                                        ),
-                                      ),
+                                    const SizedBox(height: 10),
+                                    BlocBuilder<AccountBloc, AccountState>(
+                                      builder: (context, state) {
+                                        double balance = 0.0;
+                                        if (state is AccountComplete) {
+                                          balance = state.accountModel.credit;
+                                        }
+                                        return FittedBox(
+                                          child: Text(
+                                            "${balance.to3Dot()} تومان (T)",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),

@@ -4,6 +4,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:share_scooter/core/utils/constants.dart';
 import 'package:share_scooter/feature/home/view/blocs/ride/ride_bloc.dart';
+import 'package:share_scooter/feature/payment/model/account_model.dart';
+import 'package:share_scooter/feature/payment/view/bloc/account_bloc.dart';
 import 'package:share_scooter/feature/ride_histories/model/ride_history_model.dart';
 import 'package:share_scooter/feature/splash/view/screens/splash_screen_page.dart';
 import 'package:share_scooter/locator.dart';
@@ -17,10 +19,15 @@ void main() async {
 
   await initAppMoudule();
   await Hive.initFlutter();
-  Hive.registerAdapter<RideHistoryModel>(RideHistoryModelAdapter());
-  Hive.registerAdapter<Scooter>(ScooterAdapter());
+  Hive
+    ..registerAdapter(RideHistoryModelAdapter())
+    ..registerAdapter(ScooterAdapter())
+    ..registerAdapter(AccountModelAdapter())
+    ..registerAdapter(CardDetailModelAdapter())
+    ..registerAdapter(CouponDetailModelAdapter());
 
   await Hive.openBox<RideHistoryModel>(Constant.rideHistoryBox);
+  await Hive.openBox<AccountModel>(Constant.accountBox);
   // await FMTCObjectBoxBackend().initialise();
 
   // if (!await const FMTCStore('mapStore').manage.ready) {
@@ -48,6 +55,10 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di<LocationBloc>(),
+        ),
+        BlocProvider(
+          create: (context) =>
+              di<AccountBloc>()..add(FetchAccountDetailEvent()),
         ),
       ],
       child: MaterialApp(

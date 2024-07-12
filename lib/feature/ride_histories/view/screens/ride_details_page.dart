@@ -87,11 +87,15 @@ class WidgetColumnDetails extends StatelessWidget {
               color: "red"),
           const WidgetDivider(),
           const WidgetDetailsRow(
-              title: "موجودی کیف پول", description: '8.600 T', color: "green"),
+            title: "موجودی کیف پول",
+            description: '8.600 T',
+            color: "green",
+          ),
           const WidgetDetailsRow(
-              title: "پرداخت اینترنتی",
-              description: '20.000 T',
-              color: "green"),
+            title: "پرداخت اینترنتی",
+            description: '20.000 T',
+            color: "green",
+          ),
         ],
       ),
     );
@@ -124,9 +128,10 @@ class WidgetDetailsRow extends StatelessWidget {
         Text(
           description,
           style: TextStyle(
-              fontWeight: FontWeight.w800,
-              color: _getColor(color),
-              fontSize: 16),
+            fontWeight: FontWeight.w800,
+            color: _getColor(color),
+            fontSize: 16,
+          ),
         )
       ]),
     );
