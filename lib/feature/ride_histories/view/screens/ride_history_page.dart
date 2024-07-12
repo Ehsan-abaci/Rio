@@ -13,6 +13,8 @@ import 'package:share_scooter/core/widgets/animate_in_effect.dart';
 import 'package:share_scooter/core/widgets/custom_appbar_widget.dart';
 import 'package:share_scooter/feature/ride_histories/model/ride_history_model.dart';
 import 'package:share_scooter/feature/ride_histories/view/bloc/ride_history_bloc.dart';
+import 'package:share_scooter/feature/ride_histories/view/screens/ride_details_page.dart';
+import 'package:share_scooter/feature/ride_histories/view/widgets/ride_image.dart';
 
 class RideHistoriesPage extends StatelessWidget {
   const RideHistoriesPage({super.key});
@@ -63,8 +65,18 @@ class RioRideHistoryScrollView extends StatelessWidget {
           itemBuilder: (context, i) => AnimateInEffect(
             intervalStart: (i / rideHistories.length),
             keepAlive: true,
-            child: RideHistoryItem(
-              rideHistory: rideHistories[i],
+            child: GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RideDetailsPage(
+                    rideHistoryModel: rideHistories[i],
+                  ),
+                ),
+              ),
+              child: RideHistoryItem(
+                rideHistory: rideHistories[i],
+              ),
             ),
           ),
         ),
@@ -101,40 +113,7 @@ class RideHistoryItem extends StatelessWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Column(
               children: [
-                Expanded(
-                  flex: 3,
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: (rideHistory.img != null)
-                            ? Image.memory(
-                                Uint8List.fromList(
-                                    base64Decode(rideHistory.img!).toList()),
-                                fit: BoxFit.cover,
-                                width: 500,
-                              )
-                            : const Placeholder(),
-                      ),
-                      Positioned(
-                        left: 10,
-                        bottom: 10,
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: ColorManager.appBg,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: SvgPicture.asset(
-                            AssetsIcon.scooterAlt,
-                            fit: BoxFit.scaleDown,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                getRideImage(rideHistory.img),
                 Expanded(
                   flex: 2,
                   child: Padding(
@@ -243,10 +222,7 @@ class RideHistoryItem extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       textDirection: TextDirection.ltr,
-                                      rideHistory.totalCost
-                                          // .toStringAsFixed(0)
-                                          !
-                                          .to3Dot(),
+                                      rideHistory.totalCost!.to3Dot(),
                                       style: TextStyle(
                                         fontSize: 12,
                                         overflow: TextOverflow.ellipsis,

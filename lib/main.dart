@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:share_scooter/core/utils/constants.dart';
-import 'package:share_scooter/feature/home/view/blocs/battery/battery_bloc.dart';
 import 'package:share_scooter/feature/home/view/blocs/ride/ride_bloc.dart';
 import 'package:share_scooter/feature/ride_histories/model/ride_history_model.dart';
 import 'package:share_scooter/feature/splash/view/screens/splash_screen_page.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'feature/home/view/blocs/location/location_bloc.dart';
 import 'feature/ride_histories/model/scooter_model.dart';
-import 'feature/ride_histories/view/screens/ride_details_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,7 +68,7 @@ class MyApp extends StatelessWidget {
           fontFamily: Constant.fontFamily,
           useMaterial3: true,
         ),
-        home: const RideDetailsPage(),
+        home: const SplashScreenPage(),
       ),
     );
   }
