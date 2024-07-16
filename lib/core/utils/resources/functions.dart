@@ -48,11 +48,21 @@ void showProcssingModal(BuildContext context) {
   );
 }
 
-void dismissDialog(BuildContext context) {
-  if (_isThereCurrentDialogShowing(_loadinDialogKey)) {
-    log("dismiss");
-    Navigator.pop(context);
-  }
-}
+// void dismissDialog1(BuildContext context) {
+//   if (_isThereCurrentDialogShowing(_loadinDialogKey)) {
+//     log("dismiss");
+//     Navigator.pop(context);
+//   }
+// }
 
-bool _isThereCurrentDialogShowing(GlobalKey key) => key.currentContext != null;
+// bool _isThereCurrentDialogShowing1(GlobalKey key) => key.currentContext != null;
+
+
+ void dismissDialog(BuildContext context){
+    if(_isThereCurrentDialogShowing(context)){
+      Navigator.of(context,rootNavigator: true).pop(true);
+    }
+  }
+
+  bool _isThereCurrentDialogShowing(BuildContext context) =>
+      ModalRoute.of(context)?.isCurrent != true;

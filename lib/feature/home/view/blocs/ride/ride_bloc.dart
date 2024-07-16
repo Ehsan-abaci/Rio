@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:share_scooter/feature/home/controller/battery_controller.dart';
 import 'package:share_scooter/feature/home/controller/ridde_command_controller.dart';
 import 'package:share_scooter/feature/home/view/screens/home_page.dart';
@@ -28,7 +29,6 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     var moneyController = MoneyController();
     RideState? currentState;
     RideState? previousState;
-    double increaseAmount = 0.0;
 
     on<ReservingEvent>(
       (event, emit) async {
@@ -60,7 +60,6 @@ class RideBloc extends Bloc<RideEvent, RideState> {
       emit(RideLoading());
       final dataState = await _commandController.turnEngineOn();
       if (dataState is DataSuccess) {
-        increaseAmount = 500;
         currentState = RideInProgress(rideDetail: rideHistoryModel);
         emit(currentState!);
         add(IncreaseAmount());
@@ -73,11 +72,10 @@ class RideBloc extends Bloc<RideEvent, RideState> {
       emit(RideLoading());
       final dataState = await _commandController.pauseEngine();
       if (dataState is DataSuccess) {
-        increaseAmount = 100;
         currentState = RidePaused(rideDetail: rideHistoryModel);
         emit(currentState!);
-        previousState = currentState;
         add(IncreaseAmount());
+        previousState = currentState;
       } else {
         emit(previousState!);
       }
@@ -97,9 +95,13 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     });
 
     on<IncreaseAmount>((event, emit) async {
-      moneyController.dispose();
-      moneyController = MoneyController();
-      moneyController.startTimer(increaseAmount);
+      if (currentState is RidePaused) {
+        moneyController.startPausedTimer();
+      } else if (currentState is RideInProgress) {
+        moneyController.startunningTimer();
+      } else {
+        return;
+      }
       await for (final val in moneyController.stream) {
         rideHistoryModel = rideHistoryModel.copyWith(
           ridingCost: rideHistoryModel.ridingCost! + val,
@@ -130,30 +132,67 @@ class RideBloc extends Bloc<RideEvent, RideState> {
 }
 
 class MoneyController {
+  static final MoneyController _moneyController = MoneyController._internal();
+  MoneyController._internal();
+  factory MoneyController() => _moneyController;
+
   // Create a StreamController that will manage the stream
-  final StreamController<double>? _controller = StreamController<double>();
-  Timer? _timer;
+  StreamController<double> _controller = StreamController();
+  Sink<double> get mySteamInputSink => _controller.sink;
+  Timer? _pausedTimer;
+  Timer? _runningTimer;
+
+  final Stopwatch _pausedStopwatch = Stopwatch();
+  final Stopwatch _runningStopwatch = Stopwatch();
 
   // Getter to expose the stream
-  Stream<double> get stream => _controller!.stream;
-  Stopwatch? stopwatch;
+  Stream<double> get stream => _controller.stream;
+
   // Function to start the timer and update the stream
-  void startTimer(double amount) {
-    stopwatch = Stopwatch()..start();
+  void startPausedTimer() async {
+    if (_runningStopwatch.isRunning) {
+      _flush();
+      _runningStopwatch.stop();
+      _runningTimer?.cancel();
+    }
+    _pausedStopwatch.start();
+
     // Set up a periodic timer that triggers every minute
-    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+
+    _pausedTimer = Timer.periodic(const Duration(minutes: 1), (t) {
       // Add the updated amount to the stream
-      _controller?.add(amount);
+      mySteamInputSink.add(100.0);
     });
   }
 
+  void startunningTimer() async {
+    if (_pausedStopwatch.isRunning) {
+      _flush();
+      _pausedStopwatch.stop();
+      _pausedTimer?.cancel();
+    }
+    _runningStopwatch.start();
+    // Set up a periodic timer that triggers every minute
+    _runningTimer = Timer.periodic(const Duration(minutes: 1), (t) {
+      // Add the updated amount to the stream
+      mySteamInputSink.add(500.0);
+    });
+  }
+
+  _flush() {
+    _controller.close();
+    _controller = StreamController<double>();
+  }
+
   void disposeTimer() {
-    _timer?.cancel();
+    _pausedTimer?.cancel();
+    _runningTimer?.cancel();
   }
 
   // Function to stop the timer and close the stream
   void dispose() {
-    _timer?.cancel();
-    _controller?.close();
+    _pausedTimer?.cancel();
+    _runningTimer?.cancel();
+    _controller.close();
   }
 }

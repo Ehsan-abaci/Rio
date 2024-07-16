@@ -34,11 +34,14 @@ void main() async {
   //   await const FMTCStore('mapStore').manage.create();
   // }
 
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
       systemNavigationBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: Colors.transparent, // navigation bar color
       statusBarColor: Colors.transparent, // status bar color
-      statusBarIconBrightness: Brightness.dark));
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  );
 
   runApp(const MyApp());
 }

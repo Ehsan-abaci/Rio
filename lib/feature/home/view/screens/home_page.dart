@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
             _getBottomSheet(bottomSheetHeight),
           ],
         ),
-        drawer: const MainDrawer(),
+        drawer:  MainDrawer(),
       ),
     );
   }

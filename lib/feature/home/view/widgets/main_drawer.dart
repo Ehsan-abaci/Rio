@@ -14,9 +14,14 @@ import 'package:share_scooter/feature/ride_histories/view/screens/ride_history_p
 import 'package:share_scooter/feature/settings/view/screens/setting_page.dart';
 import 'package:share_scooter/locator.dart';
 
-class MainDrawer extends StatelessWidget {
+class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key});
 
+  @override
+  State<MainDrawer> createState() => _MainDrawerState();
+}
+
+class _MainDrawerState extends State<MainDrawer> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
@@ -26,14 +31,14 @@ class MainDrawer extends StatelessWidget {
       width: width * .8,
       child: Column(
         children: [
-          _getDrawerHeader(height, width, context),
-          _getDrawerBody(context),
+          _getDrawerHeader(height, width),
+          _getDrawerBody(),
         ],
       ),
     );
   }
 
-  Widget _getDrawerBody(BuildContext context) {
+  Widget _getDrawerBody() {
     return Expanded(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -41,21 +46,24 @@ class MainDrawer extends StatelessWidget {
           MenuListTile(
             title: "تاریخچه سواری",
             icon: AssetsIcon.history,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (context) => RideHistoryBloc(di()),
-                  child: const RideHistoriesPage(),
+            onTap: () {
+              Scaffold.of(context).closeDrawer();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => RideHistoryBloc(di()),
+                    child: const RideHistoriesPage(),
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
           MenuListTile(
             title: "پرداخت اعتباری",
             icon: AssetsIcon.payment,
             onTap: () {
-              Navigator.pop(context);
+              Scaffold.of(context).closeDrawer();
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -92,7 +100,7 @@ class MainDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pop(context);
+              Scaffold.of(context).closeDrawer();
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -106,7 +114,7 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  Widget _getDrawerHeader(double height, double width, BuildContext context) {
+  Widget _getDrawerHeader(double height, double width) {
     return SizedBox(
       height: height * .4,
       child: Stack(
