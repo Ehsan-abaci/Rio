@@ -7,6 +7,7 @@ import 'package:share_scooter/feature/home/view/blocs/ride/ride_bloc.dart';
 import 'package:share_scooter/feature/payment/model/account_model.dart';
 import 'package:share_scooter/feature/payment/view/bloc/account_bloc.dart';
 import 'package:share_scooter/feature/ride_histories/model/ride_history_model.dart';
+import 'package:share_scooter/feature/splash/view/cubit/network_connection_cubit.dart';
 import 'package:share_scooter/feature/splash/view/screens/splash_screen_page.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,6 +54,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+          BlocProvider(
+          create: (context) => di<NetworkConnectionCubit>(),
+        ),
         BlocProvider(
           create: (context) => di<RideBloc>(),
         ),
