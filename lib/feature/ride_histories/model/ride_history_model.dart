@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
@@ -61,6 +63,8 @@ class RideHistoryModel extends Equatable {
         totalCost,
       ];
 
+
+
   RideHistoryModel copyWith({
     String? rideId,
     Scooter? scooter,
@@ -121,3 +125,5 @@ class RideHistoryModel extends Equatable {
   factory RideHistoryModel.fromJson(String source) =>
       RideHistoryModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }
+
+

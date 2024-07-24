@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:share_scooter/core/utils/constants.dart';
+import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/feature/home/view/blocs/ride/ride_bloc.dart';
 import 'package:share_scooter/feature/payment/model/account_model.dart';
 import 'package:share_scooter/feature/payment/view/bloc/account_bloc.dart';
 import 'package:share_scooter/feature/ride_histories/model/ride_history_model.dart';
 import 'package:share_scooter/feature/splash/view/cubit/network_connection_cubit.dart';
-import 'package:share_scooter/feature/splash/view/screens/splash_screen_page.dart';
 import 'package:share_scooter/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,7 +26,6 @@ void main() async {
     ..registerAdapter(AccountModelAdapter())
     ..registerAdapter(CardDetailModelAdapter())
     ..registerAdapter(CouponDetailModelAdapter());
-
   await Hive.openBox<RideHistoryModel>(Constant.rideHistoryBox);
   await Hive.openBox<AccountModel>(Constant.accountBox);
   // await FMTCObjectBoxBackend().initialise();
@@ -34,6 +33,7 @@ void main() async {
   // if (!await const FMTCStore('mapStore').manage.ready) {
   //   await const FMTCStore('mapStore').manage.create();
   // }
+  // await di<AppPreferences>().logout();
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-          BlocProvider(
+        BlocProvider(
           create: (context) => di<NetworkConnectionCubit>(),
         ),
         BlocProvider(
@@ -64,8 +64,7 @@ class MyApp extends StatelessWidget {
           create: (context) => di<LocationBloc>(),
         ),
         BlocProvider(
-          create: (context) =>
-              di<AccountBloc>()..add(FetchAccountDetailEvent()),
+          create: (context) => di<AccountBloc>(),
         ),
       ],
       child: MaterialApp(
@@ -80,13 +79,14 @@ class MyApp extends StatelessWidget {
           Locale('fa', "IR"),
           Locale('en', "US"),
         ],
+        onGenerateRoute: RouteGenerator.getRoute,
         title: 'RIO',
         themeMode: ThemeMode.light,
         theme: ThemeData(
           fontFamily: Constant.fontFamily,
           useMaterial3: true,
         ),
-        home: const SplashScreenPage(),
+        initialRoute: Routes.splashRoute,
       ),
     );
   }

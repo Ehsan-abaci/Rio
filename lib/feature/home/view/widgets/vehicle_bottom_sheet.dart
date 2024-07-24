@@ -67,16 +67,13 @@ class _VehicleBottomSheetState extends State<VehicleBottomSheet>
           selectedScooter = state.selectedScooter;
           bottomSheetButtons = ReserveBottomSheetButtons(width: width);
         } else if (state is RideInProgress) {
-          // _animationController.forward();
-          selectedScooter = state.rideDetail.scooter;
+          selectedScooter = state.rideDetail?.scooter;
           bottomSheetButtons = RidingBottomSheetButtons(width: width);
         } else if (state is RidePaused) {
-          // _animationController.forward();
-          selectedScooter = state.rideDetail.scooter;
+          selectedScooter = state.rideDetail?.scooter;
           bottomSheetButtons = PausedBottomSheetButtons(width: width);
         } else if (state is RideReserved) {
-          // _animationController.forward();
-          selectedScooter = state.rideDetail.scooter;
+          selectedScooter = state.rideDetail?.scooter;
           bottomSheetButtons =
               StartBottomSheetButtons(width: width, stopwatch: _stopwatch);
         } else if (state is RideInitial) {

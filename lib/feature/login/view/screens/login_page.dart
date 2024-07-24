@@ -1,14 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/core/widgets/scroll_column_expandable.dart';
-import 'package:share_scooter/feature/home/view/screens/home_page.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 
-class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +61,7 @@ class SignupPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: height * .025,
-                      ),
+                      SizedBox(height: height * .025),
                       Text(
                         "از سفر با وسایل نقلیه دوستدار محیط زیست لذت ببرید. همین حالا شروع کنید.",
                         textAlign: TextAlign.center,
@@ -72,7 +69,6 @@ class SignupPage extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           color: ColorManager.highEmphasis,
-                          // height: 1.8,
                         ),
                       ),
                       SizedBox(
@@ -82,11 +78,10 @@ class SignupPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomElevatedButton(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const HomePage(),
-                                )),
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              Routes.loginByPhoneNumberRoute,
+                            ),
                             content: "ورود با شماره همراه",
                             fontSize: 16,
                             bgColor: ColorManager.primary,
@@ -98,7 +93,7 @@ class SignupPage extends StatelessWidget {
                             height: height * .02,
                           ),
                           CustomElevatedButton(
-                            onTap: () {},
+                            onTap: null,
                             content: "ورود با شماره دانشجویی",
                             fontSize: 16,
                             bgColor: ColorManager.highEmphasis,

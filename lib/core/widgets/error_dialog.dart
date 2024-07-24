@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:share_scooter/core/utils/resources/app_strings.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
+import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 
-class ProcessingModal extends StatelessWidget {
-  const ProcessingModal({super.key});
+class ErrorDialog extends StatelessWidget {
+  ErrorDialog({
+    super.key,
+    required this.errorTitle,
+    required this.errorDesc,
+    this.retryActionFunction,
+  });
+  String errorTitle;
+  String errorDesc;
+  Function()? retryActionFunction;
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +21,8 @@ class ProcessingModal extends StatelessWidget {
       canPop: false,
       child: Dialog(
         child: Container(
-          height: height * .27,
-          width: width * .8,
+          height: height * .2,
+          width: width < 600 ? width * .8 : 450,
           decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
@@ -29,7 +37,7 @@ class ProcessingModal extends StatelessWidget {
                 flex: 2,
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: height * .03, horizontal: width * .05),
+                      vertical: height * .02, horizontal: width * .05),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -38,7 +46,7 @@ class ProcessingModal extends StatelessWidget {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            "در حال پردازش",
+                            errorTitle,
                             style: TextStyle(
                               color: ColorManager.highEmphasis,
                               fontWeight: FontWeight.w600,
@@ -51,7 +59,7 @@ class ProcessingModal extends StatelessWidget {
                       Expanded(
                         flex: 3,
                         child: Text(
-                          AppStr.loading,
+                          errorDesc,
                           style: TextStyle(
                             color: ColorManager.mediumEmphasis,
                             fontWeight: FontWeight.w400,
@@ -62,13 +70,15 @@ class ProcessingModal extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Align(
-                          alignment: Alignment.center,
-                          child: CircularProgressIndicator.adaptive(
-                            valueColor: AlwaysStoppedAnimation(
-                              ColorManager.success,
-                            ),
-                          ),
-                        ),
+                            alignment: Alignment.center,
+                            child: CustomElevatedButton(
+                              onTap: retryActionFunction ??
+                                  () => Navigator.pop(context),
+                              content: "بستن",
+                              bgColor: ColorManager.surfacePrimary,
+                              frColor: ColorManager.primaryDark,
+                              width: width,
+                            )),
                       )
                     ],
                   ),

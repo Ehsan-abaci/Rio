@@ -6,18 +6,35 @@ import 'package:flutter_svg/svg.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
+import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/feature/qr_pin_code/view/widgets/otp_widget.dart';
 
 class PinCodePage extends StatefulWidget {
-  const PinCodePage({super.key, required this.controller});
+  const PinCodePage({super.key});
 
   @override
   State<PinCodePage> createState() => _PinCodePageState();
-  final QRViewController controller;
 }
 
 class _PinCodePageState extends State<PinCodePage> {
+  QRViewController? controller;
+  void _onQRViewCreated(QRViewController controller) {
+    setState(() {
+      this.controller = controller;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    QRView(
+      key: GlobalKey(debugLabel: "qrCode"),
+      onQRViewCreated: _onQRViewCreated,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
@@ -63,14 +80,14 @@ class _PinCodePageState extends State<PinCodePage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               FutureBuilder<bool?>(
-                  future: widget.controller.getFlashStatus(),
+                  future: controller?.getFlashStatus(),
                   builder: (context, snapshot) {
                     log(snapshot.data.toString());
                     var isTurnedOn = snapshot.data ?? false;
                     return CustomElevatedButton(
                       content: "فلاش گوشی",
                       onTap: () async {
-                        await widget.controller.toggleFlash();
+                        await controller?.toggleFlash();
                         setState(() {});
                       },
                       icon: AssetsIcon.flashlight,
@@ -106,7 +123,6 @@ class _PinCodePageState extends State<PinCodePage> {
         backgroundColor: Colors.transparent,
         leading: GestureDetector(
           onTap: () {
-            Navigator.pop(context);
             Navigator.pop(context);
           },
           child: SvgPicture.asset(

@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
+import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/feature/payment/view/bloc/account_bloc.dart';
 import 'package:share_scooter/feature/payment/view/screens/credit_payment_page.dart';
@@ -48,14 +49,9 @@ class _MainDrawerState extends State<MainDrawer> {
             icon: AssetsIcon.history,
             onTap: () {
               Scaffold.of(context).closeDrawer();
-              Navigator.push(
+              Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) => RideHistoryBloc(di()),
-                    child: const RideHistoriesPage(),
-                  ),
-                ),
+                Routes.rideHistoryRoute,
               );
             },
           ),
@@ -64,11 +60,10 @@ class _MainDrawerState extends State<MainDrawer> {
             icon: AssetsIcon.payment,
             onTap: () {
               Scaffold.of(context).closeDrawer();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CreditPaymentPage(),
-                  ));
+              Navigator.pushNamed(
+                context,
+                Routes.creditPaymentRoute,
+              );
             },
           ),
           MenuListTile(
@@ -101,11 +96,9 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
             onTap: () {
               Scaffold.of(context).closeDrawer();
-              Navigator.push(
+              Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const SettingPage(),
-                ),
+                Routes.settingRoute,
               );
             },
           ),
@@ -129,20 +122,28 @@ class _MainDrawerState extends State<MainDrawer> {
             right: width * .075,
             top: height * .13,
             height: height * .1,
-            child: const FittedBox(
+            child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    "سلام احسان",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w800,
-                    ),
+                  BlocBuilder<AccountBloc, AccountState>(
+                    builder: (context, state) {
+                      String name = "";
+                      if (state is AccountComplete) {
+                        name = state.accountModel.name;
+                      }
+                      return Text(
+                        "سلام $name",
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      );
+                    },
                   ),
-                  Text(
+                  const Text(
                     "امروز با ریو میخوای سواری داشته یاشی؟",
                     style: TextStyle(
                       fontSize: 15,
@@ -225,12 +226,10 @@ class _MainDrawerState extends State<MainDrawer> {
                             ),
                             const SizedBox(width: 5),
                             CustomElevatedButton(
-                              onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RechargeTheWalletPage(),
-                                  )),
+                              onTap: () => Navigator.pushNamed(
+                                context,
+                                Routes.rechargeWalletRoute,
+                              ),
                               content: "شارژ",
                               fontSize: 16,
                               bgColor: ColorManager.surfaceTertiary,

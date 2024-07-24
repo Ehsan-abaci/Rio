@@ -9,6 +9,7 @@ import 'package:share_scooter/core/utils/extensions.dart';
 
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
+import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/core/widgets/animate_in_effect.dart';
 import 'package:share_scooter/core/widgets/custom_appbar_widget.dart';
 import 'package:share_scooter/feature/ride_histories/model/ride_history_model.dart';
@@ -66,13 +67,10 @@ class RioRideHistoryScrollView extends StatelessWidget {
             intervalStart: (i / rideHistories.length),
             keepAlive: true,
             child: GestureDetector(
-              onTap: () => Navigator.push(
+              onTap: () => Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => RideDetailsPage(
-                    rideHistoryModel: rideHistories[i],
-                  ),
-                ),
+                Routes.rideDetailRoute,
+                arguments: rideHistories[i],
               ),
               child: RideHistoryItem(
                 rideHistory: rideHistories[i],

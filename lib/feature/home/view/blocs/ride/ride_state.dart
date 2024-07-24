@@ -1,73 +1,199 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: must_be_immutable
+
 part of 'ride_bloc.dart';
 
-abstract class RideState extends Equatable {}
+enum ReservedModal { startModal, unlockingModal, ringModal }
+
+abstract class RideState extends Equatable {
+  RideHistoryModel? rideDetail;
+  bool isLoading;
+  ErrorState? error;
+
+  RideState({
+    this.rideDetail,
+    this.isLoading = false,
+    this.error,
+  });
+
+  @override
+  List<Object?> get props => [rideDetail, isLoading, error];
+
+  RideState copyWith({
+    RideHistoryModel? rideDetail,
+    bool? isLoading,
+    ErrorState? error,
+  });
+}
 
 class RideInitial extends RideState {
+  RideInitial({
+    super.rideDetail,
+    super.isLoading,
+    super.error,
+  });
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [rideDetail, isLoading, error];
+
+  @override
+  RideState copyWith({
+    RideHistoryModel? rideDetail,
+    bool? isLoading,
+    ErrorState? error,
+  }) {
+    return RideInitial(
+      rideDetail: rideDetail ?? this.rideDetail,
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+    );
+  }
 }
 
 class RideFirst extends RideState {
+  RideFirst({
+    super.isLoading,
+    super.error,
+  });
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [rideDetail, isLoading, error];
+
+  @override
+  RideState copyWith({
+    RideHistoryModel? rideDetail,
+    bool? isLoading,
+    ErrorState? error,
+  }) {
+    return RideFirst(
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+    );
+  }
 }
 
 class RideReserving extends RideState {
   final Scooter selectedScooter;
   RideReserving({
     required this.selectedScooter,
+    super.isLoading,
+    super.error,
   });
   @override
-  List<Object?> get props => [selectedScooter];
+  List<Object?> get props => [selectedScooter, rideDetail, isLoading, error];
+
+  @override
+  RideState copyWith({
+    Scooter? selectedScooter,
+    RideHistoryModel? rideDetail,
+    bool? isLoading,
+    ErrorState? error,
+  }) {
+    return RideReserving(
+      selectedScooter: selectedScooter ?? this.selectedScooter,
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+    );
+  }
 }
 
 class RideReserved extends RideState {
-  final RideHistoryModel rideDetail;
+  ReservedModal? modal;
+
   RideReserved({
-    required this.rideDetail,
+    this.modal,
+    super.rideDetail,
+    super.isLoading,
+    super.error,
   });
   @override
-  List<Object?> get props => [rideDetail];
+  List<Object?> get props => [rideDetail, isLoading, error];
+
+  @override
+  RideState copyWith({
+    ReservedModal? modal,
+    RideHistoryModel? rideDetail,
+    bool? isLoading,
+    ErrorState? error,
+  }) {
+    return RideReserved(
+      modal: modal,
+      rideDetail: rideDetail ?? this.rideDetail,
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+    );
+  }
 }
 
+// class RingModalRideReserved extends RideReserved {}
+
+// class UnlockingModalRideReserved extends RideReserved {}
+
+// class StartModalRideReserved extends RideReserved {}
+
 class RideInProgress extends RideState {
-  final RideHistoryModel rideDetail;
   RideInProgress({
-    required this.rideDetail,
+    super.rideDetail,
+    super.isLoading,
+    super.error,
   });
   @override
-  List<Object?> get props => [rideDetail];
+  List<Object?> get props => [rideDetail, isLoading, error];
+
+  @override
+  RideState copyWith({
+    RideHistoryModel? rideDetail,
+    bool? isLoading,
+    ErrorState? error,
+  }) {
+    return RideInProgress(
+      rideDetail: rideDetail ?? this.rideDetail,
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+    );
+  }
 }
 
 class RidePaused extends RideState {
-  final RideHistoryModel rideDetail;
   RidePaused({
-    required this.rideDetail,
+    super.rideDetail,
+    super.isLoading,
+    super.error,
   });
   @override
-  List<Object?> get props => [rideDetail];
+  List<Object?> get props => [rideDetail, isLoading, error];
+
+  @override
+  RideState copyWith({
+    RideHistoryModel? rideDetail,
+    bool? isLoading,
+    ErrorState? error,
+  }) {
+    return RidePaused(
+      rideDetail: rideDetail ?? this.rideDetail,
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+    );
+  }
 }
 
 class RideFinished extends RideState {
-  final RideHistoryModel rideDetail;
   RideFinished({
-    required this.rideDetail,
+    super.rideDetail,
+    super.isLoading,
+    super.error,
   });
   @override
-  List<Object?> get props => [rideDetail];
-}
+  List<Object?> get props => [rideDetail, isLoading, error];
 
-class RideLoading extends RideState {
   @override
-  List<Object?> get props => [];
-}
-
-class RideError extends RideState {
-  final String message;
-  RideError({
-    required this.message,
-  });
-  @override
-  List<Object?> get props => [message];
+  RideState copyWith({
+    RideHistoryModel? rideDetail,
+    bool? isLoading,
+    ErrorState? error,
+  }) {
+    return RideFinished(
+      rideDetail: rideDetail ?? this.rideDetail,
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+    );
+  }
 }

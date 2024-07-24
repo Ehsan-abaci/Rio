@@ -12,9 +12,12 @@ import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 // import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:share_scooter/core/utils/resources/app_strings.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/utils/resources/functions.dart';
+import 'package:share_scooter/core/widgets/error_dialog.dart';
+import 'package:share_scooter/core/widgets/loading/loading_screen.dart';
 import 'package:share_scooter/core/widgets/low_level_circle_button.dart';
 import 'package:share_scooter/feature/home/view/blocs/battery/battery_bloc.dart';
 import 'package:share_scooter/feature/home/view/blocs/location/location_bloc.dart';
@@ -115,8 +118,23 @@ class _HomePageState extends State<HomePage> {
       listeners: [
         BlocListener<RideBloc, RideState>(
           listener: (context, state) async {
-            if (state is! RideFinished) {
-              dismissDialog(context);
+            if (state.isLoading) {
+              LoadingScreen.instance()
+                  .show(context: context, text: AppStr.loading);
+            } else {
+              LoadingScreen.instance().hide();
+            }
+            if (state.error != null) {
+              showAdaptiveDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return ErrorDialog(
+                    errorTitle: state.error!.title,
+                    errorDesc: state.error!.desc,
+                  );
+                },
+              );
             }
 
             if (state is RideFinished) {
@@ -126,22 +144,41 @@ class _HomePageState extends State<HomePage> {
                       previewContainer: previewContainer,
                     ),
                   );
-            } else if (state is RideLoading) {
-              showProcssingModal(context);
             } else if (state is RideReserved) {
-              showAdaptiveDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => const RingModal(),
-              );
+              if (state.modal == ReservedModal.ringModal) {
+                showAdaptiveDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const RingModal(),
+                );
+              }
             }
           },
         ),
         BlocListener<LocationBloc, LocationState>(
           listener: (context, state) {
             if (state is LocationLoading) {
-              showProcssingModal(context);
-            } else if (state is LocationComplete || state is LocationError) {
+              LoadingScreen.instance().show(
+                context: context,
+                text: AppStr.loading,
+              );
+            } else {
+              LoadingScreen.instance().hide();
+            }
+            if (state is LocationError) {
+              showAdaptiveDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return ErrorDialog(
+                    retryActionFunction: () =>
+                        context.read<LocationBloc>().add(GetLocationEvent()),
+                    errorTitle: state.error.title,
+                    errorDesc: state.error.desc,
+                  );
+                },
+              );
+            } else {
               dismissDialog(context);
             }
           },
@@ -160,7 +197,7 @@ class _HomePageState extends State<HomePage> {
             _getBottomSheet(bottomSheetHeight),
           ],
         ),
-        drawer:  MainDrawer(),
+        drawer: MainDrawer(),
       ),
     );
   }
@@ -176,8 +213,9 @@ class _HomePageState extends State<HomePage> {
         return PopScope(
           canPop: state is RideInitial,
           onPopInvoked: (_) {
+            log("on pop invoked");
             final state = context.read<RideBloc>().state;
-            if (state is! RideInitial) {
+            if (state is RideReserving) {
               context.read<RideBloc>().emit(RideInitial());
             }
           },

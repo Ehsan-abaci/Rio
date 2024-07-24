@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:share_scooter/core/resources/error.dart';
 
 import '../../../../../core/utils/resources/functions.dart';
 
@@ -19,8 +20,11 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
         log(loc.toString());
         emit(LocationComplete(loc));
       } catch (e) {
-        emit(LocationError());
-        log(e.toString());
+        emit(
+          LocationError(
+            ErrorType.LOCATION.getError(),
+          ),
+        );
       }
     });
   }

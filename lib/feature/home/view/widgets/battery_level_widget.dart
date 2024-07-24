@@ -24,17 +24,16 @@ class BatteryLevelWidget extends StatelessWidget {
         ),
       ),
       child: BlocConsumer<BatteryBloc, BatteryState>(
+        listenWhen: (previous, current) => previous is BatteryLoading || current is BatteryLoading,
         listener: (context, state) {
+          log(state.toString());
           if (state is BatteryLoading) {
-            log(state.toString());
-            showProcssingModal(context);
+            showProccessingModal(context);
           } else {
             dismissDialog(context);
           }
         },
         builder: (context, state) {
-          // double? btLevel;
-          // String? icon;
           if (state is BatteryComplete) {
             btLevel = state.batteryModel.level;
           }

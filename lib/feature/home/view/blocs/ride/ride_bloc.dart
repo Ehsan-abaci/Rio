@@ -1,15 +1,14 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:share_scooter/feature/home/controller/battery_controller.dart';
 import 'package:share_scooter/feature/home/controller/ridde_command_controller.dart';
 import 'package:share_scooter/feature/home/view/screens/home_page.dart';
 
 import '../../../../../core/resources/data_state.dart';
+import '../../../../../core/resources/error.dart';
 import '../../../../ride_histories/controller/ride_history_hive.dart';
 import '../../../../ride_histories/model/ride_history_model.dart';
 import '../../../../ride_histories/model/scooter_model.dart';
@@ -24,118 +23,146 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     this._rideHistoryHiveImpl,
     this._commandController,
   ) : super(RideInitial()) {
-    late Scooter selectedScooter;
-    late RideHistoryModel rideHistoryModel;
-    var moneyController = MoneyController();
+    late MoneyController moneyController;
     RideState? currentState;
-    RideState? previousState;
 
     on<ReservingEvent>(
       (event, emit) async {
-        selectedScooter = event.scooter;
         currentState = RideReserving(selectedScooter: event.scooter);
         emit(currentState!);
-        previousState = currentState;
       },
     );
 
     on<ReservedEvent>((event, emit) async {
-      emit(RideLoading());
+      moneyController = MoneyController();
+      emit(state.copyWith(isLoading: true));
+
       final dataState = await _commandController.reserveVehicle();
       if (dataState is DataSuccess) {
-        rideHistoryModel = RideHistoryModel(
+        final rideData = RideHistoryModel(
           ridingCost: 0,
-          scooter: selectedScooter,
+          scooter: (state as RideReserving).selectedScooter,
           startTime: DateTime.now(),
         );
-        currentState = RideReserved(rideDetail: rideHistoryModel);
+        currentState = RideReserved(
+          rideDetail: rideData,
+          isLoading: false,
+          modal: ReservedModal.ringModal,
+        );
         emit(currentState!);
-        previousState = currentState;
       } else {
-        emit(previousState!);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            error: ErrorType.INTERNET.getError(),
+          ),
+        );
       }
     });
 
     on<StartRidingEvent>((event, emit) async {
-      emit(RideLoading());
+      emit(state.copyWith(
+        isLoading: true,
+      ));
+
       final dataState = await _commandController.turnEngineOn();
       if (dataState is DataSuccess) {
-        currentState = RideInProgress(rideDetail: rideHistoryModel);
+        currentState = RideInProgress(rideDetail: state.rideDetail);
         emit(currentState!);
         add(IncreaseAmount());
-        previousState = currentState;
       } else {
-        emit(previousState!);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            error: ErrorType.INTERNET.getError(),
+          ),
+        );
       }
     });
     on<PausedEvent>((event, emit) async {
-      emit(RideLoading());
+      emit(state.copyWith(isLoading: true));
       final dataState = await _commandController.pauseEngine();
       if (dataState is DataSuccess) {
-        currentState = RidePaused(rideDetail: rideHistoryModel);
+        currentState = RidePaused(rideDetail: state.rideDetail);
         emit(currentState!);
         add(IncreaseAmount());
-        previousState = currentState;
       } else {
-        emit(previousState!);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            error: ErrorType.INTERNET.getError(),
+          ),
+        );
       }
     });
 
     on<FinishedEvent>((event, emit) async {
-      emit(RideLoading());
+      emit(state.copyWith(isLoading: true));
+
       final dataState = await _commandController.turnEngineOff();
       if (dataState is DataSuccess) {
         moneyController.dispose();
-        currentState = RideFinished(rideDetail: rideHistoryModel);
+        currentState = RideFinished(rideDetail: state.rideDetail);
         emit(currentState!);
-        previousState = currentState;
       } else {
-        emit(previousState!);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            error: ErrorType.INTERNET.getError(),
+          ),
+        );
       }
     });
 
     on<IncreaseAmount>((event, emit) async {
       if (currentState is RidePaused) {
-        moneyController.startPausedTimer();
+        await moneyController.startPausedTimer();
       } else if (currentState is RideInProgress) {
-        moneyController.startunningTimer();
+        await moneyController.startunningTimer();
       } else {
         return;
       }
       await for (final val in moneyController.stream) {
-        rideHistoryModel = rideHistoryModel.copyWith(
-          ridingCost: rideHistoryModel.ridingCost! + val,
+        final rideData = state.rideDetail?.copyWith(
+          ridingCost: state.rideDetail!.ridingCost! + val,
         );
         if (currentState is RideInProgress) {
-          currentState = RideInProgress(rideDetail: rideHistoryModel);
+          currentState = RideInProgress(rideDetail: rideData);
         } else if (currentState is RidePaused) {
-          currentState = RidePaused(rideDetail: rideHistoryModel);
+          currentState = RidePaused(rideDetail: rideData);
         }
         emit(currentState!);
-        previousState = currentState;
       }
     });
     on<AddNewRideEvent>((event, emit) async {
       try {
         final img = await takeImage(event.previewContainer);
-        final rideHistoryModel = event.rideDetailModel.copyWith(
+        final rideHistoryModel = event.rideDetailModel!.copyWith(
           img: img,
           endTime: DateTime.now(),
         );
         await _rideHistoryHiveImpl.saveRide(rideHistoryModel);
-        emit(RideInitial());
+        currentState = RideInitial(
+          rideDetail: null,
+          isLoading: false,
+          error: null,
+        );
+        emit(currentState!);
       } catch (e) {
-        emit(RideError(message: e.toString()));
+        emit(
+          state.copyWith(
+            error: ErrorState(
+              title: "Error",
+              desc: e.toString(),
+            ),
+          ),
+        );
       }
     });
   }
 }
 
 class MoneyController {
-  static final MoneyController _moneyController = MoneyController._internal();
-  MoneyController._internal();
-  factory MoneyController() => _moneyController;
-
   // Create a StreamController that will manage the stream
   StreamController<double> _controller = StreamController();
   Sink<double> get mySteamInputSink => _controller.sink;
@@ -149,7 +176,7 @@ class MoneyController {
   Stream<double> get stream => _controller.stream;
 
   // Function to start the timer and update the stream
-  void startPausedTimer() async {
+  Future<void> startPausedTimer() async {
     if (_runningStopwatch.isRunning) {
       _flush();
       _runningStopwatch.stop();
@@ -159,13 +186,13 @@ class MoneyController {
 
     // Set up a periodic timer that triggers every minute
 
-    _pausedTimer = Timer.periodic(const Duration(minutes: 1), (t) {
+    _pausedTimer = Timer.periodic(const Duration(seconds: 5), (t) {
       // Add the updated amount to the stream
       mySteamInputSink.add(100.0);
     });
   }
 
-  void startunningTimer() async {
+  Future<void> startunningTimer() async {
     if (_pausedStopwatch.isRunning) {
       _flush();
       _pausedStopwatch.stop();
@@ -173,7 +200,7 @@ class MoneyController {
     }
     _runningStopwatch.start();
     // Set up a periodic timer that triggers every minute
-    _runningTimer = Timer.periodic(const Duration(minutes: 1), (t) {
+    _runningTimer = Timer.periodic(const Duration(seconds: 5), (t) {
       // Add the updated amount to the stream
       mySteamInputSink.add(500.0);
     });
@@ -181,7 +208,7 @@ class MoneyController {
 
   _flush() {
     _controller.close();
-    _controller = StreamController<double>();
+    _controller = StreamController();
   }
 
   void disposeTimer() {
@@ -190,7 +217,7 @@ class MoneyController {
   }
 
   // Function to stop the timer and close the stream
-  void dispose() {
+  dispose() {
     _pausedTimer?.cancel();
     _runningTimer?.cancel();
     _controller.close();

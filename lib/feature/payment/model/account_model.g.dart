@@ -20,19 +20,28 @@ class AccountModelAdapter extends TypeAdapter<AccountModel> {
       credit: fields[0] as double,
       card: fields[1] as CardDetailModel?,
       coupons: (fields[2] as List?)?.cast<CouponDetailModel>(),
+      name: fields[3] as String,
+      birthDate: fields[4] as DateTime?,
+      phone: fields[5] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, AccountModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.credit)
       ..writeByte(1)
       ..write(obj.card)
       ..writeByte(2)
-      ..write(obj.coupons);
+      ..write(obj.coupons)
+      ..writeByte(3)
+      ..write(obj.name)
+      ..writeByte(4)
+      ..write(obj.birthDate)
+      ..writeByte(5)
+      ..write(obj.phone);
   }
 
   @override

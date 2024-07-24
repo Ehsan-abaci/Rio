@@ -1,16 +1,14 @@
-import 'dart:developer';
-
 import 'package:hive/hive.dart';
 import 'package:share_scooter/core/utils/constants.dart';
 import 'package:share_scooter/feature/payment/model/account_model.dart';
 
-abstract class AccountDatabaseController {
+abstract class PaymentDBController {
   Future<void> addCredit(double data);
   Future<void> addCoupon(CouponDetailModel data);
   AccountModel fetchAccountDetails();
 }
 
-class AccountDatabaseControllerImpl extends AccountDatabaseController {
+class PaymentDBControllerImpl extends PaymentDBController {
   static Box<AccountModel> accountBox = Hive.box(Constant.accountBox);
 
   @override

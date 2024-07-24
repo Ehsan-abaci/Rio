@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:share_scooter/core/utils/constants.dart';
+import 'package:share_scooter/core/utils/resources/functions.dart';
 import '../../../../core/widgets/custom_appbar_widget.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -13,19 +15,7 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  String formatNumber(String number) {
-    number = number.replaceFirst(RegExp(r'^0+'), '');
 
-    if (phoneRegExp.hasMatch(number.replaceAll(' ', ''))) {
-      number = number.replaceAll(' ', '');
-      return number
-          .replaceAllMapped(RegExp(r".{7}$"), (match) => ' ${match[0]}')
-          .replaceAllMapped(RegExp(r".{4}$"), (match) => ' ${match[0]}')
-          .replaceAllMapped(RegExp(r".{2}$"), (match) => ' ${match[0]}');
-    } else {
-      return number;
-    }
-  }
 
   final persianRegExp = RegExp(r'^[\u0600-\u06FF\s]*$');
   final firstNameController = TextEditingController();
@@ -34,21 +24,21 @@ class _AccountPageState extends State<AccountPage> {
   final numberController = TextEditingController();
   final RegExp dateRegExp = RegExp(r'^\d{4}/\d{1,2}/\d{1,2}$');
   final RegExp studentRegExp = RegExp(r'^\d{8,10}$');
-  RegExp phoneRegExp = RegExp(r'^9[0-9]{9}$');
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
     return Scaffold(
-      backgroundColor: ColorManager.appBg,
+        backgroundColor: ColorManager.appBg,
         appBar: const CustomAppBarWidget(title: "حساب کاربری"),
         body: Padding(
           padding: EdgeInsets.only(
-              top: 24.0,
-              right: 24,
-              left: 24,
-              bottom: MediaQuery.of(context).viewInsets.bottom * .2 + height * .2),
+            top: 24.0,
+            right: 24,
+            left: 24,
+            bottom: MediaQuery.of(context).viewInsets.bottom * .2 + height * .02,
+          ),
           child: ListView(
             shrinkWrap: true,
             primary: true,
@@ -73,8 +63,8 @@ class _AccountPageState extends State<AccountPage> {
                           }
                           return null;
                         },
-                        hintText: "نام و نام خانوادکی",
-                        controllers: firstNameController,
+                        hintText: "نام و نام خانوادگی",
+                        controller: firstNameController,
                       ),
                       Divider(
                         color: ColorManager.border,
@@ -82,8 +72,10 @@ class _AccountPageState extends State<AccountPage> {
                       ),
                       CustomTextFormFieldWidget(
                         hintText: "تاریخ تولد",
-                        controllers: dateController,
-                        inputFormatters: [DateTextInputFormatter()],
+                        controller: dateController,
+                        inputFormatters: [
+                          DateTextInputFormatter(),
+                        ],
                         valid: (value) {
                           if (value == null || value.isEmpty) {
                             return 'لطفا تاریخ را وارد کنید';
@@ -110,7 +102,7 @@ class _AccountPageState extends State<AccountPage> {
                           return null;
                         },
                         hintText: "کدملی / شماره دانشجویی",
-                        controllers: studentController,
+                        controller: studentController,
                       ),
                     ],
                   ),
@@ -158,21 +150,19 @@ class _AccountPageState extends State<AccountPage> {
                       return null;
                     },
                     hintText: "شماره تماس",
-                    controllers: numberController,
+                    controller: numberController,
                   ),
                 ),
               ),
-              // const SizedBox(
-              //   height: 40,
-              // ),
+           
             ],
           ),
         ),
         bottomSheet: SizedBox(
           width: width,
           child: Padding(
-            padding:
-                EdgeInsets.symmetric(vertical: height * .02, horizontal: width * .05),
+            padding: EdgeInsets.symmetric(
+                vertical: height * .02, horizontal: width * .05),
             child: CustomElevatedButton(
               onTap: () {},
               content: "ذخیره",

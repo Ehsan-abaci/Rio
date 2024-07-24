@@ -4,3 +4,5 @@ class Constant {
   static const String fontFamily = 'Vazir';
   static const String baseUrl = "https://rio-backend.liara.run";
 }
+
+RegExp phoneRegExp = RegExp(r'^9[0-9]{9}$');

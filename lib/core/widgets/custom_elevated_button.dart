@@ -4,13 +4,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomElevatedButton extends StatelessWidget {
- const CustomElevatedButton({
+  const CustomElevatedButton({
     super.key,
     required this.content,
     this.icon,
     required this.bgColor,
     required this.frColor,
-    required this.borderRadius,
+    this.borderRadius = 12,
     this.borderColor,
     required this.width,
     this.fontSize = 18,

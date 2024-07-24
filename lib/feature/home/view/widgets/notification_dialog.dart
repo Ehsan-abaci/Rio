@@ -72,7 +72,7 @@ class _NotificationDialogState extends State<NotificationDialog>
             title = "یک اسکوتر رزرو کرده اید";
             subtitle = [
               "هزینه شما تا الان: ",
-              "${state.rideDetail.totalCost} T"
+              "${state.rideDetail?.totalCost} T"
             ];
             indexOfGreenSubtitle = 1;
           } else if (state is RideInProgress) {
@@ -80,7 +80,7 @@ class _NotificationDialogState extends State<NotificationDialog>
             title = "درحال سواری هستید";
             subtitle = [
               "هزینه شما تا الان: ",
-              "${state.rideDetail.totalCost} T"
+              "${state.rideDetail?.totalCost} T"
             ];
             indexOfGreenSubtitle = 1;
           } else if (state is RidePaused) {
@@ -155,54 +155,6 @@ class _NotificationDialogState extends State<NotificationDialog>
                             ]),
                           ),
                         ),
-
-                        // ...subtitle.map(
-                        //   (sub) {
-                        //     if (sub != subtitle[indexOfGreenSubtitle]) {
-                        //       return RichText(
-                        //         text: TextSpan(
-                        //           text: sub,
-                        //           style: TextStyle(
-                        //             color: ColorManager.mediumEmphasis,
-                        //             fontSize: 16,
-                        //             fontWeight: FontWeight.w500,
-                        //           ),
-                        //           children: [
-                        //             TextSpan(
-                        //               text: subtitle[indexOfGreenSubtitle],
-                        //               style: TextStyle(
-                        //                 color: ColorManager.success,
-                        //                 fontSize: 16,
-                        //                 fontWeight: FontWeight.w400,
-                        //               ),
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       );
-                        //     }
-                        //     return Align();
-                        //   },
-                        // ),
-                        // RichText(
-                        //   text: TextSpan(
-                        //     text: subtitle,
-                        //     style: TextStyle(
-                        //       color: ColorManager.mediumEmphasis,
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.w500,
-                        //     ),
-                        //     children: [
-                        //       TextSpan(
-                        //         text: greenSubtitle,
-                        //         style: TextStyle(
-                        //           color: ColorManager.success,
-                        //           fontSize: 16,
-                        //           fontWeight: FontWeight.w400,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),

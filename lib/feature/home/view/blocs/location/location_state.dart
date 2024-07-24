@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'location_bloc.dart';
 
 abstract class LocationState extends Equatable {}
@@ -20,6 +21,8 @@ class LocationComplete extends LocationState {
 }
 
 class LocationError extends LocationState {
+  ErrorState error;
+  LocationError(this.error);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [error];
 }

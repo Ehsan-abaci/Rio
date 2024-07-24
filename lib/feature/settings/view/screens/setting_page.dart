@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/feature/settings/view/screens/terms_of_use_page.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_appbar_widget.dart';
@@ -11,7 +12,7 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorManager.appBg,
+        backgroundColor: ColorManager.appBg,
         appBar: const CustomAppBarWidget(title: "تنظیمات"),
         body: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -31,8 +32,8 @@ class SettingPage extends StatelessWidget {
                           title: 'حساب کاربری',
                           leading: Icons.account_circle,
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const AccountPage()));
+                            Navigator.pushNamed(
+                                context, Routes.accountRoute);
                           },
                         ),
                         Divider(
@@ -43,17 +44,15 @@ class SettingPage extends StatelessWidget {
                           title: 'تغییر زبان',
                           leading: Icons.language,
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    const ChangeLanguagePage()));
+                            Navigator.pushNamed(context, Routes.changeLanguageRoute);
                           },
                         ),
                         ListTileSetting(
                           title: 'شرایط استفاده',
                           leading: Icons.text_snippet_rounded,
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const TermsOfUsePage()));
+                            Navigator.pushNamed(
+                                context, Routes.termsOfUsePeageRoute);
                           },
                         ),
                         ListTileSetting(

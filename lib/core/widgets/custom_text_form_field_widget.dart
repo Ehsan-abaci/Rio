@@ -6,7 +6,7 @@ class CustomTextFormFieldWidget extends StatefulWidget {
   const CustomTextFormFieldWidget({
     super.key,
     required this.hintText,
-    required this.controllers,
+    required this.controller,
     required this.valid,
     this.onChanged,
     this.inputFormatters,
@@ -16,7 +16,7 @@ class CustomTextFormFieldWidget extends StatefulWidget {
   });
 
   final String hintText;
-  final TextEditingController controllers;
+  final TextEditingController controller;
   final String? Function(String?)? valid;
   final void Function(String)? onChanged;
   final List<TextInputFormatter>? inputFormatters;
@@ -49,7 +49,7 @@ class _CustomTextFormFieldWidgetState extends State<CustomTextFormFieldWidget> {
             color: ColorManager.highEmphasis,
             fontWeight: FontWeight.w500,
           ),
-          controller: widget.controllers,
+          controller: widget.controller,
           textAlign: widget.textAlign,
           decoration: InputDecoration(
             prefixText: widget.phoneNumberPrefix ? "+98 " : '',

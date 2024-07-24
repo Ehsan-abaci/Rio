@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:share_scooter/core/resources/network_info.dart';
+import 'package:share_scooter/core/utils/app_prefs.dart';
+import 'package:share_scooter/core/utils/resources/app_strings.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
+import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
-import 'package:share_scooter/feature/signup/view/screens/signup_page.dart';
+import 'package:share_scooter/feature/home/view/screens/home_page.dart';
+import 'package:share_scooter/feature/login/view/screens/login_page.dart';
 import 'package:share_scooter/feature/splash/view/cubit/network_connection_cubit.dart';
 import 'package:share_scooter/locator.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
@@ -27,6 +30,24 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     context.read<NetworkConnectionCubit>().checkNetworkConnection();
   }
 
+  void _goNext() {
+    if (di<AppPreferences>().isLoggedIn()) {
+      Future.delayed(
+          const Duration(seconds: 2),
+          () => Navigator.pushReplacementNamed(
+                context,
+                Routes.homeRoute,
+              ));
+    } else {
+      Future.delayed(
+          const Duration(seconds: 2),
+          () => Navigator.pushReplacementNamed(
+                context,
+                Routes.loginRoute,
+              ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.sizeOf(context).width;
@@ -35,14 +56,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
       body: BlocBuilder<NetworkConnectionCubit, NetworkConnectionState>(
         builder: (context, state) {
           if (state is NetworkConnectionSuccess) {
-            Future.delayed(
-                const Duration(seconds: 2),
-                () => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => const SignupPage(),
-                      ),
-                    ));
+            _goNext();
           }
           return Center(
             child: Stack(
@@ -81,7 +95,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     return Column(
       children: [
         const Text(
-          "مشکل در برقراری ارتباط",
+          AppStr.internetErrorTitle,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
@@ -89,7 +103,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
         ),
         const SizedBox(height: 5),
         const Text(
-          "در برقراری ارتباط با شبکه مشکلی پیش آمده لطفا از وجود دسترسی به شبکه مطمئن و مجددا تلاش کنید",
+          AppStr.internetErrorDesc,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,

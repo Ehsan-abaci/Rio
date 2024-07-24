@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
+import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/feature/qr_pin_code/view/screens/pin_code_page.dart';
 
@@ -102,13 +103,10 @@ class _QrCodePageState extends State<QrCodePage> {
                 CustomElevatedButton(
                   onTap: () {
                     controller?.pauseCamera();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PinCodePage(
-                            controller: controller!,
-                          ),
-                        )).then(
+                    Navigator.pushNamed(
+                      context,
+                      Routes.pinCodeRoute,
+                    ).then(
                       (_) => controller?.resumeCamera(),
                     );
                   },

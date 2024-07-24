@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'ride_bloc.dart';
 
 class RideEvent {}
@@ -21,7 +20,7 @@ class FinishedEvent extends RideEvent {}
 class IncreaseAmount extends RideEvent {}
 
 class AddNewRideEvent extends RideEvent {
-  final RideHistoryModel rideDetailModel;
+  final RideHistoryModel? rideDetailModel;
   final GlobalKey previewContainer;
   AddNewRideEvent({
     required this.rideDetailModel,
