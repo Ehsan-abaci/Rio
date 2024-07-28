@@ -5,4 +5,4 @@ class Constant {
   static const String baseUrl = "https://rio-backend.liara.run";
 }
 
-RegExp phoneRegExp = RegExp(r'^9[0-9]{9}$');
+  RegExp phoneRegExp = RegExp(r'^9[\u06F0-\u06F90-9]{9}$');

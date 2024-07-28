@@ -157,6 +157,7 @@ class _HomePageState extends State<HomePage> {
         ),
         BlocListener<LocationBloc, LocationState>(
           listener: (context, state) {
+              log(state.toString());
             if (state is LocationLoading) {
               LoadingScreen.instance().show(
                 context: context,

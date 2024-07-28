@@ -74,7 +74,7 @@ class ErrorDialog extends StatelessWidget {
                             child: CustomElevatedButton(
                               onTap: retryActionFunction ??
                                   () => Navigator.pop(context),
-                              content: "بستن",
+                              content:retryActionFunction != null ? "تلاش مجدد" :  "بستن",
                               bgColor: ColorManager.surfacePrimary,
                               frColor: ColorManager.primaryDark,
                               width: width,

@@ -63,12 +63,11 @@ bool _isThereCurrentDialogShowing(BuildContext context) =>
     ModalRoute.of(context)?.isCurrent != true;
 
 String formatNumber(String number) {
-  RegExp phoneRegExp = RegExp(r'^9[0-9]{9}$');
+  RegExp phoneRegExp = RegExp(r'^9[\u06F0-\u06F90-9]{9}$');
 
-  number = number.replaceFirst(RegExp(r'^0+'), '');
+  number = number.replaceAll(RegExp(r'^\s*0+'), '');
 
-  if (phoneRegExp.hasMatch(number.replaceAll(' ', ''))) {
-    number = number.replaceAll(' ', '');
+  if (phoneRegExp.hasMatch(number)) {
     return number
         .replaceAllMapped(RegExp(r".{7}$"), (match) => ' ${match[0]}')
         .replaceAllMapped(RegExp(r".{4}$"), (match) => ' ${match[0]}')
@@ -77,3 +76,4 @@ String formatNumber(String number) {
     return number;
   }
 }
+

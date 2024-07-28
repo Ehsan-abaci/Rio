@@ -3,7 +3,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:share_scooter/feature/home/controller/ridde_command_controller.dart';
 import 'package:share_scooter/feature/home/view/screens/home_page.dart';
 
@@ -61,9 +60,7 @@ class RideBloc extends Bloc<RideEvent, RideState> {
     });
 
     on<StartRidingEvent>((event, emit) async {
-      emit(state.copyWith(
-        isLoading: true,
-      ));
+      emit(state.copyWith(isLoading: true));
 
       final dataState = await _commandController.turnEngineOn();
       if (dataState is DataSuccess) {

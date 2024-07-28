@@ -12,6 +12,7 @@ import 'package:share_scooter/feature/ride_histories/model/ride_history_model.da
 import 'package:share_scooter/feature/ride_histories/view/bloc/ride_history_bloc.dart';
 import 'package:share_scooter/feature/ride_histories/view/screens/ride_details_page.dart';
 import 'package:share_scooter/feature/ride_histories/view/screens/ride_history_page.dart';
+import 'package:share_scooter/feature/settings/view/cubit/account_cubit.dart';
 import 'package:share_scooter/feature/settings/view/screens/account_page.dart';
 import 'package:share_scooter/feature/settings/view/screens/change_language_page.dart';
 import 'package:share_scooter/feature/settings/view/screens/setting_page.dart';
@@ -66,7 +67,11 @@ class RouteGenerator {
                 ),
             settings: RouteSettings(arguments: routeSettings.arguments));
       case Routes.accountRoute:
-        return MaterialPageRoute(builder: (_) => const AccountPage());
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (context) => AccountCubit(di())..getAccountInfo(),
+                  child: const AccountPage(),
+                ));
       case Routes.settingRoute:
         return MaterialPageRoute(builder: (_) => const SettingPage());
       case Routes.addCreditCodeRoute:

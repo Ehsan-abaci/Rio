@@ -22,7 +22,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
       } catch (e) {
         emit(
           LocationError(
-            ErrorType.LOCATION.getError(),
+            ErrorType.LOCATION.getError(e.toString()),
           ),
         );
       }

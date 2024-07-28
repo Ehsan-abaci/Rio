@@ -30,7 +30,7 @@ class _NotificationDialogState extends State<NotificationDialog>
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(
-        milliseconds: 500,
+        milliseconds: 1000,
       ),
     );
 
