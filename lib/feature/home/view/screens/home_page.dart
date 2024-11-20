@@ -490,7 +490,6 @@ FutureOr<String?> takeImage(GlobalKey previewContainer) async {
   try {
     RenderRepaintBoundary? boundary = previewContainer.currentContext!
         .findRenderObject() as RenderRepaintBoundary?;
-
     final image = await boundary!.toImage();
     final byteData = await image.toByteData(format: ImageByteFormat.png);
     final pngBytes = byteData?.buffer.asUint8List();
