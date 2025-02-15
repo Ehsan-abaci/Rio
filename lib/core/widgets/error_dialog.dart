@@ -3,15 +3,15 @@ import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 
 class ErrorDialog extends StatelessWidget {
-  ErrorDialog({
+  const ErrorDialog({
     super.key,
     required this.errorTitle,
     required this.errorDesc,
     this.retryActionFunction,
   });
-  String errorTitle;
-  String errorDesc;
-  Function()? retryActionFunction;
+  final String errorTitle;
+  final String errorDesc;
+  final Function()? retryActionFunction;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,9 @@ class ErrorDialog extends StatelessWidget {
                             child: CustomElevatedButton(
                               onTap: retryActionFunction ??
                                   () => Navigator.pop(context),
-                              content:retryActionFunction != null ? "تلاش مجدد" :  "بستن",
+                              content: retryActionFunction != null
+                                  ? "تلاش مجدد"
+                                  : "بستن",
                               bgColor: ColorManager.surfacePrimary,
                               frColor: ColorManager.primaryDark,
                               width: width,

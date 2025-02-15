@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_scooter/core/utils/constants.dart';
 import 'package:share_scooter/core/utils/resources/functions.dart';
-import 'package:share_scooter/core/widgets/scroll_column_expandable.dart';
 import 'package:share_scooter/feature/settings/view/cubit/account_cubit.dart';
 import '../../../../core/widgets/custom_appbar_widget.dart';
 import '../../../../core/utils/resources/color_manager.dart';
@@ -33,7 +32,7 @@ class _AccountPageState extends State<AccountPage> {
     super.didChangeDependencies();
     numberController.text =
         context.read<AccountCubit>().state.account?.phone ?? "";
-        firstNameController.text =
+    firstNameController.text =
         context.read<AccountCubit>().state.account?.name ?? "";
   }
 

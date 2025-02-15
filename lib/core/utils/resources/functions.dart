@@ -5,7 +5,7 @@ import 'package:share_scooter/core/widgets/error_dialog.dart';
 
 import '../../widgets/processing_modal.dart';
 
-///get  LocationPermission
+/// Get Location Permission
 Future<LatLng> determinePosition() async {
   bool serviceEnabled;
   LocationPermission permission;
@@ -76,4 +76,3 @@ String formatNumber(String number) {
     return number;
   }
 }
-

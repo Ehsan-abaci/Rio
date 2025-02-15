@@ -30,7 +30,7 @@ class _VehicleBottomSheetState extends State<VehicleBottomSheet>
     context.read<BatteryBloc>().add(GetBatteryLevel());
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 500),
     );
     super.initState();
   }

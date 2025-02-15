@@ -13,7 +13,7 @@ class AccountLoading extends AccountState {
 }
 
 class AccountComplete extends AccountState {
-  AccountModel accountModel;
+  final AccountModel accountModel;
   AccountComplete(this.accountModel);
   @override
   List<Object?> get props => [accountModel];

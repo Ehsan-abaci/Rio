@@ -2,9 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:share_scooter/core/resources/network_info.dart';
-import 'package:share_scooter/core/utils/app_prefs.dart';
-import 'package:share_scooter/feature/home/controller/battery_controller.dart';
-import 'package:share_scooter/feature/home/controller/ridde_command_controller.dart';
 import 'package:share_scooter/feature/home/view/blocs/battery/battery_bloc.dart';
 import 'package:share_scooter/feature/home/view/blocs/location/location_bloc.dart';
 import 'package:share_scooter/feature/home/view/blocs/ride/ride_bloc.dart';
@@ -27,22 +24,18 @@ Future<void> initAppMoudule() async {
   di.registerLazySingleton<NetworkInfo>(
       () => NetworkInfoImpl(InternetConnectionChecker()));
 
-  di.registerLazySingleton(() => AppPreferences(di()));
-
   di.registerLazySingleton<RideHistoryHive>(() => RideHistoryHiveImpl());
 
   di.registerLazySingleton<PaymentDBController>(
       () => PaymentDBControllerImpl());
-  di.registerLazySingleton<BatteryController>(() => BatteryController());
-  di.registerLazySingleton<RideCommandController>(
-      () => RideCommandController(di()));
-  di.registerLazySingleton<LoginController>(() => LoginControllerImpl(di()));
+
+  di.registerLazySingleton<LoginController>(() => LoginControllerImpl());
   di.registerLazySingleton<AccountController>(() => AccountControllerImpl());
 
   // blocs
-  di.registerLazySingleton<RideBloc>(() => RideBloc(di(), di()));
+  di.registerLazySingleton<RideBloc>(() => RideBloc(di()));
   di.registerLazySingleton<LocationBloc>(() => LocationBloc());
-  di.registerLazySingleton<BatteryBloc>(() => BatteryBloc(di()));
+  di.registerLazySingleton<BatteryBloc>(() => BatteryBloc());
   di.registerLazySingleton<AccountBloc>(() => AccountBloc(di()));
   di.registerLazySingleton<NetworkConnectionCubit>(
       () => NetworkConnectionCubit());

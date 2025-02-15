@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'dart:async';
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
@@ -14,7 +10,6 @@ import 'package:share_scooter/core/widgets/animate_in_effect.dart';
 import 'package:share_scooter/core/widgets/custom_appbar_widget.dart';
 import 'package:share_scooter/feature/ride_histories/model/ride_history_model.dart';
 import 'package:share_scooter/feature/ride_histories/view/bloc/ride_history_bloc.dart';
-import 'package:share_scooter/feature/ride_histories/view/screens/ride_details_page.dart';
 import 'package:share_scooter/feature/ride_histories/view/widgets/ride_image.dart';
 
 class RideHistoriesPage extends StatelessWidget {
@@ -52,11 +47,11 @@ class RideHistoriesPage extends StatelessWidget {
 }
 
 class RioRideHistoryScrollView extends StatelessWidget {
-  RioRideHistoryScrollView({
+  const RioRideHistoryScrollView({
     super.key,
     required this.rideHistories,
   });
-  List<RideHistoryModel> rideHistories;
+  final List<RideHistoryModel> rideHistories;
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(

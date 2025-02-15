@@ -6,7 +6,6 @@ import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/feature/home/view/blocs/ride/ride_bloc.dart';
-import 'package:share_scooter/feature/home/view/widgets/ring_modal.dart';
 
 class ReservationModal extends StatelessWidget {
   const ReservationModal({super.key});

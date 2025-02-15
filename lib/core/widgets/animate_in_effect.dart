@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AnimateInEffect extends StatefulWidget {
-  AnimateInEffect({
+  const AnimateInEffect({
     super.key,
     required this.child,
     required this.intervalStart,

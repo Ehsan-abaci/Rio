@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_scooter/core/utils/resources/routes_manager.dart';
-import 'package:share_scooter/feature/settings/view/screens/terms_of_use_page.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_appbar_widget.dart';
-import 'account_page.dart';
-import 'change_language_page.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -32,8 +29,7 @@ class SettingPage extends StatelessWidget {
                           title: 'حساب کاربری',
                           leading: Icons.account_circle,
                           onTap: () {
-                            Navigator.pushNamed(
-                                context, Routes.accountRoute);
+                            Navigator.pushNamed(context, Routes.accountRoute);
                           },
                         ),
                         Divider(
@@ -44,7 +40,8 @@ class SettingPage extends StatelessWidget {
                           title: 'تغییر زبان',
                           leading: Icons.language,
                           onTap: () {
-                            Navigator.pushNamed(context, Routes.changeLanguageRoute);
+                            Navigator.pushNamed(
+                                context, Routes.changeLanguageRoute);
                           },
                         ),
                         ListTileSetting(

@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'ride_history_bloc.dart';
 
 abstract class RideHistoryState extends Equatable {}
@@ -14,7 +13,7 @@ class LoadingState extends RideHistoryState {
 }
 
 class CompleteState extends RideHistoryState {
-  List<RideHistoryModel> rideHistories;
+  final List<RideHistoryModel> rideHistories;
   CompleteState({
     required this.rideHistories,
   });

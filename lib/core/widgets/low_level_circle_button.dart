@@ -2,24 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class LowLevelCircleButton extends StatelessWidget {
-  LowLevelCircleButton(
-    this.image,
-    this.size,
-    this.bgColor,
-    this.frColor,
-    this.onTap,
-  );
-  void Function()? onTap;
-  String image;
-  double size;
-  Color bgColor;
-  Color frColor;
+  const LowLevelCircleButton(
+      this.image, this.size, this.bgColor, this.frColor, this.onTap,
+      {super.key});
+  final void Function()? onTap;
+  final String image;
+  final double size;
+  final Color bgColor;
+  final Color frColor;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        
         width: size,
         height: size,
         padding: EdgeInsets.all(size / 3.6),

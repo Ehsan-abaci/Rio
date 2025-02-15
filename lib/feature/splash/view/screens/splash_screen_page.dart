@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:share_scooter/core/utils/app_prefs.dart';
 import 'package:share_scooter/core/utils/resources/app_strings.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
-import 'package:share_scooter/feature/home/view/screens/home_page.dart';
-import 'package:share_scooter/feature/login/view/screens/login_page.dart';
 import 'package:share_scooter/feature/splash/view/cubit/network_connection_cubit.dart';
-import 'package:share_scooter/locator.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 
 class SplashScreenPage extends StatefulWidget {
@@ -31,21 +28,14 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   }
 
   void _goNext() {
-    if (di<AppPreferences>().isLoggedIn()) {
-      Future.delayed(
-          const Duration(seconds: 2),
-          () => Navigator.pushReplacementNamed(
-                context,
-                Routes.homeRoute,
-              ));
-    } else {
-      Future.delayed(
-          const Duration(seconds: 2),
-          () => Navigator.pushReplacementNamed(
+    Future.delayed(
+        const Duration(seconds: 2),
+        () => mounted
+            ? Navigator.pushReplacementNamed(
                 context,
                 Routes.loginRoute,
-              ));
-    }
+              )
+            : null);
   }
 
   @override
@@ -72,8 +62,8 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
                   child: SvgPicture.asset(
                     AssetsImage.logo,
                     fit: BoxFit.scaleDown,
-                    width: MediaQuery.sizeOf(context).width * .4,
-                  ),
+                    width: w * .4,
+                  ).animate().shimmer(duration: 500.ms),
                 ),
                 if (state is NetworkConnectionError)
                   Positioned(

@@ -6,7 +6,6 @@ import 'package:share_scooter/core/utils/resources/assets_manager.dart';
 import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
-import 'package:share_scooter/feature/qr_pin_code/view/screens/pin_code_page.dart';
 
 class QrCodePage extends StatefulWidget {
   const QrCodePage({super.key});

@@ -26,6 +26,5 @@ class AddNewRideEvent extends RideEvent {
     required this.rideDetailModel,
     required this.previewContainer,
   });
-  @override
   List<Object?> get props => [rideDetailModel];
 }

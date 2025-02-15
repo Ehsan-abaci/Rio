@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:share_scooter/core/utils/app_prefs.dart';
 import 'package:share_scooter/core/utils/constants.dart';
 import 'package:share_scooter/feature/payment/model/account_model.dart';
 

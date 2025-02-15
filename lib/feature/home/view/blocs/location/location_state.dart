@@ -21,7 +21,7 @@ class LocationComplete extends LocationState {
 }
 
 class LocationError extends LocationState {
-  ErrorState error;
+  final ErrorState error;
   LocationError(this.error);
   @override
   List<Object?> get props => [error];

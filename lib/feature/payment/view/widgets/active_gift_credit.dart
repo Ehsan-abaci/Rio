@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
 import 'package:share_scooter/core/utils/resources/routes_manager.dart';
-import 'package:share_scooter/feature/payment/view/screens/add_credit_code_page.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';

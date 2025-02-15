@@ -6,7 +6,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.4 <4.0.0'
+  sdk: '>=3.5.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -21,7 +21,7 @@ dependencies:
   flutter_svg: ^2.0.8
   http: ^1.2.1
   flutter_map_location_marker: any # or latest verion
-  # flutter_map_tile_caching: ^9.0.1
+  flutter_map_tile_caching: ^9.0.1
   qr_code_scanner: ^1.0.1
   shared_preferences: ^2.2.3
   uuid: ^4.4.0
@@ -36,6 +36,7 @@ dependencies:
   dio: ^5.5.0+1
   rxdart: ^0.28.0
   internet_connection_checker: ^1.0.0+1
+  flutter_animate: ^4.5.2
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-// import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:share_scooter/core/utils/resources/app_strings.dart';
@@ -28,8 +26,6 @@ import 'package:share_scooter/feature/home/view/widgets/ring_modal.dart';
 import 'package:share_scooter/feature/home/view/widgets/vehicle_bottom_sheet.dart';
 import 'package:share_scooter/feature/qr_pin_code/view/screens/qr_code_page.dart';
 import 'package:share_scooter/feature/ride_histories/model/scooter_model.dart';
-
-import '../../../../locator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -157,7 +153,6 @@ class _HomePageState extends State<HomePage> {
         ),
         BlocListener<LocationBloc, LocationState>(
           listener: (context, state) {
-              log(state.toString());
             if (state is LocationLoading) {
               LoadingScreen.instance().show(
                 context: context,
@@ -191,14 +186,13 @@ class _HomePageState extends State<HomePage> {
           children: [
             _getMapContent(),
             _getAppbar(width, height),
-            // _getNotification(width, height),
             const NotificationDialog(),
             _getLocationButton(width, height, bottomSheetHeight),
             _getQrCodeButton(width, height, bottomSheetHeight),
             _getBottomSheet(bottomSheetHeight),
           ],
         ),
-        drawer: MainDrawer(),
+        drawer: const MainDrawer(),
       ),
     );
   }
@@ -213,8 +207,7 @@ class _HomePageState extends State<HomePage> {
         }
         return PopScope(
           canPop: state is RideInitial,
-          onPopInvoked: (_) {
-            log("on pop invoked");
+          onPopInvokedWithResult: (_, __) {
             final state = context.read<RideBloc>().state;
             if (state is RideReserving) {
               context.read<RideBloc>().emit(RideInitial());
@@ -222,7 +215,7 @@ class _HomePageState extends State<HomePage> {
           },
           child: BlocProvider(
             lazy: false,
-            create: (context) => BatteryBloc(di()),
+            create: (context) => BatteryBloc(),
             child: const VehicleBottomSheet(),
           ),
         );

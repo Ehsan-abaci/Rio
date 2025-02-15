@@ -8,17 +8,11 @@ import 'package:share_scooter/core/utils/resources/functions.dart';
 import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/core/widgets/custom_text_form_field_widget.dart';
-import 'package:share_scooter/feature/home/view/screens/home_page.dart';
-import 'package:share_scooter/feature/login/controller/login_controller.dart';
 import 'package:share_scooter/feature/payment/model/account_model.dart';
-import 'package:share_scooter/locator.dart';
 
-class LoginPhoneNumberPage extends StatefulWidget {
-  @override
-  State<LoginPhoneNumberPage> createState() => _LoginPhoneNumberPageState();
-}
+class LoginPhoneNumberPage extends StatelessWidget {
+  LoginPhoneNumberPage({super.key});
 
-class _LoginPhoneNumberPageState extends State<LoginPhoneNumberPage> {
   final _phoneNumberController = TextEditingController();
 
   final _nameController = TextEditingController();
@@ -68,7 +62,7 @@ class _LoginPhoneNumberPageState extends State<LoginPhoneNumberPage> {
                     controller: _nameController,
                     onChanged: (val) => _accountModel =
                         _accountModel.copyWith(name: _nameController.text),
-                    valid: (p0) {},
+                    valid: null,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -113,15 +107,11 @@ class _LoginPhoneNumberPageState extends State<LoginPhoneNumberPage> {
                   borderRadius: 12,
                   width: w,
                   onTap: () async {
-                    await di<LoginController>()
-                        .loginByPhoneNumber(_accountModel)
-                        .then((_) {
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        Routes.homeRoute,
-                        ModalRoute.withName(Routes.splashRoute),
-                      );
-                    });
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.homeRoute,
+                      ModalRoute.withName(Routes.splashRoute),
+                    );
                   },
                 ),
               ],

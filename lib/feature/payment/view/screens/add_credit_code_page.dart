@@ -10,7 +10,7 @@ import '../../../../core/widgets/custom_elevated_button.dart';
 class AddCreditCodePage extends StatelessWidget {
   AddCreditCodePage({super.key});
 
-  TextEditingController _couponController = TextEditingController();
+  final TextEditingController _couponController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

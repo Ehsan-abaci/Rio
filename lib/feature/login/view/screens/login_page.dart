@@ -5,6 +5,7 @@ import 'package:share_scooter/core/widgets/scroll_column_expandable.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -38,7 +39,7 @@ class LoginPage extends StatelessWidget {
                     AssetsImage.logo,
                     fit: BoxFit.scaleDown,
                     width: width * .4,
-                  ),
+                  ).animate().scale(duration: 500.ms),
                 ),
               ),
               Align(
@@ -59,7 +60,10 @@ class LoginPage extends StatelessWidget {
                             fontWeight: FontWeight.w800,
                             color: ColorManager.highEmphasis,
                           ),
-                        ),
+                        )
+                            .animate()
+                            .fade(duration: 500.ms)
+                            .slideY(duration: 500.ms),
                       ),
                       SizedBox(height: height * .025),
                       Text(
@@ -70,7 +74,10 @@ class LoginPage extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                           color: ColorManager.highEmphasis,
                         ),
-                      ),
+                      )
+                          .animate()
+                          .fade(delay: 500.ms, duration: 500.ms)
+                          .slideY(delay: 700.ms, duration: 500.ms),
                       SizedBox(
                         height: height * .05,
                       ),
@@ -88,7 +95,9 @@ class LoginPage extends StatelessWidget {
                             frColor: Colors.white,
                             borderRadius: 12,
                             width: width,
-                          ),
+                          )
+                              .animate()
+                              .slideY(end: 0, begin: 1, duration: 500.ms),
                           SizedBox(
                             height: height * .02,
                           ),
@@ -100,7 +109,11 @@ class LoginPage extends StatelessWidget {
                             frColor: Colors.white,
                             borderRadius: 12,
                             width: width,
-                          ),
+                          ).animate().slideY(
+                              end: 0,
+                              begin: 10,
+                              duration: 700.ms,
+                              delay: 500.ms),
                         ],
                       )
                     ],

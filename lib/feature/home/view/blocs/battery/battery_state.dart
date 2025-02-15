@@ -13,7 +13,7 @@ class BatteryLoading extends BatteryState {
 }
 
 class BatteryComplete extends BatteryState {
-  BatteryModel batteryModel;
+  final BatteryModel batteryModel;
   BatteryComplete(this.batteryModel);
   @override
   List<Object?> get props => [batteryModel];

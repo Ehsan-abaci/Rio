@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,12 +7,6 @@ import 'package:share_scooter/core/utils/resources/color_manager.dart';
 import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/core/widgets/custom_elevated_button.dart';
 import 'package:share_scooter/feature/payment/view/bloc/account_bloc.dart';
-import 'package:share_scooter/feature/payment/view/screens/credit_payment_page.dart';
-import 'package:share_scooter/feature/payment/view/screens/recharge_the_wallet_page.dart';
-import 'package:share_scooter/feature/ride_histories/view/bloc/ride_history_bloc.dart';
-import 'package:share_scooter/feature/ride_histories/view/screens/ride_history_page.dart';
-import 'package:share_scooter/feature/settings/view/screens/setting_page.dart';
-import 'package:share_scooter/locator.dart';
 
 class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key});

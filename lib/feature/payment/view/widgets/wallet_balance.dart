@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_scooter/core/utils/extensions.dart';
 import 'package:share_scooter/core/utils/resources/routes_manager.dart';
 import 'package:share_scooter/feature/payment/view/bloc/account_bloc.dart';
-import 'package:share_scooter/feature/payment/view/screens/recharge_the_wallet_page.dart';
 import '../../../../core/utils/resources/assets_manager.dart';
 import '../../../../core/utils/resources/color_manager.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';

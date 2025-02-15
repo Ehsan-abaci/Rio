@@ -3,10 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:share_scooter/feature/home/controller/ridde_command_controller.dart';
 import 'package:share_scooter/feature/home/view/screens/home_page.dart';
 
-import '../../../../../core/resources/data_state.dart';
 import '../../../../../core/resources/error.dart';
 import '../../../../ride_histories/controller/ride_history_hive.dart';
 import '../../../../ride_histories/model/ride_history_model.dart';
@@ -17,10 +15,8 @@ part 'ride_state.dart';
 
 class RideBloc extends Bloc<RideEvent, RideState> {
   final RideHistoryHive _rideHistoryHiveImpl;
-  final RideCommandController _commandController;
   RideBloc(
     this._rideHistoryHiveImpl,
-    this._commandController,
   ) : super(RideInitial()) {
     late MoneyController moneyController;
     RideState? currentState;
@@ -36,79 +32,48 @@ class RideBloc extends Bloc<RideEvent, RideState> {
       moneyController = MoneyController();
       emit(state.copyWith(isLoading: true));
 
-      final dataState = await _commandController.reserveVehicle();
-      if (dataState is DataSuccess) {
-        final rideData = RideHistoryModel(
-          ridingCost: 0,
-          scooter: (state as RideReserving).selectedScooter,
-          startTime: DateTime.now(),
-        );
-        currentState = RideReserved(
-          rideDetail: rideData,
-          isLoading: false,
-          modal: ReservedModal.ringModal,
-        );
-        emit(currentState!);
-      } else {
-        emit(
-          state.copyWith(
-            isLoading: false,
-            error: ErrorType.INTERNET.getError(),
-          ),
-        );
-      }
+      await Future.delayed(const Duration(seconds: 2));
+
+      final rideData = RideHistoryModel(
+        ridingCost: 0,
+        scooter: (state as RideReserving).selectedScooter,
+        startTime: DateTime.now(),
+      );
+      currentState = RideReserved(
+        rideDetail: rideData,
+        isLoading: false,
+        modal: ReservedModal.ringModal,
+      );
+      emit(currentState!);
     });
 
     on<StartRidingEvent>((event, emit) async {
       emit(state.copyWith(isLoading: true));
 
-      final dataState = await _commandController.turnEngineOn();
-      if (dataState is DataSuccess) {
-        currentState = RideInProgress(rideDetail: state.rideDetail);
-        emit(currentState!);
-        add(IncreaseAmount());
-      } else {
-        emit(
-          state.copyWith(
-            isLoading: false,
-            error: ErrorType.INTERNET.getError(),
-          ),
-        );
-      }
+      await Future.delayed(const Duration(seconds: 2));
+
+      currentState = RideInProgress(rideDetail: state.rideDetail);
+      emit(currentState!);
+      add(IncreaseAmount());
     });
     on<PausedEvent>((event, emit) async {
       emit(state.copyWith(isLoading: true));
-      final dataState = await _commandController.pauseEngine();
-      if (dataState is DataSuccess) {
-        currentState = RidePaused(rideDetail: state.rideDetail);
-        emit(currentState!);
-        add(IncreaseAmount());
-      } else {
-        emit(
-          state.copyWith(
-            isLoading: false,
-            error: ErrorType.INTERNET.getError(),
-          ),
-        );
-      }
+
+      await Future.delayed(const Duration(seconds: 2));
+
+      currentState = RidePaused(rideDetail: state.rideDetail);
+      emit(currentState!);
+      add(IncreaseAmount());
     });
 
     on<FinishedEvent>((event, emit) async {
       emit(state.copyWith(isLoading: true));
 
-      final dataState = await _commandController.turnEngineOff();
-      if (dataState is DataSuccess) {
-        moneyController.dispose();
-        currentState = RideFinished(rideDetail: state.rideDetail);
-        emit(currentState!);
-      } else {
-        emit(
-          state.copyWith(
-            isLoading: false,
-            error: ErrorType.INTERNET.getError(),
-          ),
-        );
-      }
+      await Future.delayed(const Duration(seconds: 2));
+
+      moneyController.dispose();
+      currentState = RideFinished(rideDetail: state.rideDetail);
+      emit(currentState!);
     });
 
     on<IncreaseAmount>((event, emit) async {
