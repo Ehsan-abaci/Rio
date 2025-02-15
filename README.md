@@ -1,8 +1,6 @@
 # Rio
 Advanced UI has been implemented by Flutter.
 
-The code cannot be displayed
-
 ## Screenshots
 
 <img src="https://github.com/user-attachments/assets/4a8d1bfc-5791-4a04-a7ae-4f3832f35ffa" width="250"/>
